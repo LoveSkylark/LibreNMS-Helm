@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{.Release.Name}}-mysql-config
 data:
-  TZ: "{{.Values.application.TZ}}"
+  TZ: "{{.Values.shared.TZ}}"
   MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
   MYSQL_DATABASE: "{{.Release.Name}}-database"
   MYSQL_USER: "{{.Values.credentials.mysql.user}}"

@@ -21,7 +21,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-snmptrapd
-          image: librenms/librenms:latest
+          image: {{.Values.syslogng.image}}
           envFrom:
             - configMapRef:
                 name: {{.Release.Name}}-librenms-config

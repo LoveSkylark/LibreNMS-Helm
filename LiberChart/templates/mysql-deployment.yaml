@@ -21,7 +21,7 @@ spec:
       hostname: {{.Release.Name}}-mysql
       containers:
         - name: {{.Release.Name}}-mysql
-          image: "mariadb:10.5"
+          image: {{.Values.mysql.image}}
           args:
             - mysqld
             - --innodb-file-per-table=1

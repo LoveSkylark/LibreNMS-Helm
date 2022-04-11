@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{.Release.Name}}-rrdcached-claim       
+  name: {{.Release.Name}}-rrdcached-claim
 spec:
   accessModes:
     - ReadWriteOnce

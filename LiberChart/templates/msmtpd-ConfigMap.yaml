@@ -10,6 +10,6 @@ data:
   SMTP_STARTTLS: "on"
   SMTP_TLS_CHECKCERT: "on"
   SMTP_AUTH: "on"
-  SMTP_USER: "{{.Values.email.user}}" 
+  SMTP_USER: "{{.Values.email.user}}"
   SMTP_PASSWORD: "{{.Values.email.password}}"
   SMTP_FROM: "{{.Values.email.from}}"

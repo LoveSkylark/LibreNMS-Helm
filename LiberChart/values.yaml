@@ -1,27 +1,69 @@
 ---
-application:
-  serviceType: ingress
-  ingressHost: "libre.example.com"
+shared:
   TZ: "Europe/London"
-  PUID: 1000
-  PGID: 1000
+  PUID: "1000"
+  PGID: "1000"
+  realIPfrom: "0.0.0.0/32"
+  realIPheader: "X-Forwarded-For"
+  uploadMAXsize: "16M"
+  MemoryLimit: "256M"
+  opcacheMEMsize: "128"
+  logIP: "remote_addr"
+application:
+  image: "librenms/librenms:latest"
+  replicas: "1"
+  serviceType: "ingress"
+  ingressHost: "libre.example.com"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"
-  SNMPcommunity: test
-credentials:
-  application:
-    administrativeUser: "foo"
-    administrativePassword: "bar"
-    administrativeEmail: "foo@gmail.com"
-  mysql:
-    name: "libreDB"
-    rootPassword: "fooRootPassword"
-    user: "foo"
-    password: "bar"
-  redis:
-    password: "bar"
+  SNMPcommunity: "test"
+  servicePort: "80"
+  providerPort: "8000"
+  authMechanism: "mysql"
+  memoryLimit: "1024"
+  mysqlReadinessDelay: "15"
+dispatcher:
+  image: "librenms/librenms:latest"
+  replicas: "3"
+  nodeID: "dispatcher1"
+snmptrapd:
+  image: "librenms/librenms:latest"
+syslogng:
+  image: "librenms/librenms:latest"
+mysql:
+  image: "mariadb:10.5"
+  servicePort: 3306
+  providerPort: 33306
+  external:
+    enabled: false
+    address:
+    port: 3306
+memcached:
+  image: "memcached:alpine"
+  servicePort: 11211
+  providerPort: 11211
+  threadCount: 2
+  connectionRequests: 10
+  logLevel: ""
+msmtpd:
+  image: "crazymax/msmtpd:latest"
+redis:
+  image: "redis:5.0-alpine"
+  servicePort: "6379"
+  providerPort: 36379
+  logLevel: "notice"
+rrdcached:
+  image: "crazymax/rrdcached"
+  servicePort: 42217
+  providerPort: 42217
+  chunkSize: 2
+  threadCount: 2
+  flushInterval: 600
+  writeInterval: 300
+  writeDelay: 5
+  logLevel: "LOG_NOTICE"
 storage:
-  path: ""
+  path: "/opt/kube/experments/"
   mysql:
     size: "1Gi"
   redis:
@@ -34,3 +76,15 @@ email:
   user: "foo"
   password: "bar"
   from: "foo@gmail.com"
+credentials:
+  application:
+    administrativeUser: "foo"
+    administrativePassword: "bar"
+    administrativeEmail: "foo@gmail.com"
+  mysql:
+    name: "libreDB"
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+  redis:
+    password: "bar"

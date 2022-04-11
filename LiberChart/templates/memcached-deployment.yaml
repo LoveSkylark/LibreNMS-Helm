@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: {{.Release.Name}}-memcached
-          image: memcached:alpine
+          image: "{{.Values.memcached.image}}"
           env:
             - name: TZ
-              value: {{.Values.application.TZ}}
+              value: {{.Values.shared.TZ}}
       restartPolicy: Always

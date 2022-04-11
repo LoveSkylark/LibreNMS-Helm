@@ -21,7 +21,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-application
-          image: librenms/librenms:latest
+          image: "{{.Values.application.image}}"
           envFrom:
             - configMapRef:
                 name: {{.Release.Name}}-librenms-config

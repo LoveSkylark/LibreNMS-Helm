@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: {{.Release.Name}}-redis
-          image: redis:5.0-alpine
+          image: {{.Values.redis.image}}
           env:
             - name: TZ
-              value: {{.Values.application.TZ}}
+              value: {{.Values.shared.TZ}}
       restartPolicy: Always
