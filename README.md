@@ -19,6 +19,4 @@ helm install LibreNMS ./LibreChart
   
   
   This is a work in progress, cluster has been spun up but has not been exposed or tested.
-  
-  
-  
+  Needs to be move into namespace
