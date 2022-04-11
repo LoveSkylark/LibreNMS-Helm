@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Release.Name}}-msmtpd-config
+data:
+  SMTP_HOST: "{{.Values.email.host}}"
+  SMTP_PORT: "{{.Values.email.port}}"
+  SMTP_TLS: "on"
+  SMTP_STARTTLS: "on"
+  SMTP_TLS_CHECKCERT: "on"
+  SMTP_AUTH: "on"
+  SMTP_USER: "{{.Values.email.user}}" 
+  SMTP_PASSWORD: "{{.Values.email.password}}"
+  SMTP_FROM: "{{.Values.email.from}}"

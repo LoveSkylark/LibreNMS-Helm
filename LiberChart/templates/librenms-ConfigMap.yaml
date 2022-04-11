@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{.Release.Name}}-librenms-config
+data:
+  TZ: "{{.Values.application.TZ}}"
+  PUID: "{{.Values.application.PGUID}}"
+  PGID: "{{.Values.application.PGID}}"
+  REAL_IP_FROM: "192.168.102.100/32"
+  REAL_IP_HEADER: "X-Forwarded-For"
+  LOG_IP_VAR: "remote_addr"
+  UPLOAD_MAX_SIZE: "16M"
+  DB_HOST: "{{.Release.Name}}-mysql"
+  DB_NAME: "{{.Release.Name}}-database"
+  DB_USER: "{{.Values.credentials.mysql.user}}"
+  DB_PASSWORD: "{{.Values.credentials.mysql.password}}"
+  DB_TIMEOUT: "60"
+  REDIS_HOST: "{{.Release.Name}}-redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  MEMCACHED_HOST: "{{.Release.Name}}-memcached"
+  MEMCACHED_PORT: "11211"
+  MEMORY_LIMIT: "256M"
+  OPCACHE_MEM_SIZE: "128"
+  LIBRENMS_SNMP_COMMUNITY: "{{.Values.application.SNMPcommunity}}"

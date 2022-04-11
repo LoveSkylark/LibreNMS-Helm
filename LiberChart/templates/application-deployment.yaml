@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-application
+  labels:
+    app: {{.Release.Name}}-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-application
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-application
+    spec:
+      hostname: {{.Release.Name}}-application
+      restartPolicy: Always
+      containers:
+        - name: {{.Release.Name}}-application
+          image: librenms/librenms:latest
+          envFrom:
+            - configMapRef:
+                name: {{.Release.Name}}-librenms-config
+          env:
+            - name: LIBRENMS_WEATHERMAP
+              value: "{{.Values.application.weathermap}}"
+            - name: LIBRENMS_WEATHERMAP_SCHEDULE
+              value: "{{.Values.application.weathermapSchedule}}"
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          volumeMounts:
+            - name: {{.Release.Name}}-rrdcached
+              mountPath: /data
+      volumes:
+        - name: {{.Release.Name}}-rrdcached
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-rrdcached-claim

@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-mysql
+  labels:
+    app: {{.Release.Name}}-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-mysql
+    spec:
+      restartPolicy: Always
+      hostname: {{.Release.Name}}-mysql
+      containers:
+        - name: {{.Release.Name}}-mysql
+          image: "mariadb:10.5"
+          args:
+            - mysqld
+            - --innodb-file-per-table=1
+            - --lower-case-table-names=0
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+          envFrom:
+            - configMapRef:
+                name: {{.Release.Name}}-mysql-config
+          volumeMounts:
+            - name: {{.Release.Name}}-mysql
+              mountPath: /data
+
+      volumes:
+        - name: {{.Release.Name}}-mysql
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-mysql-claim

@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-msmtpd
+  labels:
+    app: {{.Release.Name}}-msmtpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-msmtpd
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-msmtpd
+    spec:
+      restartPolicy: Always
+      hostname: {{.Release.Name}}-msmtpd
+      containers:
+        - name: {{.Release.Name}}-msmtpd
+          image: "crazymax/msmtpd:latest"
+          envFrom:
+            - configMapRef:
+                name: {{.Release.Name}}-msmtpd-config

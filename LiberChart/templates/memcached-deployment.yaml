@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-memcached
+  labels:
+    app: {{.Release.Name}}-memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-memcached
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-memcached
+    spec:
+      containers:
+        - name: {{.Release.Name}}-memcached
+          image: memcached:alpine
+          env:
+            - name: TZ
+              value: {{.Values.application.TZ}}
+      restartPolicy: Always

@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{.Release.Name}}-rrdcached-claim       
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{.Values.storage.rrdcached.size}}
+  volumeName: {{.Release.Name}}-rrdcached
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{.Release.Name}}-rrdcached
+  labels:
+    type: {{.Release.Name}}-rrdcached
+spec:
+  storageClassName: ""
+  capacity:
+    storage: {{.Values.storage.rrdcached.size}}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{.Values.storage.path}}{{.Release.Name}}/rrdcached

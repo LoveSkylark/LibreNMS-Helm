@@ -1,0 +1,36 @@
+---
+application:
+  serviceType: ingress
+  ingressHost: "libre.example.com"
+  TZ: "Europe/London"
+  PUID: 1000
+  PGID: 1000
+  weathermap: "false"
+  weathermapSchedule: "*/5 * * * *"
+  SNMPcommunity: test
+credentials:
+  application:
+    administrativeUser: "foo"
+    administrativePassword: "bar"
+    administrativeEmail: "foo@gmail.com"
+  mysql:
+    name: "libreDB"
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+  redis:
+    password: "bar"
+storage:
+  path: ""
+  mysql:
+    size: "1Gi"
+  redis:
+    size: "1Gi"
+  rrdcached:
+    size: "1Gi"
+email:
+  host: "smtp.gmail.com"
+  port: "587"
+  user: "foo"
+  password: "bar"
+  from: "foo@gmail.com"

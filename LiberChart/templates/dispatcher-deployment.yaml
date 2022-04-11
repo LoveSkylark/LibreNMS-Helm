@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-dispatcher
+  labels:
+    app: {{.Release.Name}}-dispatcher
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-dispatcher
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-dispatcher
+    spec:
+      hostname: {{.Release.Name}}-dispatcher
+      restartPolicy: Always
+      containers:
+        - name: {{.Release.Name}}-dispatcher
+          image: librenms/librenms:latest
+          envFrom:
+            - configMapRef:
+                name: {{.Release.Name}}-librenms-config
+          env:
+            - name: DISPATCHER_NODE_ID
+              value: "dispatcher1"
+            - name: SIDECAR_DISPATCHER
+              value: "1"
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          volumeMounts:
+            - name: {{.Release.Name}}-rrdcached
+              mountPath: /data
+      volumes:
+        - name: {{.Release.Name}}-rrdcached
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-rrdcached-claim
