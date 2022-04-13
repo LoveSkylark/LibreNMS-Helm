@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Release.Name}}-redis
+spec:
+  type: ClusterIP
+  selector:
+    app: redis
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: redis
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: {{.Release.Name}}-redis
+          image: {{.Values.redis.image}}
+          envFrom:
+            - configMapRef:
+                name: redis-cfg
+          env:
+            - name: REDIS_REQUIRED_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: redis_password
+          ports:
+            - name: redis
+              containerPort: 6378
+      restartPolicy: Always

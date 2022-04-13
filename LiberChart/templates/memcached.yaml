@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Release.Name}}-memcached
+spec:
+  type: ClusterIP
+  selector:
+    app: memcached
+  ports:
+    - name: memcached
+      protocol: TCP
+      port: 11211
+      targetPort: memcached
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-memcached
+  labels:
+    app: memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      containers:
+        - name: {{.Release.Name}}-memcached
+          image: "{{.Values.memcached.image}}"
+          envFrom:
+            - configMapRef:
+                name: memcached-cfg
+          ports:
+            - name: memcached
+              containerPort: 11211
+      restartPolicy: Always

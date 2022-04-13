@@ -1,0 +1,107 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{.Release.Name}}-database-claim
+  labels:
+    app: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{.Values.storage.mysql.size}}
+  volumeName: {{.Release.Name}}-database
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{.Release.Name}}-database
+  labels:
+    type: database
+spec:
+  storageClassName: ""
+  capacity:
+    storage: {{.Values.storage.mysql.size}}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{.Values.storage.path}}{{.Release.Name}}/database
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Release.Name}}-database
+spec:
+  type: ClusterIP
+  selector:
+    app: database
+  ports:
+    - name: mysql
+      protocol: TCP
+      port: 3306
+      targetPort: mysql
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-database
+  labels:
+    app: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      restartPolicy: Always
+      hostname: {{.Release.Name}}-database
+      containers:
+        - name: {{.Release.Name}}-database
+          image: {{.Values.mysql.image}}
+          args:
+            - mysqld
+            - --innodb-file-per-table=1
+            - --lower-case-table-names=0
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+          envFrom:
+            - configMapRef:
+                name: mysql-cfg
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: mysql_root
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: mysql_user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: mysql_password
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - name: {{.Release.Name}}-database
+              mountPath: /data
+      volumes:
+        - name: {{.Release.Name}}-database
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-database-claim
