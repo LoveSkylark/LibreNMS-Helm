@@ -47,23 +47,23 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{.Release.Name}}-database
   labels:
     app: database
 spec:
+  serviceName: database
   replicas: 1
   selector:
     matchLabels:
       app: database
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: database
     spec:
+      hostname: {{.Release.Name}}-database
       restartPolicy: Always
       hostname: {{.Release.Name}}-database
       containers:

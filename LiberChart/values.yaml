@@ -1,5 +1,7 @@
 ---
 credentials:
+  # passed into secrets
+  #application not in use yet
   application:
     administrativeUser: "foo"
     administrativePassword: "bar"
@@ -10,8 +12,9 @@ credentials:
     password: "bar"
   redis:
     password: "bar"
-
-
+  email:
+    user: "foo"
+    password: "bar"   
 
 shared:
   TZ: "Europe/London"
@@ -27,27 +30,25 @@ shared:
 application:
   image: "librenms/librenms:latest"
   replicas: "1"
-  serviceType: "ingress"
-  ingressHost: "libre.example.com"
+  baseURL: "libre.example.com"
+  SNMPcommunity: "test"
+  nPort: "30080"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"
-  SNMPcommunity: "test"
-  servicePort: "80"
-  providerPort: "8000"
-  authMechanism: "mysql"
-  memoryLimit: "1024"
-  mysqlReadinessDelay: "15"
 
 dispatcher:
   image: "librenms/librenms:latest"
   replicas: "3"
   nodeID: "dispatcher1"
+  args: ""
 
 snmptrapd:
   image: "librenms/librenms:latest"
 
 syslogng:
   image: "librenms/librenms:latest"
+
+## Services
 
 mysql:
   database: "libreDB"
@@ -57,31 +58,31 @@ mysql:
 
 memcached:
   image: "memcached:alpine"
-  servicePort: 11211
-  providerPort: 11211
   threadCount: 2
   connectionRequests: 10
   logLevel: ""
 
 msmtpd:
   image: "crazymax/msmtpd:latest"
+  host: "smtp.gmail.com"
+  port: "587"
+  from: "foo@gmail.com"
+  TLS: "on"
+  startTLS: "on"
+  TLSchecker: "on"
+  auth: "on"
 
 redis:
   image: "redis:5.0-alpine"
-  servicePort: "6379"
-  providerPort: 36379
   logLevel: "notice"
 
 rrdcached:
   image: "crazymax/rrdcached"
-  servicePort: 42217
-  providerPort: 42217
-  chunkSize: 2
-  threadCount: 2
-  flushInterval: 600
-  writeInterval: 300
-  writeDelay: 5
-  logLevel: "LOG_NOTICE"
+  writeThreads: "4"
+  writeTimeout: "1800"
+  writeJitter: "1800"
+  flushDeadDataInterval: "3600"
+  logLevel: "LOG_INFO"
 
 storage:
   path: "/opt/kubes/storage/"
@@ -91,10 +92,3 @@ storage:
     size: "1Gi"
   rrdcached:
     size: "1Gi"
-
-email:
-  host: "smtp.gmail.com"
-  port: "587"
-  user: "foo"
-  password: "bar"
-  from: "foo@gmail.com"

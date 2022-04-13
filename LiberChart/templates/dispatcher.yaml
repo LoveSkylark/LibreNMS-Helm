@@ -2,12 +2,12 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Release.Name}}-dispatcher
+  name: {{ .Release.Name }}-dispatcher
   labels:
     app: dispatcher
 spec:
   serviceName: dispatcher
-  replicas: {{.Values.dispatcher.replicas}}
+  replicas: {{ .Values.dispatcher.replicas }}
   selector:
     matchLabels:
       app: dispatcher
@@ -16,11 +16,11 @@ spec:
       labels:
         app: dispatcher
     spec:
-      hostname: {{.Release.Name}}-dispatcher
+      hostname: {{ .Release.Name }}-dispatcher
       restartPolicy: Always
       containers:
-        - name: {{.Release.Name}}-dispatcher
-          image: {{.Values.dispatcher.image}}
+        - name: {{ .Release.Name }}-dispatcher
+          image: {{ .Values.dispatcher.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg
@@ -41,19 +41,20 @@ spec:
                   name: credentials
                   key: redis_password
             - name: DISPATCHER_NODE_ID
-              value: {{.Values.dispatcher.nodeID}}
+              value: {{ .Values.dispatcher.nodeID | quote }}
+            - name: DISPATCHER_ARGS
+              value: {{ .Values.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
               value: "1"
-
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
-            - name: {{.Release.Name}}-rrdcached
+            - name: {{ .Release.Name }}-rrdcached
               mountPath: /data
       volumes:
-        - name: {{.Release.Name}}-rrdcached
+        - name: {{ .Release.Name }}-rrdcached
           persistentVolumeClaim:
-            claimName: {{.Release.Name}}-rrdcached-claim
+            claimName: {{ .Release.Name }}-rrdcached-claim

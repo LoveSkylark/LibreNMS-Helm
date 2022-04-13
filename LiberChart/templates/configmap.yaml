@@ -51,7 +51,9 @@ data:
   REDIS_DB: "0"
   MEMCACHED_HOST: "{{ .Release.Name }}-memcached"
   MEMCACHED_PORT: "11211"
+  RRDCACHED_SERVER: "{{ .Release.Name }}-rrdcached:42217"
   LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
+
 
 ---
 apiVersion: v1
@@ -62,11 +64,11 @@ data:
   TZ: {{ .Values.shared.TZ | quote }}
   PUID: {{ .Values.shared.puid | quote }}
   PGID: {{ .Values.shared.pgid | quote }}
-  LOG_LEVEL: "LOG_INFO"
-  WRITE_TIMEOUT: "1800"
-  WRITE_JITTER: "1800"
-  WRITE_THREADS: "4"
-  FLUSH_DEAD_DATA_INTERVAL: "3600"
+  LOG_LEVEL: {{ .Values.rrdcached.logLevel | quote }}
+  WRITE_TIMEOUT: {{ .Values.rrdcached.writeTimeout | quote }}
+  WRITE_JITTER: {{ .Values.rrdcached.writeJitter | quote }}
+  WRITE_THREADS: {{ .Values.rrdcached.writeThreads | quote }}
+  FLUSH_DEAD_DATA_INTERVAL: {{ .Values.rrdcached.flushDeadDataInterval | quote }}
 
 ---
 apiVersion: v1
@@ -74,12 +76,10 @@ kind: ConfigMap
 metadata:
   name: msmtpd-cfg
 data:
-  SMTP_HOST: {{ .Values.email.host | quote }}
-  SMTP_PORT: {{ .Values.email.port | quote }}
-  SMTP_TLS: "on"
-  SMTP_STARTTLS: "on"
-  SMTP_TLS_CHECKCERT: "on"
-  SMTP_AUTH: "on"
-  SMTP_USER: {{ .Values.email.user | quote }}
-  SMTP_PASSWORD: {{ .Values.email.password | quote }}
-  SMTP_FROM: {{ .Values.email.from | quote }}
+  SMTP_HOST: {{ .Values.msmtpd.host | quote }}
+  SMTP_PORT: {{ .Values.msmtpd.port | quote }}
+  SMTP_TLS: {{ .Values.msmtpd.TLS | quote }}
+  SMTP_STARTTLS: {{ .Values.msmtpd.startTLS | quote }}
+  SMTP_TLS_CHECKCERT: {{ .Values.msmtpd.TLSchecker | quote }}
+  SMTP_AUTH: {{ .Values.msmtpd.auth | quote }}
+  SMTP_FROM: {{ .Values.msmtpd.from | quote }}

@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Release.Name}}-application
+  name: {{ .Release.Name }}-application
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: application
   ports:
     - name: application
       protocol: TCP
-      nodePort: 30080
+      nodePort: {{ .Values.application.nPort }}
       port: 8000
       targetPort: application
 
@@ -18,11 +18,11 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Release.Name}}-application
+  name: {{ .Release.Name }}-application
   labels:
     app: application
 spec:
-  replicas: 1
+  replicas: {{ .Values.application.replicas }}
   selector:
     matchLabels:
       app: application
@@ -33,11 +33,11 @@ spec:
       labels:
         app: application
     spec:
-      hostname: {{.Release.Name}}-application
+      hostname: {{ .Release.Name }}-application
       restartPolicy: Always
       containers:
-        - name: {{.Release.Name}}-application
-          image: "{{.Values.application.image}}"
+        - name: {{ .Release.Name }}-application
+          image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg
@@ -57,10 +57,12 @@ spec:
                 secretKeyRef:
                   name: credentials
                   key: redis_password
+            - name: LIBRENMS_BASE_URL
+              value: {{ .Values.application.baseURL | quote }}
             - name: LIBRENMS_WEATHERMAP
-              value: "{{.Values.application.weathermap}}"
+              value: {{ .Values.application.weathermap | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE
-              value: "{{.Values.application.weathermapSchedule}}"
+              value: {{ .Values.application.weathermapSchedule | quote }}
           securityContext:
             capabilities:
               add:
@@ -71,9 +73,9 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - name: {{.Release.Name}}-rrdcached
+            - name: {{ .Release.Name }}-rrdcached
               mountPath: /data
       volumes:
-        - name: {{.Release.Name}}-rrdcached
+        - name: {{ .Release.Name }}-rrdcached
           persistentVolumeClaim:
-            claimName: {{.Release.Name}}-rrdcached-claim
+            claimName: {{ .Release.Name }}-rrdcached-claim

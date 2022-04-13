@@ -15,23 +15,24 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{.Release.Name}}-memcached
   labels:
     app: memcached
 spec:
+  serviceName: memcached
   replicas: 1
   selector:
     matchLabels:
       app: memcached
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: memcached
     spec:
+      hostname: {{.Release.Name}}-memcached
+      restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-memcached
           image: "{{.Values.memcached.image}}"
@@ -41,4 +42,3 @@ spec:
           ports:
             - name: memcached
               containerPort: 11211
-      restartPolicy: Always

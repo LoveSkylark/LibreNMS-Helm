@@ -31,6 +31,20 @@ spec:
     path: {{.Values.storage.path}}{{.Release.Name}}/rrdcached
 
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-rrdcached
+spec:
+  selector:
+    app: rrdcached
+  ports:
+    - name: rrdcached
+      protocol: TCP
+      port: 42217
+      targetPort: rrdcached
+
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -61,6 +75,10 @@ spec:
               add:
                 - NET_ADMIN
                 - NET_RAW
+          ports:
+            - name: rrdcached
+              containerPort: 42217
+              protocol: TCP
           volumeMounts:
             - name: {{.Release.Name}}-rrdcached
               mountPath: /data

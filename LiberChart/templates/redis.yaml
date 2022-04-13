@@ -15,23 +15,24 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{.Release.Name}}-redis
   labels:
     app: redis
 spec:
+  serviceName: redis
   replicas: 1
   selector:
     matchLabels:
       app: redis
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: redis
     spec:
+      hostname: {{.Release.Name}}-redis
+      restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-redis
           image: {{.Values.redis.image}}
@@ -47,4 +48,3 @@ spec:
           ports:
             - name: redis
               containerPort: 6378
-      restartPolicy: Always
