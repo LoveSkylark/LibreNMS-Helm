@@ -20,7 +20,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{ .Release.Name }}-dispatcher
-          image: {{ .Values.dispatcher.image | quote }}
+          image: {{ .Values.librenms.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg
@@ -40,8 +40,8 @@ spec:
                 secretKeyRef:
                   name: credentials
                   key: redis_password
-            - name: DISPATCHER_NODE_ID
-              value: {{ .Values.dispatcher.nodeID | quote }}
+            #- name: DISPATCHER_NODE_ID
+            #  value: {{ .Values.dispatcher.nodeID | quote }}
             - name: DISPATCHER_ARGS
               value: {{ .Values.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER

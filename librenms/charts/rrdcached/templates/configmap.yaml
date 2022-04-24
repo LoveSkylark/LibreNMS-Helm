@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rrdcached-cfg
+data:
+  TZ: {{ .Values.shared.TZ | quote }}
+  PUID: {{ .Values.shared.puid | quote }}
+  PGID: {{ .Values.shared.pgid | quote }}
+  LOG_LEVEL: {{ .Values.rrdcached.logLevel | quote }}
+  WRITE_TIMEOUT: {{ .Values.rrdcached.writeTimeout | quote }}
+  WRITE_JITTER: {{ .Values.rrdcached.writeJitter | quote }}
+  WRITE_THREADS: {{ .Values.rrdcached.writeThreads | quote }}
+  FLUSH_DEAD_DATA_INTERVAL: {{ .Values.rrdcached.flushDeadDataInterval | quote }}

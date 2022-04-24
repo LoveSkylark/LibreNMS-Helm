@@ -1,0 +1,20 @@
+---
+mysql:
+  database: "libreDB"
+  timeout: "60"
+  image: "mariadb:10.5"
+  allow_empty_password: "yes"
+
+storage:
+  path: "/opt/kubes/storage/"
+  mysql:
+    size: "1Gi"
+
+credentials:
+  mysql:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+
+shared:
+  TZ: "Europe/London"

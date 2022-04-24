@@ -1,0 +1,11 @@
+---
+redis:
+  image: "redis:5.0-alpine"
+  logLevel: "notice"
+
+credentials:
+  redis:
+    password: "bar"
+
+shared:
+  TZ: "Europe/London"

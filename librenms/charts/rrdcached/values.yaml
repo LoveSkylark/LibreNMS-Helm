@@ -1,0 +1,17 @@
+rrdcached:
+  image: "crazymax/rrdcached"
+  writeThreads: "4"
+  writeTimeout: "1800"
+  writeJitter: "1800"
+  flushDeadDataInterval: "3600"
+  logLevel: "LOG_INFO"
+
+shared:
+  TZ: "Europe/London"
+  puid: "1000"
+  pgid: "1000"
+
+storage:
+  path: "/opt/kubes/storage/"
+  rrdcached:
+    size: "1Gi"

@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{.Release.Name}}-msmtpd
+  labels:
+    app: msmtpd
+spec:
+  serviceName: msmtpd
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msmtpd
+  template:
+    metadata:
+      labels:
+        app: msmtpd
+    spec:
+      hostname: {{.Release.Name}}-msmtpd
+      restartPolicy: Always
+      containers:
+        - name: {{.Release.Name}}-msmtpd
+          image: "{{.Values.msmtpd.image}}"
+          envFrom:
+            - configMapRef:
+                name: msmtpd-cfg
+          env:
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: msmtpd-sec
+                  key: email_user
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: msmtpd-sec
+                  key: email_password

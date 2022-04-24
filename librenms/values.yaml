@@ -1,0 +1,78 @@
+---
+credentials:
+  # passed into secrets
+  #application not in use yet
+  application:
+    administrativeUser: "foo"
+    administrativePassword: "bar"
+    administrativeEmail: "foo@gmail.com"
+  mysql:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+  redis:
+    password: "bar"
+  email:
+    user: "foo"
+    password: "bar"   
+
+
+
+shared:
+  TZ: "Europe/London"
+  puid: "1000"
+  pgid: "1000"
+  realIPfrom: "0.0.0.0/32"
+  realIPheader: "X-Forwarded-For"
+  uploadMAXsize: "16M"
+  MemoryLimit: "256M"
+  opcacheMEMsize: "128"
+  logIP: "remote_addr"
+
+application:
+  replicas: "1"
+  baseURL: ""
+  SNMPcommunity: "test"
+  nPort: "30080"
+  weathermap: "false"
+  weathermapSchedule: "*/5 * * * *"
+
+dispatcher:
+  replicas: "1"
+  nodeID: "1"
+  args: ""
+
+librenms:
+  image: "librenms/librenms:latest"
+
+
+## Services
+
+
+mariadb:
+  enabled: true
+memcached:
+  enabled: true
+redis:
+  enabled: true
+rrdcached:
+  enabled: true
+
+
+
+mysql:
+  database: "libreDB"
+  timeout: "60"
+
+
+msmtpd:
+  host: "smtp.gmail.com"
+  port: "587"
+  from: "foo@gmail.com"
+
+storage:
+  path: "/opt/kubes/storage/"
+  mysql:
+    size: "1Gi"
+  rrdcached:
+    size: "1Gi"

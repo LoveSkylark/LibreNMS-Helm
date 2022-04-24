@@ -16,6 +16,8 @@ credentials:
     user: "foo"
     password: "bar"   
 
+
+
 shared:
   TZ: "Europe/London"
   puid: "1000"
@@ -28,67 +30,38 @@ shared:
   logIP: "remote_addr"
 
 application:
-  image: "librenms/librenms:latest"
   replicas: "1"
-  baseURL: "libre.example.com"
+  baseURL: ""
   SNMPcommunity: "test"
   nPort: "30080"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"
 
 dispatcher:
-  image: "librenms/librenms:latest"
-  replicas: "3"
-  nodeID: "dispatcher1"
+  replicas: "1"
+  nodeID: "1"
   args: ""
 
-snmptrapd:
+librenms:
   image: "librenms/librenms:latest"
 
-syslogng:
-  image: "librenms/librenms:latest"
 
 ## Services
+
 
 mysql:
   database: "libreDB"
   timeout: "60"
-  image: "mariadb:10.5"
-  allow_empty_password: "yes"
 
-memcached:
-  image: "memcached:alpine"
-  threadCount: 2
-  connectionRequests: 10
-  logLevel: ""
 
 msmtpd:
-  image: "crazymax/msmtpd:latest"
   host: "smtp.gmail.com"
   port: "587"
   from: "foo@gmail.com"
-  TLS: "on"
-  startTLS: "on"
-  TLSchecker: "on"
-  auth: "on"
-
-redis:
-  image: "redis:5.0-alpine"
-  logLevel: "notice"
-
-rrdcached:
-  image: "crazymax/rrdcached"
-  writeThreads: "4"
-  writeTimeout: "1800"
-  writeJitter: "1800"
-  flushDeadDataInterval: "3600"
-  logLevel: "LOG_INFO"
 
 storage:
   path: "/opt/kubes/storage/"
   mysql:
-    size: "1Gi"
-  redis:
     size: "1Gi"
   rrdcached:
     size: "1Gi"

@@ -1,0 +1,15 @@
+---
+msmtpd:
+  image: "crazymax/msmtpd:latest"
+  host: "smtp.gmail.com"
+  port: "587"
+  from: "foo@gmail.com"
+  TLS: "on"
+  startTLS: "on"
+  TLSchecker: "on"
+  auth: "on"
+
+credentials:
+  email:
+    user: "foo"
+    password: "bar"   

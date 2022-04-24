@@ -1,0 +1,17 @@
+---
+mysql:
+  database: "libreDB"
+  timeout: "60"
+  image: "mariadb:10.5"
+  allow_empty_password: "yes"
+
+credentials:
+  # passed into secrets
+  #application not in use yet
+  application:
+    administrativeUser: "foo"
+    administrativePassword: "bar"
+    administr  mysql:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"

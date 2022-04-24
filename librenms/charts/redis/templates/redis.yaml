@@ -43,7 +43,7 @@ spec:
             - name: REDIS_REQUIRED_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: redis-sec
                   key: redis_password
           ports:
             - name: redis

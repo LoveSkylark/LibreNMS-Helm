@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: librenms-cfg
+data:
+  TZ: {{ .Values.shared.TZ | quote }}
+  PUID: {{ .Values.shared.puid | quote }}
+  PGID: {{ .Values.shared.pgid | quote }}
+  REAL_IP_FROM: {{ .Values.shared.realIPfrom | quote }}
+  REAL_IP_HEADER: {{ .Values.shared.realIPheader | quote }}
+  LOG_IP_VAR: {{ .Values.shared.logIP | quote }}
+  UPLOAD_MAX_SIZE: {{ .Values.shared.uploadMAXsize | quote }}
+  MEMORY_LIMIT: {{ .Values.shared.MemoryLimit | quote }}
+  OPCACHE_MEM_SIZE: {{ .Values.shared.opcacheMEMsize | quote }}
+  DB_HOST: "{{ .Release.Name }}-database"
+  DB_NAME: {{ .Values.mysql.database  | quote }}
+  DB_TIMEOUT: {{ .Values.mysql.timeout  | quote }}
+  REDIS_HOST: "{{ .Release.Name }}-redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  MEMCACHED_HOST: "{{ .Release.Name }}-memcached"
+  MEMCACHED_PORT: "11211"
+  RRDCACHED_SERVER: "{{ .Release.Name }}-rrdcached:42217"
+  LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
+

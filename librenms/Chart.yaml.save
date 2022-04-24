@@ -1,0 +1,14 @@
+apiVersion: v2
+appVersion: 1.16.0
+description: A Helm chart for Kubernetes
+name: librechart
+type: application
+version: 0.1.0
+
+---
+dependencies:
+  - name: message-queue
+    condition: message-queue.enabled
+  - name: database
+    condition: database.enabled
+

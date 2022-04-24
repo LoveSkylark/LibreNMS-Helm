@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: memcached-cfg
+data:
+  TZ: {{ .Values.shared.TZ | quote }}
+  MEMCACHED_THREAD_COUNT: {{ .Values.memcached.threadCount | quote }}
+  MEMCACHED_CONNECTION_REQUESTS: {{ .Values.memcached.connectionRequests | quote }}
+  MEMCACHED_LOG_LEVEL: {{ .Values.memcached.logLevel | quote }}

@@ -1,0 +1,9 @@
+---
+memcached:
+  image: "memcached:alpine"
+  threadCount: 2
+  connectionRequests: 10
+  logLevel: ""
+
+shared:
+  TZ: "Europe/London"

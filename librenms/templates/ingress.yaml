@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: application
+  annotations:
+    # (Optional): Annotations for the Ingress Controller
+    # ---
+    # General:
+    # kubernetes.io/ingress.class: traefik
+    # 
+    # TLS configuration:
+    # traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # 
+    # Middleware:
+    # traefik.ingress.kubernetes.io/router.middlewares:your-middleware@kubernetescrd
+spec:
+  rules:
+  - host: "nms.test.local"  # Your hostname
+    http:
+      paths:
+      # Path-based routing settings:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-application
+            port:
+              number: 8000
+  defaultBackend:
+    service:
+      name: {{ .Release.Name }}-application
+      port:
+        number: 8000 
