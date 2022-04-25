@@ -19,3 +19,5 @@ helm install LibreNMS ./LibreChart
   
   
   This is a work in progress.
+  
+  ingress config does not contain cerificates setup
