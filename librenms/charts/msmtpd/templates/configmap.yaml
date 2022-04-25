@@ -4,10 +4,10 @@ kind: ConfigMap
 metadata:
   name: msmtpd-cfg
 data:
-  SMTP_HOST: {{ .Values.msmtpd.host | quote }}
-  SMTP_PORT: {{ .Values.msmtpd.port | quote }}
-  SMTP_TLS: {{ .Values.msmtpd.TLS | quote }}
-  SMTP_STARTTLS: {{ .Values.msmtpd.startTLS | quote }}
-  SMTP_TLS_CHECKCERT: {{ .Values.msmtpd.TLSchecker | quote }}
-  SMTP_AUTH: {{ .Values.msmtpd.auth | quote }}
-  SMTP_FROM: {{ .Values.msmtpd.from | quote }}
+  SMTP_HOST: {{ .Values.host | quote }}
+  SMTP_PORT: {{ .Values.port | quote }}
+  SMTP_TLS: {{ .Values.TLS | quote }}
+  SMTP_STARTTLS: {{ .Values.startTLS | quote }}
+  SMTP_TLS_CHECKCERT: {{ .Values.TLSchecker | quote }}
+  SMTP_AUTH: {{ .Values.auth | quote }}
+  SMTP_FROM: {{ .Values.from | quote }}

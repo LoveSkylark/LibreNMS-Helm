@@ -4,6 +4,6 @@ kind: ConfigMap
 metadata:
   name: mysql-cfg
 data:
-  TZ: {{ .Values.shared.TZ | quote }}
-  MYSQL_ALLOW_EMPTY_PASSWORD: {{ .Values.mysql.allow_empty_password | quote }}
-  MYSQL_DATABASE: {{ .Values.mysql.database | quote }}
+  TZ: {{ .Values.global.TZ | quote }}
+  MYSQL_ALLOW_EMPTY_PASSWORD: {{ .Values.allow_empty_password | quote }}
+  MYSQL_DATABASE: {{ .Values.database | quote }}

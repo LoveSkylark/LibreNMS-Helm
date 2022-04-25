@@ -11,7 +11,7 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: {{.Values.storage.rrdcached.size}}
+      storage: {{.Values.storage.size}}
   volumeName: {{.Release.Name}}-rrdcached
 
 ---
@@ -24,7 +24,7 @@ metadata:
 spec:
   storageClassName: ""
   capacity:
-    storage: {{.Values.storage.rrdcached.size}}
+    storage: {{.Values.storage.size}}
   accessModes:
     - ReadWriteOnce
   hostPath:

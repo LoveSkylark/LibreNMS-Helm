@@ -14,8 +14,8 @@ data:
   MEMORY_LIMIT: {{ .Values.shared.MemoryLimit | quote }}
   OPCACHE_MEM_SIZE: {{ .Values.shared.opcacheMEMsize | quote }}
   DB_HOST: "{{ .Release.Name }}-database"
-  DB_NAME: {{ .Values.mysql.database  | quote }}
-  DB_TIMEOUT: {{ .Values.mysql.timeout  | quote }}
+  DB_NAME: {{ .Values.mariadb.database  | quote }}
+  DB_TIMEOUT: {{ .Values.mariadb.timeout  | quote }}
   REDIS_HOST: "{{ .Release.Name }}-redis"
   REDIS_PORT: "6379"
   REDIS_DB: "0"

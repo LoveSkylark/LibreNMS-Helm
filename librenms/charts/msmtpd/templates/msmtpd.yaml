@@ -20,7 +20,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-msmtpd
-          image: "{{.Values.msmtpd.image}}"
+          image: "{{.Values.image}}"
           envFrom:
             - configMapRef:
                 name: msmtpd-cfg

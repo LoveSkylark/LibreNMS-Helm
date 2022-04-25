@@ -35,7 +35,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-memcached
-          image: "{{.Values.memcached.image}}"
+          image: "{{.Values.image}}"
           envFrom:
             - configMapRef:
                 name: memcached-cfg

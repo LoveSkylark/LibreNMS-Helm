@@ -1,27 +1,14 @@
 ---
-credentials:
-  # passed into secrets
-  #application not in use yet
-  application:
-    administrativeUser: "foo"
-    administrativePassword: "bar"
-    administrativeEmail: "foo@gmail.com"
-  mysql:
-    rootPassword: "fooRootPassword"
-    user: "foo"
-    password: "bar"
-  redis:
-    password: "bar"
-  email:
-    user: "foo"
-    password: "bar"   
-
-
+global:
+  TZ: "Atlantic/Reykjavik"
+  puid: "1000"
+  pgid: "1000"
 
 shared:
   TZ: "Europe/London"
   puid: "1000"
   pgid: "1000"
+  database: "libreDB2"
   realIPfrom: "0.0.0.0/32"
   realIPheader: "X-Forwarded-For"
   uploadMAXsize: "16M"
@@ -47,32 +34,31 @@ librenms:
 
 
 ## Services
-
-
 mariadb:
-  enabled: true
-memcached:
-  enabled: true
+  database: "librenms"
+  storage:
+    path: "/opt/kubes/storage/"
+    size: "1Gi"
+  credentials:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+
 redis:
-  enabled: true
-rrdcached:
-  enabled: true
-
-
-
-mysql:
-  database: "libreDB"
-  timeout: "60"
-
+  credentials:
+    password: "bar"
 
 msmtpd:
   host: "smtp.gmail.com"
   port: "587"
   from: "foo@gmail.com"
+  credentials:
+    email:
+      user: "foo"
+      password: "bar"   
+
 
 storage:
   path: "/opt/kubes/storage/"
-  mysql:
-    size: "1Gi"
   rrdcached:
     size: "1Gi"

@@ -36,7 +36,7 @@ spec:
       hostname: {{.Release.Name}}-database
       containers:
         - name: {{.Release.Name}}-database
-          image: {{.Values.mysql.image}}
+          image: {{.Values.image}}
           args:
             - mysqld
             - --innodb-file-per-table=1

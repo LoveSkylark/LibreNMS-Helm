@@ -4,5 +4,5 @@ kind: ConfigMap
 metadata:
   name: redis-cfg
 data:
-  TZ: {{ .Values.shared.TZ | quote }}
-  REDIS_LOG_LEVEL: {{ .Values.redis.logLevel | quote }}
+  TZ: {{ .Values.global.TZ | quote }}
+  REDIS_LOG_LEVEL: {{ .Values.logLevel | quote }}

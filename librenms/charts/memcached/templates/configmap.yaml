@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: memcached-cfg
 data:
-  TZ: {{ .Values.shared.TZ | quote }}
-  MEMCACHED_THREAD_COUNT: {{ .Values.memcached.threadCount | quote }}
-  MEMCACHED_CONNECTION_REQUESTS: {{ .Values.memcached.connectionRequests | quote }}
-  MEMCACHED_LOG_LEVEL: {{ .Values.memcached.logLevel | quote }}
+  TZ: {{ .Values.global.TZ | quote }}
+  MEMCACHED_THREAD_COUNT: {{ .Values.threadCount | quote }}
+  MEMCACHED_CONNECTION_REQUESTS: {{ .Values.connectionRequests | quote }}
+  MEMCACHED_LOG_LEVEL: {{ .Values.logLevel | quote }}

@@ -35,7 +35,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-redis
-          image: {{.Values.redis.image}}
+          image: {{.Values.image}}
           envFrom:
             - configMapRef:
                 name: redis-cfg

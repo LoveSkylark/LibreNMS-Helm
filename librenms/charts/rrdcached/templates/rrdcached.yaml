@@ -34,7 +34,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{.Release.Name}}-rrdcached
-          image: {{.Values.rrdcached.image}}
+          image: {{.Values.image}}
           envFrom:
             - configMapRef:
                 name: rrdcached-cfg
