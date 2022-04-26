@@ -3,6 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redis-cfg
+  labels:
+{{ include "common.labels" . | indent 4 }}
 data:
   TZ: {{ .Values.global.TZ | quote }}
   REDIS_LOG_LEVEL: {{ .Values.logLevel | quote }}

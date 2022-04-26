@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-dispatcher
   labels:
+{{ include "common.labels" . | indent 4 }}
     app: dispatcher
 spec:
   serviceName: dispatcher

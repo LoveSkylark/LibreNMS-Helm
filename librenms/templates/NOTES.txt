@@ -1,0 +1,4 @@
+You have deployed the following release: {{ .Release.Name }}.
+
+To view the correct namespace, you can run the command:
+  $ kubectl config set-context --current --namespace={{ .Release.Name }}

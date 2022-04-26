@@ -4,6 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{.Release.Name}}-database-claim
   labels:
+{{ include "common.labels" . | indent 4 }}
     app: database
 spec:
   accessModes:
@@ -20,6 +21,7 @@ kind: PersistentVolume
 metadata:
   name: {{.Release.Name}}-database
   labels:
+{{ include "common.labels" . | indent 4 }}
     type: database
 spec:
   storageClassName: ""

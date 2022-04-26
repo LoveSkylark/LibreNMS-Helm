@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   name: {{.Release.Name}}-msmtpd
   labels:
+{{ include "common.labels" . | indent 4 }}
     app: msmtpd
 spec:
   serviceName: msmtpd

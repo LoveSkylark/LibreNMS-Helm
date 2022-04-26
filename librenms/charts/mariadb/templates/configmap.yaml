@@ -3,6 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-cfg
+  labels:
+{{ include "common.labels" . | indent 4 }}
 data:
   TZ: {{ .Values.global.TZ | quote }}
   MYSQL_ALLOW_EMPTY_PASSWORD: {{ .Values.allow_empty_password | quote }}
