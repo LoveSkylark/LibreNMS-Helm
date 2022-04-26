@@ -3,6 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: rrdcached-cfg
+  labels:
+{{ include "common.labels" . | indent 4 }}
 data:
   TZ: {{ .Values.global.TZ | quote }}
   PUID: {{ .Values.global.puid | quote }}

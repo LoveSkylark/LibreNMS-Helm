@@ -4,6 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{.Release.Name}}-rrdcached-claim
   labels:
+{{ include "common.labels" . | indent 4 }}
     app: rrdcached
 spec:
   accessModes:
@@ -20,6 +21,7 @@ kind: PersistentVolume
 metadata:
   name: {{.Release.Name}}-rrdcached
   labels:
+{{ include "common.labels" . | indent 4 }}
     type: rrdcached
 spec:
   storageClassName: ""
