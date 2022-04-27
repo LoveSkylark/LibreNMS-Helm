@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Release.Name}}-memcached
+  name: memcached
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -19,7 +20,8 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Release.Name}}-memcached
+  name: memcached
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: memcached
@@ -37,7 +39,7 @@ spec:
       hostname: {{.Release.Name}}-memcached
       restartPolicy: Always
       containers:
-        - name: {{.Release.Name}}-memcached
+        - name: memcached
           image: "{{.Values.image}}"
           envFrom:
             - configMapRef:

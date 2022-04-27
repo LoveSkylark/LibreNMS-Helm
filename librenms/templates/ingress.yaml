@@ -26,11 +26,11 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}-application
+            name: application
             port:
               number: 8000
   defaultBackend:
     service:
-      name: {{ .Release.Name }}-application
+      name: application
       port:
         number: 8000 

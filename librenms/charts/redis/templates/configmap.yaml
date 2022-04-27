@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redis-cfg
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 data:

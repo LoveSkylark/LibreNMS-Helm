@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Release.Name}}-snmptrapd
+  name: snmptrapd
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -25,7 +26,8 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Release.Name}}-snmptrapd
+  name: snmptrapd
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: snmptrapd
@@ -43,7 +45,7 @@ spec:
       hostname: {{.Release.Name}}-snmptrapd
       restartPolicy: Always
       containers:
-        - name: {{.Release.Name}}-snmptrapd
+        - name: snmptrapd
           image: {{.Values.librenms.image}}
           envFrom:
             - configMapRef:
@@ -79,9 +81,9 @@ spec:
               containerPort: 162
               protocol: UDP
           volumeMounts:
-            - name: {{.Release.Name}}-rrdcached
+            - name: rrdcached
               mountPath: /data
       volumes:
-        - name: {{.Release.Name}}-rrdcached
+        - name: rrdcached
           persistentVolumeClaim:
-            claimName: {{.Release.Name}}-rrdcached-claim
+            claimName: rrdcached-claim

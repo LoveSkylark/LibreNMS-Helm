@@ -2,7 +2,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Release.Name}}-msmtpd
+  name: msmtpd
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: msmtpd
@@ -20,7 +21,7 @@ spec:
       hostname: {{.Release.Name}}-msmtpd
       restartPolicy: Always
       containers:
-        - name: {{.Release.Name}}-msmtpd
+        - name: msmtpd
           image: "{{.Values.image}}"
           envFrom:
             - configMapRef:

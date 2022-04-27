@@ -2,7 +2,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-dispatcher
+  name: dispatcher
+  namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: dispatcher
@@ -20,7 +21,7 @@ spec:
       hostname: {{ .Release.Name }}-dispatcher
       restartPolicy: Always
       containers:
-        - name: {{ .Release.Name }}-dispatcher
+        - name: dispatcher
           image: {{ .Values.librenms.image | quote }}
           envFrom:
             - configMapRef:
@@ -53,9 +54,9 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
-            - name: {{ .Release.Name }}-rrdcached
+            - name: rrdcached
               mountPath: /data
       volumes:
-        - name: {{ .Release.Name }}-rrdcached
+        - name: rrdcached
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-rrdcached-claim
+            claimName: rrdcached-claim
