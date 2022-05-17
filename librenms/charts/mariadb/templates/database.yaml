@@ -36,11 +36,11 @@ spec:
       labels:
         app: database
     spec:
-      hostname: {{.Release.Name}}-database
+      #hostname: "{{ .Release.Name }}-database"
       restartPolicy: Always
       containers:
         - name: database
-          image: {{.Values.image}}
+          image: {{ .Values.image }}
           args:
             - mysqld
             - --innodb-file-per-table=1
@@ -49,7 +49,7 @@ spec:
             - --collation-server=utf8mb4_unicode_ci
           envFrom:
             - configMapRef:
-                name: mysql-cfg
+                name: mariadb
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:

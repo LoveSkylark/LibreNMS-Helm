@@ -54,17 +54,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_password
             - name: LIBRENMS_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: redis-sec
                   key: redis_password
             - name: SIDECAR_SNMPTRAPD
               value: "1"

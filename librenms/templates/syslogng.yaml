@@ -7,7 +7,7 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: syslogng
   ports:
@@ -52,17 +52,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_password
             - name: LIBRENMS_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: redis-sec
                   key: redis_password          
             - name: SIDECAR_SYSLOGNG
               value: "1"

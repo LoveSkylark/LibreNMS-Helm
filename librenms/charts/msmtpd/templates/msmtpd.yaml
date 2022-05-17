@@ -18,14 +18,14 @@ spec:
       labels:
         app: msmtpd
     spec:
-      hostname: {{.Release.Name}}-msmtpd
+      #hostname: "{{.Release.Name}}-msmtpd"
       restartPolicy: Always
       containers:
         - name: msmtpd
           image: "{{.Values.image}}"
           envFrom:
             - configMapRef:
-                name: msmtpd-cfg
+                name: msmtpd
           env:
             - name: SMTP_USER
               valueFrom:

@@ -5,10 +5,6 @@ global:
   pgid: "1000"
 
 shared:
-  TZ: "Europe/London"
-  puid: "1000"
-  pgid: "1000"
-  database: "libreDB2"
   realIPfrom: "0.0.0.0/32"
   realIPheader: "X-Forwarded-For"
   uploadMAXsize: "16M"
@@ -17,11 +13,11 @@ shared:
   logIP: "remote_addr"
 
 application:
-  hostFQDN: "nms.test.local"
+  hostFQDN: "nms.test.home"
   replicas: "1"
   baseURL: ""
   SNMPcommunity: "test"
-  nPort: "30080"
+  nodePort: "30080"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"
 

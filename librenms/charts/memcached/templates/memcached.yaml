@@ -36,14 +36,14 @@ spec:
       labels:
         app: memcached
     spec:
-      hostname: {{.Release.Name}}-memcached
+      #hostname: {{.Release.Name}}-memcached
       restartPolicy: Always
       containers:
         - name: memcached
           image: "{{.Values.image}}"
           envFrom:
             - configMapRef:
-                name: memcached-cfg
+                name: memcached
           ports:
             - name: memcached
               containerPort: 11211

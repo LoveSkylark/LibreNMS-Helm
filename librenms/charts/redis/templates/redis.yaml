@@ -36,14 +36,14 @@ spec:
       labels:
         app: redis
     spec:
-      hostname: {{.Release.Name}}-redis
+      #hostname: {{.Release.Name}}-redis
       restartPolicy: Always
       containers:
         - name: redis
           image: {{.Values.image}}
           envFrom:
             - configMapRef:
-                name: redis-cfg
+                name: redis
           env:
             - name: REDIS_REQUIRED_PASSWORD
               valueFrom:

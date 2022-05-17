@@ -7,15 +7,15 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: application
   ports:
     - name: application
       protocol: TCP
-      nodePort: {{ .Values.application.nPort }}
       port: 8000
       targetPort: application
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,17 +49,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: mysql-sec
                   key: mysql_password
             - name: LIBRENMS_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: credentials
+                  name: redis-sec
                   key: redis_password
             - name: LIBRENMS_BASE_URL
               value: {{ .Values.application.baseURL | quote }}

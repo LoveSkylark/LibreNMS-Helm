@@ -35,14 +35,14 @@ spec:
       labels:
         app: rrdcached
     spec:
-      hostname: {{.Release.Name}}-rrdcached
+      #hostname: {{.Release.Name}}-rrdcached
       restartPolicy: Always
       containers:
         - name: rrdcached
           image: {{.Values.image}}
           envFrom:
             - configMapRef:
-                name: rrdcached-cfg
+                name: rrdcached
           securityContext:
             capabilities:
               add:
