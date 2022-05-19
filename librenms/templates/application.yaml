@@ -37,7 +37,7 @@ spec:
       labels:
         app: application
     spec:
-      hostname: {{ .Release.Name }}-application
+      hostname: application
       restartPolicy: Always
       containers:
         - name: application

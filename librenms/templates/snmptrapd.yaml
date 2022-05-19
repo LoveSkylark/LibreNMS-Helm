@@ -7,18 +7,16 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: snmptrapd
   ports:
     - name: snmptrapd-tcp
       protocol: TCP
-      nodePort: 30162
       port: 162
       targetPort: snmptrapd-tcp
     - name: snmptrapd-udp
       protocol: UDP
-      nodePort: 30162
       port: 162
       targetPort: snmptrapd-udp
 

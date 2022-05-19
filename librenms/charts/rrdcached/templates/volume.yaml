@@ -5,7 +5,6 @@ metadata:
   name: rrdcached-claim
   namespace: {{ .Release.Name }}
   labels:
-{{ include "common.labels" . | indent 4 }}
     app: rrdcached
 spec:
   accessModes:
@@ -13,23 +12,22 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: {{.Values.storage.size}}
-  volumeName: rrdcached
+      storage: {{ .Values.storageSize }}
+  volumeName: {{ .Release.Name }}-rrdcached
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: rrdcached
+  name: {{ .Release.Name }}-rrdcached
   namespace: {{ .Release.Name }}
   labels:
-{{ include "common.labels" . | indent 4 }}
     type: rrdcached
 spec:
   storageClassName: ""
   capacity:
-    storage: {{.Values.storage.size}}
+    storage: {{ .Values.storageSize }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{.Values.storage.path}}{{.Release.Name}}/rrdcached
+    path: {{ .Values.global.storagePath }}{{ .Release.Name }}/rrdcached

@@ -3,6 +3,8 @@ global:
   TZ: "Atlantic/Reykjavik"
   puid: "1000"
   pgid: "1000"
+  storagePath: "/opt/kubes/storage/"
+
 
 shared:
   realIPfrom: "0.0.0.0/32"
@@ -13,7 +15,7 @@ shared:
   logIP: "remote_addr"
 
 application:
-  hostFQDN: "nms.test.home"
+  hostFQDN: "nms.test.local"
   replicas: "1"
   baseURL: ""
   SNMPcommunity: "test"

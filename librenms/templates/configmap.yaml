@@ -19,12 +19,12 @@ data:
   DB_HOST: "database"
   DB_NAME: {{ .Values.mariadb.database  | quote }}
   DB_TIMEOUT: {{ .Values.mariadb.timeout  | quote }}
-  REDIS_HOST: "{{ .Release.Name }}-redis"
+  REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_DB: "0"
-  MEMCACHED_HOST: "{{ .Release.Name }}-memcached"
+  MEMCACHED_HOST: "memcached"
   MEMCACHED_PORT: "11211"
-  RRDCACHED_SERVER: "{{ .Release.Name }}-rrdcached:42217"
+  RRDCACHED_SERVER: "rrdcached:42217"
   LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
   mysql_user: {{ .Values.mariadb.credentials.user | quote }}
   mysql_password: {{ .Values.mariadb.credentials.password | quote }}

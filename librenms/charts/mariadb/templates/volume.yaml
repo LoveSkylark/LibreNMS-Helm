@@ -13,14 +13,14 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: {{.Values.storage.size}}
-  volumeName: database
+      storage: {{ .Values.storageSize }}
+  volumeName: {{ .Release.Name }}-database
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: database
+  name: {{ .Release.Name }}-database
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
@@ -28,8 +28,8 @@ metadata:
 spec:
   storageClassName: ""
   capacity:
-    storage: {{.Values.storage.size}}
+    storage: {{ .Values.storageSize }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{.Values.storage.path}}{{.Release.Name}}/database
+    path: {{ .Values.global.storagePath }}{{ .Release.Name }}/database
