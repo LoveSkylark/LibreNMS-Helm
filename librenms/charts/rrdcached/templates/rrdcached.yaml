@@ -53,9 +53,9 @@ spec:
               containerPort: 42217
               protocol: TCP
           volumeMounts:
-            - name: rrdcached
+            - name: application
               mountPath: /data
       volumes:
-        - name: rrdcached
+        - name: application
           persistentVolumeClaim:
-            claimName: rrdcached-claim
+            claimName: application

@@ -72,8 +72,28 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: database
-              mountPath: /data
+              mountPath: /var/lib/mysql
       volumes:
         - name: database
           persistentVolumeClaim:
-            claimName: database-claim
+            claimName: database
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+    app: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{ .Values.volumeSize }}
+  volumeName: "{{ .Release.Name }}-database"
+
+

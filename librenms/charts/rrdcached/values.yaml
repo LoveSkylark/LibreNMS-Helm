@@ -5,10 +5,8 @@ writeTimeout: "1800"
 writeJitter: "1800"
 flushDeadDataInterval: "3600"
 logLevel: "LOG_INFO"
-storageSize: "1Gi"
 
 global:
   TZ: "Europe/London"
   puid: "1000"
   pgid: "1000"
-  storagePath: "/opt/kubes/storage/"

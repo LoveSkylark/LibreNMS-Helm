@@ -54,9 +54,9 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
-            - name: rrdcached
+            - name: application
               mountPath: /data
       volumes:
-        - name: rrdcached
+        - name: application
           persistentVolumeClaim:
-            claimName: rrdcached-claim
+            claimName: application

@@ -79,9 +79,9 @@ spec:
               containerPort: 162
               protocol: UDP
           volumeMounts:
-            - name: rrdcached
+            - name: application
               mountPath: /data
       volumes:
-        - name: rrdcached
+        - name: application
           persistentVolumeClaim:
-            claimName: rrdcached-claim
+            claimName: application
