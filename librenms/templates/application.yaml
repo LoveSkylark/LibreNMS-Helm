@@ -77,9 +77,28 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - name: rrdcached
+            - name: application
               mountPath: /data
       volumes:
-        - name: rrdcached
+        - name: application
           persistentVolumeClaim:
-            claimName: rrdcached-claim
+            claimName: application
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: application
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+    app: application
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{ .Values.application.volumeSize }}
+  volumeName: "{{ .Release.Name }}-application"
+

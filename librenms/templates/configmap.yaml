@@ -10,12 +10,12 @@ data:
   TZ: {{ .Values.global.TZ | quote }}
   PUID: {{ .Values.global.puid | quote }}
   PGID: {{ .Values.global.pgid | quote }}
-  REAL_IP_FROM: {{ .Values.shared.realIPfrom | quote }}
-  REAL_IP_HEADER: {{ .Values.shared.realIPheader | quote }}
-  LOG_IP_VAR: {{ .Values.shared.logIP | quote }}
-  UPLOAD_MAX_SIZE: {{ .Values.shared.uploadMAXsize | quote }}
-  MEMORY_LIMIT: {{ .Values.shared.MemoryLimit | quote }}
-  OPCACHE_MEM_SIZE: {{ .Values.shared.opcacheMEMsize | quote }}
+  REAL_IP_FROM: {{ .Values.application.realIPfrom | quote }}
+  REAL_IP_HEADER: {{ .Values.application.realIPheader | quote }}
+  LOG_IP_VAR: {{ .Values.application.logIP | quote }}
+  UPLOAD_MAX_SIZE: {{ .Values.application.uploadMAXsize | quote }}
+  MEMORY_LIMIT: {{ .Values.application.MemoryLimit | quote }}
+  OPCACHE_MEM_SIZE: {{ .Values.application.opcacheMEMsize | quote }}
   DB_HOST: "database"
   DB_NAME: {{ .Values.mariadb.database  | quote }}
   DB_TIMEOUT: {{ .Values.mariadb.timeout  | quote }}

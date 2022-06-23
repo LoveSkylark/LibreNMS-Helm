@@ -3,26 +3,22 @@ global:
   TZ: "Atlantic/Reykjavik"
   puid: "1000"
   pgid: "1000"
-  storagePath: "/opt/kubes/storage/"
 
-
-shared:
+application:
+  hostFQDN: "nms.test.local"
+  replicas: "1"
+  volumeSize: "20Gi"
   realIPfrom: "0.0.0.0/32"
   realIPheader: "X-Forwarded-For"
   uploadMAXsize: "16M"
   MemoryLimit: "256M"
   opcacheMEMsize: "128"
   logIP: "remote_addr"
-
-application:
-  hostFQDN: "nms.test.local"
-  replicas: "1"
   baseURL: ""
   SNMPcommunity: "test"
   nodePort: "30080"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"
-
 dispatcher:
   replicas: "1"
   nodeID: "poller 1"
@@ -31,13 +27,13 @@ dispatcher:
 librenms:
   image: "librenms/librenms:latest"
 
+storage:
+  path: "/opt/kubes/storage/"
 
 ## Services
 mariadb:
   database: "librenms"
-  storage:
-    path: "/opt/kubes/storage/"
-    size: "2Gi"
+  volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
     user: "foo"
@@ -55,8 +51,3 @@ msmtpd:
     email:
       user: "foo"
       password: "bar"   
-
-rrdcached:
-  storage:
-    path: "/opt/kubes/storage/"
-    size: "2Gi"
