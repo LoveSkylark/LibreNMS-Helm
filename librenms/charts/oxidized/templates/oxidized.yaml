@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oxidized
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  selector:
+    app: oxidized
+  ports:
+    - name: oxidized
+      protocol: TCP
+      port: 8888
+      targetPort: oxidized
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: oxidized
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+    app: oxidized
+spec:
+  serviceName: oxidized
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oxidized
+  template:
+    metadata:
+      labels:
+        app: oxidized
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: oxidized
+          image: {{ .Values.image | quote }}
+          envFrom:
+            - configMapRef:
+                name: oxidized
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          ports:
+            - name: oxidized
+              containerPort: 8888
+              protocol: TCP
+          volumeMounts:
+            - name: application
+              mountPath: /root/.config/oxidized/
+              subPath: oxidized
+      volumes:
+        - name: application
+          persistentVolumeClaim:
+            claimName: application
+

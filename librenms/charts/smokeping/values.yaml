@@ -1,0 +1,7 @@
+---
+image: "lscr.io/linuxserver/smokeping:latest"
+
+global:
+  TZ: "Europe/London"
+  puid: "1000"
+  pgid: "1000"

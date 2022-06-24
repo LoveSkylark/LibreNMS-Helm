@@ -1,0 +1,1 @@
+php file may be copied int the /application/config to adjust the setup.
