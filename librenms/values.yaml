@@ -51,3 +51,9 @@ msmtpd:
     email:
       user: "foo"
       password: "bar"   
+
+smokeping:
+  hostFQDN: "smokeping.test.local"
+
+oxidized:
+  hostFQDN: "ox.test.local"

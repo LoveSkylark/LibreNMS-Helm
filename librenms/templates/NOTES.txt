@@ -1,5 +1,11 @@
 You have deployed the following release: {{ .Release.Name }}.
 
+Sites:
+http://{{ .Values.application.hostFQDN }}
+http://{{ .Values.oxidized.hostFQDN }}
+http://{{ .Values.smokeping.hostFQDN }}
+
+
 To view the correct namespace, you can run the command:
   $ kubectl config set-context --current --namespace={{ .Release.Name }}
 

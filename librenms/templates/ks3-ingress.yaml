@@ -21,6 +21,27 @@ spec:
             name: application
             port:
               number: 8000
+  - host: {{ .Values.smokeping.hostFQDN | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: smokeping
+            port:
+              number: 8081
+  - host: {{ .Values.oxidized.hostFQDN | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oxidized
+            port:
+              number: 8888
+
 
 ---
 apiVersion: v1
