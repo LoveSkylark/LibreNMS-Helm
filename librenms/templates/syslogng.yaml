@@ -31,7 +31,7 @@ metadata:
     app: syslogng
 spec:
   serviceName: syslogng
-  replicas: 1
+  replicas: {{ .Values.application.syslogng.replicas }}
   selector:
     matchLabels:
       app: syslogng
@@ -44,7 +44,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: syslogng
-          image: {{.Values.librenms.image}}
+          image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg

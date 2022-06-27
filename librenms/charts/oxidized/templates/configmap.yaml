@@ -8,3 +8,78 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
 data:
   CONFIG_RELOAD_INTERVAL: {{ .Values.reloadInterval | quote }}
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oxidized-file
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  config: |-
+    model: junos
+    resolve_dns: true
+    interval: 3600
+    use_syslog: false
+    debug: false
+    threads: 30
+    use_max_threads: false
+    timeout: 20
+    retries: 3
+    prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
+    next_adds_job: false
+    vars: {}
+    groups: {}
+    group_map: {}
+    models: {}
+    pid: "/root/.config/oxidized/pid"
+    crash:
+      directory: "/root/.config/oxidized/crashes"
+      hostnames: false
+    stats:
+      history_size: 10
+    input:
+      default: ssh, telnet
+      debug: false
+      ssh:
+        secure: false
+      ftp:
+        passive: true
+      utf8_encoded: true
+
+
+    username: {{ .Values.credentials.user }}
+    password: {{ .Values.credentials.password }}
+
+    rest: 0.0.0.0:8888
+    output:
+      default: git
+      git:
+          user: Oxidized
+          email: oxidized@example.com
+          repo: "~/.config/oxidized/oxidized.git"
+    source:
+      default: http
+      debug: false
+      http:
+        url: http://application:8000/api/v0/oxidized
+        map:
+          name: hostname
+          model: os
+          group: group
+        headers:
+          X-Auth-Token: {{ .Values.credentials.token }}
+    
+    groups:
+      other:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}
+      juniper:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}
+      cisco:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}

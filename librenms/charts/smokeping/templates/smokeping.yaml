@@ -52,6 +52,12 @@ spec:
               containerPort: 80
               protocol: TCP
           volumeMounts:
+            - name: smokeping-probes
+              mountPath: /config/Probes
+              subPath: Probes       
+            - name: smokeping-targets
+              mountPath: /config/Targets
+              subPath: Targets       
             - name: application
               mountPath: /data
               subPath: smokeping/data
@@ -62,4 +68,9 @@ spec:
         - name: application
           persistentVolumeClaim:
             claimName: application
-
+        - name: smokeping-probes
+          configMap:
+            name: smokeping-probes
+        - name: smokeping-targets
+          configMap:
+            name: smokeping-targets

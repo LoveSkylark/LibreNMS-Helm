@@ -44,7 +44,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: snmptrapd
-          image: {{.Values.librenms.image}}
+          image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg

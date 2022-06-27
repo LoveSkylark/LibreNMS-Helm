@@ -29,3 +29,47 @@ data:
   mysql_user: {{ .Values.mariadb.credentials.user | quote }}
   mysql_password: {{ .Values.mariadb.credentials.password | quote }}
   mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-file
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  config.php: |-
+    <?php
+    $config['enable_syslog'] =                      {{ .Values.application.syslogng.enable | quote }};
+    $config['syslog_purge'] =                       {{ .Values.application.syslogng.purge | quote }};
+
+    $config['enable_billing'] =                     {{ .Values.application.billing.enable | quote }};
+    $config['billing_data_purge'] =                 {{ .Values.application.billing.purge | quote }};
+    $config['billing']['95th_default_agg'] =        {{ .Values.application.billing.default95 | quote }};
+
+    $config['customers_descr'][] =                  {{ .Values.application.parsing.customers | quote }};
+    $config['transit_descr'][] =                    {{ .Values.application.parsing.transit | quote }};
+    $config['peering_descr'][] =                    {{ .Values.application.parsing.peering | quote }};
+    $config['core_descr'][] =                       {{ .Values.application.parsing.core | quote }};
+
+    $config['oxidized.enabled'][] =                 {{ .Values.oxidized.enable | quote }};
+    $config['oxidized']['url'] =                    "http://oxidized:8888";
+    $config['oxidized']['default_group'] =          'other';
+    $config['oxidized']['features']['versioning'] = {{ .Values.oxidized.featureVers | quote }};
+    $config['oxidized']['group_support'] =          {{ .Values.oxidized.groupSupport | quote }};
+    $config['oxidized']['reload_nodes'] =           {{ .Values.oxidized.reloadNodes | quote }};
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smokeping-file
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  librenms-smokeping: |-
+    /opt/librenms/lnms smokeping:generate --targets > /data/smokeping/config/librenms-targets.conf
+    /opt/librenms/lnms smokeping:generate --probes  > /data/smokeping/config/librenms-probes.conf

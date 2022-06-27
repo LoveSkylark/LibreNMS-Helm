@@ -9,7 +9,7 @@ metadata:
     app: dispatcher
 spec:
   serviceName: dispatcher
-  replicas: {{ .Values.dispatcher.replicas }}
+  replicas: {{ .Values.application.dispatcher.replicas }}
   selector:
     matchLabels:
       app: dispatcher
@@ -22,7 +22,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: dispatcher
-          image: {{ .Values.librenms.image | quote }}
+          image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg
@@ -43,9 +43,9 @@ spec:
                   name: redis-sec
                   key: redis_password
             #- name: DISPATCHER_NODE_ID
-            #  value: {{ .Values.dispatcher.nodeID | quote }}
+            #  value: {{ .Values.application.dispatcher.nodeID | quote }}
             - name: DISPATCHER_ARGS
-              value: {{ .Values.dispatcher.args | quote }}
+              value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
               value: "1"
           securityContext:
@@ -54,9 +54,15 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
+            - name: smokeping-file
+              mountPath: /etc/periodic/15min/librenms-smokeping
+              subPath: librenms-smokeping
             - name: application
               mountPath: /data
       volumes:
+        - name: smokeping-file
+          configMap:
+            name: smokeping-file
         - name: application
           persistentVolumeClaim:
             claimName: application

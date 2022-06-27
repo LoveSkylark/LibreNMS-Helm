@@ -41,7 +41,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: application
-          image: {{ .Values.librenms.image | quote }}
+          image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg
@@ -77,9 +77,15 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
+            - name: config-file
+              mountPath: /data/config/config.php
+              subPath: config.php
             - name: application
               mountPath: /data
       volumes:
+        - name: config-file
+          configMap:
+            name: config-file
         - name: application
           persistentVolumeClaim:
             claimName: application

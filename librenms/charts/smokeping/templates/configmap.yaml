@@ -10,3 +10,39 @@ data:
   TZ: {{ .Values.global.TZ | quote }}
   PUID: {{ .Values.global.puid | quote }}
   PGID: {{ .Values.global.pgid | quote }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smokeping-probes
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  Probes: |-
+    *** Probes ***
+
+    @include /config/librenms-probes.conf
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smokeping-targets
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  Targets: |-
+    *** Targets ***
+
+    probe = FPing
+
+    menu = Top
+    title = Network Latency Grapher
+    remark = Welcome to the SmokePing website of <b>{{ .Values.Company }}</b>. \
+            Here you will learn all about the latency of our network.
+
+    @include /config/librenms-targets.conf

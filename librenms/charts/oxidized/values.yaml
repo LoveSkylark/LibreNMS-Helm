@@ -1,4 +1,13 @@
 ---
 image: "oxidized/oxidized:latest"
 reloadInterval: 600
+hostFQDN: "ox.test.local"
+enable: 1
+groupSupport: 1
+featureVers: 1
+reloadNodes: 1
 
+credentials:
+  user: "foo"
+  password: "bar"  
+  token: 'ff7dd1796524fee831b52da61937d793'

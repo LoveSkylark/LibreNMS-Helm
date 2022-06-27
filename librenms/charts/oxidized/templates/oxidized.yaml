@@ -55,8 +55,13 @@ spec:
             - name: application
               mountPath: /root/.config/oxidized/
               subPath: oxidized
+            - name: oxidized-file
+              mountPath: /root/.config/oxidized/config
+              subPath: config
       volumes:
         - name: application
           persistentVolumeClaim:
             claimName: application
-
+        - name: oxidized-file
+          configMap:
+            name: oxidized-file
