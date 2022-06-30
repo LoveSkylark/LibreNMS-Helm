@@ -74,6 +74,6 @@ oxidized:
   hostFQDN: "ox.test.local"
 
   credentials:
-    user: "skylark"
-    password: "lotrScorpion11"
+    user: "deviceadmin"
+    password: "xxxxxxxxxx"
     token: "d4152ebd012aaaf79312a05d0fc2485d"
