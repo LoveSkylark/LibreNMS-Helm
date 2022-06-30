@@ -10,6 +10,8 @@ helm install LibreNMS ./LibreChart
 * LibreNMS - poller
 * LibreNMS - sylogng
 * LibreNMS - snmptrapd
+
+* Oxidized - config backup
   
 * mariadb
 * redis
