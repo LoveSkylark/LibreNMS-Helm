@@ -75,5 +75,5 @@ oxidized:
 
   credentials:
     user: "deviceadmin"
-    password: "xxxxxxxxxx"
-    token: "d4152ebd012aaaf79312a05d0fc2485d"
+    password: "devicepassword"
+    token: "API-token-generated-inside-LIBRE"
