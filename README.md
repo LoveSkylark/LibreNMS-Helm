@@ -2,7 +2,7 @@
 
 Translation of librenms/docker docker-compose to helm kube
 
-helm install LibreNMS ./LibreChart
+helm install <name-of-cluster> ./librenms
 
 
 ## Contains:
