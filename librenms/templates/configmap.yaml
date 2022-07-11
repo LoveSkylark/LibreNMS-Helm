@@ -60,6 +60,158 @@ data:
     $config['oxidized']['group_support'] =          {{ .Values.oxidized.groupSupport | quote }};
     $config['oxidized']['reload_nodes'] =           {{ .Values.oxidized.reloadNodes | quote }};
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xmatters-transport-file
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  Xmatters.php: |-
+    <?php
+    /* Copyright (C) 2019 Gardar <gardar@giraffi.net>
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+    /**
+    * Xmatters API Transport
+    * @author Gardar <gardar@giraffi.net>
+    * @copyright 2019 Gardar
+    * @license GPL
+    * @package LibreNMS
+    * @subpackage Alerts
+    */
+    namespace LibreNMS\Alert\Transport;
+
+    use LibreNMS\Alert\Transport;
+    use LibreNMS\Config;
+    use Log;
+
+    class Xmatters extends Transport
+    {
+        public function deliverAlert($obj, $opts)
+        {
+            if (!empty($this->config)) {
+                $opts['url'] = $this->config['xmatters-url'];
+                $opts['xmatters_instance'] = $this->config['xmatters_instance'];
+                $opts['xmatters_function'] = $this->config['xmatters_function'];
+                $opts['xmatters_api_key'] = $this->config['xmatters_api_key'];
+                $opts['xmatters_api_secret'] = $this->config['xmatters_api_secret'];
+            }
+            return $this->contactXmatters($obj, $opts);
+        }
+
+        public function contactXmatters($obj, $opts)
+        {
+            $url = ('https://' . $opts['xmatters_instance'] . '/api/integration/1/functions/' . $opts['xmatters_function'] . '/triggers');
+
+            $data = array(
+                'properties' => $obj,
+          'recipients' => $obj['contacts'],
+            );
+
+      $data['properties']['instance_url'] = (Config::get('base_url'));
+      $data['properties']['device_url'] = (Config::get('base_url') . '/device/' . $obj['device_id']);
+      $data['properties']['alert_url'] = (Config::get('base_url') . '/device/' . $obj['device_id'] . '/alerts/'  .$obj['alert_id']);
+      $data['properties']['device_groups'] = \DeviceCache::get($obj['device_id'])->groups->pluck('name');
+
+      if ($obj['severity'] = 'critical') {
+                $data['priority'] = 'High';
+            } elseif ($obj['severity'] = 'warning') {
+                $data['priority'] = 'Medium';
+            } elseif ($obj['severity'] = 'ok') {
+                $data['priority'] = 'Low';
+      }
+
+            if ($obj['state'] == 0) {
+                $data['properties']['event_state'] = 'ok';
+            } elseif ($obj['state'] == 1) {
+                $data['properties']['event_state'] = 'alert';
+            } elseif ($obj['state'] == 2) {
+                $data['properties']['event_state'] = 'ack';
+            } elseif ($obj['state'] == 3) {
+                $data['properties']['event_state'] = 'better';
+            } elseif ($obj['state'] == 4) {
+                $data['properties']['event_state'] = 'worse';
+      }
+
+      
+            $curl = curl_init();
+            set_curl_proxy($curl);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+      curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+      curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_setopt($curl, CURLOPT_USERPWD, $opts["xmatters_api_key"]. ":" . $opts["xmatters_api_secret"]);
+
+            $ret  = curl_exec($curl);
+            $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            if ($code = 202 && preg_match("/^\{\"requestId\"\:\".*\"/", $ret))  {
+                Log::info('Creating xMatters event.', ['code' => $code, 'response' => $ret]);
+                return true;
+      }
+
+      else {
+                Log::error('Error when creating xMatters event.', ['code' => $code, 'response' => $ret]);
+                return false;
+            }
+
+        }
+
+        public static function configTemplate()
+        {
+            return [
+                'config' => [
+                    [
+                        'title' => 'xMatters Instance',
+                        'name' => 'xmatters_instance',
+                        'descr' => 'The hostname of the xMatters instance.',
+                        'type' => 'text'
+                    ],
+                    [
+                        'title' => 'xMatters Function',
+                        'name' => 'xmatters_function',
+                        'descr' => 'The ID of the xmatters flow http trigger or legacy inbound integration.',
+                        'type' => 'text'
+                    ],
+                    [
+                        'title' => 'xMatters API Key',
+                        'name' => 'xmatters_api_key',
+                        'descr' => 'The API Key key for authenticating the flow http trigger or legacy inbound integration.',
+                        'type' => 'text'
+                    ],
+                    [
+                        'title' => 'xMatters API Secret',
+                        'name' => 'xmatters_api_secret',
+                        'descr' => 'The Secret matching the API Key for authenticating the flow http trigger or legacy inbound integration.',
+                        'type' => 'password'
+                    ]
+                ],
+                'validation' => [
+                    'xmatters_instance' => 'required|string',
+                    'xmatters_function' => 'required|string',
+                    'xmatters_api_key' => 'required|string',
+                    'xmatters_api_secret' => 'required|string'
+                ]
+            ];
+        }
+    }
+
 
 ---
 apiVersion: v1
@@ -73,3 +225,6 @@ data:
   librenms-smokeping: |-
     /opt/librenms/lnms smokeping:generate --targets > /data/smokeping/config/librenms-targets.conf
     /opt/librenms/lnms smokeping:generate --probes  > /data/smokeping/config/librenms-probes.conf
+
+
+  
