@@ -1,15 +1,16 @@
 #!/bin/sh
 
+cd ~
 echo "############## Updatinga Linux ##############"
 export DEBIAN_FRONTEND=noninteractive
-sudo apt update && sudo apt upgrade -y
+apt update && apt upgrade -y
 
 echo "############## Installing basic tools ##############"
 apt install vim git
 
 echo "############## Adding alias for KUBE & HELM##############"
-mv ~/.bash_aliases ~/.bash_aliases.backup
-wget https://raw.githubusercontent.com/LoveSkylark/dotfiles/main/Linux/.bash_aliases ~
+mv .bash_aliases .bash_aliases.backup
+wget https://raw.githubusercontent.com/LoveSkylark/dotfiles/main/Linux/.bash_aliases
 exec "$SHELL"
 
 echo "############## Downloading and installing K3S ##############"
@@ -23,7 +24,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 echo "############## Fetching helm chart ##############"
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
-mv ./example.values.yaml.example values.yaml
+mv ./example/values.yaml.example values.yaml
 
 echo "############## seting up Libre cluster ##############"
 
