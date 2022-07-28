@@ -27,7 +27,7 @@ mv ./example.values.yaml.example values.yaml
 
 echo "############## seting up Libre cluster ##############"
 
-echo "usfeull short cuts:"
+echo " usefull short cuts:"
 echo "    k=kubectl"
 echo "       kl                            // list all resoucess in namsepace"
 echo "       kall                          // list all resoucess in all namsepaces"
