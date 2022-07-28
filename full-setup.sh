@@ -19,3 +19,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 echo "Downloading and installing HELM"
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+echo "############## seting up Libre cluster ##############"
+wget https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Helm/main/example/values.yaml.example
+mv values.yaml.example values.yaml
