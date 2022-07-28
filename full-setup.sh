@@ -14,6 +14,6 @@ exec "$SHELL"
 
 echo "Downloading and installing K3S"
 export INSTALL_K3S_BIN_DIR=/usr/local/bin
-curl -sfL https://get.k3s.io | sh -
+curl -sfL 'https://get.k3s.io' | sh -
 
 
