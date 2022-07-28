@@ -7,7 +7,7 @@
 #echo "############## Installing basic tools ##############"
 #apt install vim
 
-#echo "updating alias library for KUBE & HELM"
+#echo "############## Adding alias for KUBE & HELM##############"
 #mv ~/.bash_aliases ~/.bash_aliases.backup
 #wget https://raw.githubusercontent.com/LoveSkylark/dotfiles/main/Linux/.bash_aliases ~
 #exec "$SHELL"
