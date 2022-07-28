@@ -18,5 +18,3 @@
 
 echo "Downloading and installing HELM"
 curl -sfL 'https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3' | sh -
-
-
