@@ -25,7 +25,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 echo "############## Fetching helm chart ##############"
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
-mv ./example/values.yaml.example values.yaml
+mv ./example/values.yaml.example config.yaml
 
 echo "############## seting up Libre cluster ##############"
 
@@ -47,7 +47,7 @@ echo ""
 echo ""
 echo "               next step:"
 echo "                     1. configure your cluster by editing values.yaml (can be re-named to <corportation>.yaml)" 
-echo "                     2. build the cluster using 'hin <clustername> ./librenms vlaues.yaml (or  <corportation>.yaml)"
+echo "                     2. build the cluster using 'hin <clustername> LibreNMS-Helm/librenms config.yaml (or  <corportation>.yaml)"
 echo ""
 echo ""
 exec "$SHELL"
