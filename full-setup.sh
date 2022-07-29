@@ -11,7 +11,7 @@ apt install vim git
 echo "############## Adding alias for KUBE & HELM##############"
 mv .bash_aliases .bash_aliases.backup
 wget https://raw.githubusercontent.com/LoveSkylark/dotfiles/main/Linux/.bash_aliases
-exec "$SHELL"
+
 
 echo "############## Downloading and installing K3S ##############"
 export INSTALL_K3S_BIN_DIR=/usr/local/bin
@@ -50,3 +50,4 @@ echo "                     1. configure your cluster by editing values.yaml (can
 echo "                     2. build the cluster using 'hin <clustername> ./librenms vlaues.yaml (or  <corportation>.yaml)"
 echo ""
 echo ""
+exec "$SHELL"
