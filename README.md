@@ -12,7 +12,7 @@ To install KUBE & HELM simply run:
 
 To start the cluster:
 * edit values.yaml (with your setup reqierments)
-* hin <clustername> LibreNMS-Helm/librenms config.yaml
+* hin "clustername" LibreNMS-Helm/librenms config.yaml
 
     
 
