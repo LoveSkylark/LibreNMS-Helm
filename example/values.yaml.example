@@ -42,7 +42,7 @@ application:
     core: "i"
 
 storage:
-  path: "/opt/kubes/storage/"
+  path: "/data"
 
 ## Services
 mariadb:
