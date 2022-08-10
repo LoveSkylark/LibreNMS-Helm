@@ -37,13 +37,6 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
-            - name: LIBRENMS_REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-sec
-                  key: redis_password
-            #- name: DISPATCHER_NODE_ID
-            #  value: {{ .Values.application.dispatcher.nodeID | quote }}
             - name: DISPATCHER_ARGS
               value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
