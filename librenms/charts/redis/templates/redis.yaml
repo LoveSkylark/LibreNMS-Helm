@@ -44,12 +44,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: redis
-          env:
-            - name: REDIS_REQUIRED_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-sec
-                  key: redis_password
           ports:
             - name: redis
               containerPort: 6378
