@@ -56,11 +56,6 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
-            - name: LIBRENMS_REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-sec
-                  key: redis_password
             - name: LIBRENMS_BASE_URL
               value: {{ .Values.application.baseURL | quote }}
             - name: LIBRENMS_WEATHERMAP
