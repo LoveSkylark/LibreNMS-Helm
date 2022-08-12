@@ -56,7 +56,6 @@ spec:
             - name: application
               mountPath: /data/journal
               subPath: journal
-          volumeMounts:
             - name: application
               mountPath: /data/db
               subPath:  rrd
