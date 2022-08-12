@@ -54,7 +54,12 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: application
-              mountPath: /data
+              mountPath: /data/journal
+              subPath: journal
+          volumeMounts:
+            - name: application
+              mountPath: /data/db
+              subPath:  rrd
       volumes:
         - name: application
           persistentVolumeClaim:
