@@ -53,10 +53,6 @@ mariadb:
     user: "foo"
     password: "bar"
 
-redis:
-  credentials:
-    password: "bar"
-
 msmtpd:
   host: "smtp.gmail.com"
   port: "587"
