@@ -21,9 +21,10 @@ data:
   DB_TIMEOUT: {{ .Values.mariadb.timeout  | quote }}
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"
+  REDIS_SCHEME: "tcp"
   REDIS_DB: "0"
-  MEMCACHED_HOST: "memcached"
-  MEMCACHED_PORT: "11211"
+  CACHE_DRIVER: "redis"
+  SESSION_DRIVER: "redis"
   RRDCACHED_SERVER: "rrdcached:42217"
   LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
   mysql_user: {{ .Values.mariadb.credentials.user | quote }}
@@ -43,6 +44,8 @@ data:
     <?php
     $config['enable_syslog'] =                      {{ .Values.application.syslogng.enable | quote }};
     $config['syslog_purge'] =                       {{ .Values.application.syslogng.purge | quote }};
+
+    $config['snmp']['community'] =                  array( {{ .Values.application.SNMPcommunity }} );
 
     $config['enable_billing'] =                     {{ .Values.application.billing.enable | quote }};
     $config['billing_data_purge'] =                 {{ .Values.application.billing.purge | quote }};
@@ -71,31 +74,10 @@ metadata:
 data:
   Xmatters.php: |-
     <?php
-    /* Copyright (C) 2019 Gardar <gardar@giraffi.net>
-    * This program is free software: you can redistribute it and/or modify
-    * it under the terms of the GNU General Public License as published by
-    * the Free Software Foundation, either version 3 of the License, or
-    * (at your option) any later version.
-    *
-    * This program is distributed in the hope that it will be useful,
-    * but WITHOUT ANY WARRANTY; without even the implied warranty of
-    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-    * GNU General Public License for more details.
-    *
-    * You should have received a copy of the GNU General Public License
-    * along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-
-    /**
-    * Xmatters API Transport
-    * @author Gardar <gardar@giraffi.net>
-    * @copyright 2019 Gardar
-    * @license GPL
-    * @package LibreNMS
-    * @subpackage Alerts
-    */
     namespace LibreNMS\Alert\Transport;
 
     use LibreNMS\Alert\Transport;
+    use LibreNMS\Util\Proxy;
     use LibreNMS\Config;
     use Log;
 
@@ -104,8 +86,7 @@ data:
         public function deliverAlert($obj, $opts)
         {
             if (!empty($this->config)) {
-                $opts['url'] = $this->config['xmatters-url'];
-                $opts['xmatters_instance'] = $this->config['xmatters_instance'];
+                $opts['xmatters_url'] = $this->config['xmatters_url'];
                 $opts['xmatters_function'] = $this->config['xmatters_function'];
                 $opts['xmatters_api_key'] = $this->config['xmatters_api_key'];
                 $opts['xmatters_api_secret'] = $this->config['xmatters_api_secret'];
@@ -115,17 +96,19 @@ data:
 
         public function contactXmatters($obj, $opts)
         {
-            $url = ('https://' . $opts['xmatters_instance'] . '/api/integration/1/functions/' . $opts['xmatters_function'] . '/triggers');
+            $url = ($opts['xmatters_url'] . '/api/integration/1/functions/' . $opts['xmatters_function'] . '/triggers');
+            $curl = curl_init();
+            $base_url = Config::get('base_url');
 
             $data = array(
                 'properties' => $obj,
-          'recipients' => $obj['contacts'],
+                'recipients' => $obj['contacts'],
             );
 
-      $data['properties']['instance_url'] = (Config::get('base_url'));
-      $data['properties']['device_url'] = (Config::get('base_url') . '/device/' . $obj['device_id']);
-      $data['properties']['alert_url'] = (Config::get('base_url') . '/device/' . $obj['device_id'] . '/alerts/'  .$obj['alert_id']);
-      $data['properties']['device_groups'] = \DeviceCache::get($obj['device_id'])->groups->pluck('name');
+            $data['properties']['instance_url'] = (Config::get('base_url'));
+            $data['properties']['device_url'] = (Config::get('base_url') . '/device/' . $obj['device_id']);
+            $data['properties']['alert_url'] = (Config::get('base_url') . '/device/' . $obj['device_id'] . '/alerts/'  .$obj['alert_id']);
+            $data['properties']['device_groups'] = \DeviceCache::get($obj['device_id'])->groups->pluck('name');
 
       if ($obj['severity'] = 'critical') {
                 $data['priority'] = 'High';
@@ -147,30 +130,31 @@ data:
                 $data['properties']['event_state'] = 'worse';
       }
 
-      
-            $curl = curl_init();
-            set_curl_proxy($curl);
+            $alert_message = json_encode($data);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            Proxy::applyToCurl($curl);
             curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-      curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-      curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($curl, CURLOPT_USERPWD, $opts["xmatters_api_key"]. ":" . $opts["xmatters_api_secret"]);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $alert_message);
+
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($curl, CURLOPT_USERPWD, $opts["xmatters_api_key"]. ":" . $opts["xmatters_api_secret"]);
 
             $ret  = curl_exec($curl);
             $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             if ($code = 202 && preg_match("/^\{\"requestId\"\:\".*\"/", $ret))  {
                 Log::info('Creating xMatters event.', ['code' => $code, 'response' => $ret]);
-                return true;
-      }
-
-      else {
-                Log::error('Error when creating xMatters event.', ['code' => $code, 'response' => $ret]);
-                return false;
+                    return true;
             }
 
+            else {
+                    Log::error('Error when creating xMatters event.', ['code' => $code, 'response' => $ret]);
+                    return false;
+            }
+
+            return true;
         }
 
         public static function configTemplate()
@@ -178,8 +162,8 @@ data:
             return [
                 'config' => [
                     [
-                        'title' => 'xMatters Instance',
-                        'name' => 'xmatters_instance',
+                        'title' => 'xMatters URL',
+                        'name' => 'xmatters_url',
                         'descr' => 'The hostname of the xMatters instance.',
                         'type' => 'text'
                     ],
@@ -203,7 +187,7 @@ data:
                     ]
                 ],
                 'validation' => [
-                    'xmatters_instance' => 'required|string',
+                    'xmatters_url' => 'required|url',
                     'xmatters_function' => 'required|string',
                     'xmatters_api_key' => 'required|string',
                     'xmatters_api_secret' => 'required|string'

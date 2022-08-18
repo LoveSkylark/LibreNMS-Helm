@@ -47,15 +47,21 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
-            - name: smokeping-file
-              mountPath: /etc/periodic/15min/librenms-smokeping
-              subPath: librenms-smokeping
+            - name: config-file
+              mountPath: /data/config/config.php
+              subPath: config.php
+            - name: xmatters-transport-file
+              mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
+              subPath: Xmatters.php
             - name: application
               mountPath: /data
       volumes:
-        - name: smokeping-file
+        - name: config-file
           configMap:
-            name: smokeping-file
+            name: config-file
+        - name: xmatters-transport-file
+          configMap:
+            name: xmatters-transport-file
         - name: application
           persistentVolumeClaim:
             claimName: application

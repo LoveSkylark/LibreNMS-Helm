@@ -1,0 +1,79 @@
+---
+global:
+  TZ: "Atlantic/Reykjavik"
+  puid: "1000"
+  pgid: "1000"
+
+
+Company: "TEST CO"
+
+application:
+  hostFQDN: "nms.test.local"
+  replicas: "1"
+  image: "librenms/librenms:latest"
+  volumeSize: "20Gi"
+  realIPfrom: "0.0.0.0/32"
+  realIPheader: "X-Forwarded-For"
+  uploadMAXsize: "16M"
+  MemoryLimit: "256M"
+  opcacheMEMsize: "128"
+  logIP: "remote_addr"
+  baseURL: ""
+  SNMPcommunity: "test"
+  nodePort: "30080"
+  weathermap: "false"
+  weathermapSchedule: "*/5 * * * *"
+  dispatcher:
+    replicas: "1"
+    nodeID: "poller 1"
+    args: ""
+  syslogng:
+    replicas: "1"
+    enable: "1"
+    purge: "95"
+  billing:
+    enable: "1"
+    purge: "95"
+    default95: "1"
+  parsing:
+    customers: "c"
+    transit: "t"
+    peering: "p"
+    core: "i"
+
+storage:
+  path: "/opt/kubes/storage/"
+
+## Services
+mariadb:
+  database: "librenms"
+  volumeSize: "20Gi"
+  credentials:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+
+redis:
+  credentials:
+    password: "bar"
+
+msmtpd:
+  host: "smtp.gmail.com"
+  port: "587"
+  from: "foo@gmail.com"
+  credentials:
+    email:
+      user: "foo"
+      password: "bar"   
+
+smokeping:
+  hostFQDN: "smokeping.test.local"
+
+oxidized:
+  enable: "1"
+  hostFQDN: "ox.test.local"
+
+  credentials:
+    user: "deviceadmin"
+    password: "devicepassword"
+    token: "API-token-generated-inside-LIBRE"

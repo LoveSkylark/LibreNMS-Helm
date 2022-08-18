@@ -36,7 +36,6 @@ spec:
       labels:
         app: redis
     spec:
-      #hostname: {{.Release.Name}}-redis
       restartPolicy: Always
       containers:
         - name: redis
@@ -46,4 +45,4 @@ spec:
                 name: redis
           ports:
             - name: redis
-              containerPort: 6378
+              containerPort: 6379
