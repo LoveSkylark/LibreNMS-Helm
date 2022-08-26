@@ -37,6 +37,10 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
+            - name: DISPATCHER_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: DISPATCHER_ARGS
               value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
