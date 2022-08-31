@@ -2,8 +2,5 @@
 image: "redis:5.0-alpine"
 logLevel: "notice"
 
-credentials:
-  password: "bar"
-
 global:
   TZ: "Europe/London"

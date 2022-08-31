@@ -2,10 +2,11 @@
 image: "oxidized/oxidized:latest"
 reloadInterval: 600
 hostFQDN: "ox.test.local"
-enable: 1
-groupSupport: 1
-featureVers: 1
-reloadNodes: 1
+enable: true
+groupSupport: true
+featureVers: true
+reloadNodes: true
+default_group: "group"
 
 credentials:
   user: "foo"

@@ -20,6 +20,8 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
 data:
   config: |-
+    username: {{ .Values.credentials.user }}
+    password: {{ .Values.credentials.password }}
     model: junos
     resolve_dns: true
     interval: 3600
@@ -32,9 +34,23 @@ data:
     prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
     next_adds_job: false
     vars: {}
-    groups: {}
+    groups:
+      other:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}
+      juniper:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}
+      cisco:
+        username: {{ .Values.credentials.user }}
+        password: {{ .Values.credentials.password }}
     group_map: {}
     models: {}
+    model_map:
+      juniper: junos
+      cisco: ios
+      mikrotik: routeros
+      ubiquiti: airos
     pid: "/root/.config/oxidized/pid"
     crash:
       directory: "/root/.config/oxidized/crashes"
@@ -50,36 +66,26 @@ data:
         passive: true
       utf8_encoded: true
 
-
-    username: {{ .Values.credentials.user }}
-    password: {{ .Values.credentials.password }}
-
     rest: 0.0.0.0:8888
     output:
       default: git
       git:
           user: Oxidized
           email: oxidized@example.com
-          repo: "~/.config/oxidized/oxidized.git"
+          repo: "~/.config/oxidized/configs"
     source:
       default: http
       debug: false
       http:
         url: http://application:8000/api/v0/oxidized
+        file: "~/.config/oxidized/router.db"
+        delimiter: !ruby/regexp /:/
         map:
           name: hostname
           model: os
+          username: username
+          password: password
           group: group
         headers:
           X-Auth-Token: {{ .Values.credentials.token }}
     
-    groups:
-      other:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
-      juniper:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
-      cisco:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
