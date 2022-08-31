@@ -19,7 +19,7 @@ application:
   opcacheMEMsize: "128"
   logIP: "remote_addr"
   baseURL: ""
-  SNMPcommunity: "test"
+  SNMPcommunity: "'snmp1','snmp2'"
   nodePort: "30080"
   weathermap: "false"
   weathermapSchedule: "*/5 * * * *"

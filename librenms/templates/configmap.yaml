@@ -27,10 +27,7 @@ data:
   SESSION_DRIVER: "redis"
   RRDCACHED_SERVER: "rrdcached:42217"
   LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
-  mysql_user: {{ .Values.mariadb.credentials.user | quote }}
-  mysql_password: {{ .Values.mariadb.credentials.password | quote }}
-  mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
-
+  
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -56,17 +53,12 @@ data:
     $config['peering_descr'][] =                    {{ .Values.application.parsing.peering | quote }};
     $config['core_descr'][] =                       {{ .Values.application.parsing.core | quote }};
 
-    //$config['oxidized.enabled'][] =                 {{ .Values.oxidized.enable | quote }};
+    $config['oxidized.enabled'][] =                 {{ .Values.oxidized.enable | quote }};
     $config['oxidized']['url'] =                    "http://oxidized:8888";
-    //$config['oxidized']['default_group'] =          {{ .Values.oxidized.default_group | quote }};
-    //$config['oxidized']['features']['versioning'] = {{ .Values.oxidized.featureVers | quote }};
-    //$config['oxidized']['group_support'] =          {{ .Values.oxidized.groupSupport | quote }};
-    //$config['oxidized']['reload_nodes'] =           {{ .Values.oxidized.reloadNodes | quote }};
-    $config['oxidized']['enabled']                  = TRUE;
-    $config['oxidized']['features']['versioning']   = true;
-    $config['oxidized']['group_support']            = true;
-    $config['oxidized']['default_group']            = 'default';
-     $config['oxidized']['reload_nodes']             = true;
+    $config['oxidized']['default_group'] =          {{ .Values.oxidized.default_group | quote }};
+    $config['oxidized']['features']['versioning'] = {{ .Values.oxidized.featureVers | quote }};
+    $config['oxidized']['group_support'] =          {{ .Values.oxidized.groupSupport | quote }};
+    $config['oxidized']['reload_nodes'] =           {{ .Values.oxidized.reloadNodes | quote }};
 
 ---
 apiVersion: v1
