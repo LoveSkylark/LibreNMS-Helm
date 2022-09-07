@@ -41,8 +41,6 @@ echo ""
 mv .bash_aliases .bash_aliases.backup
 cp LibreNMS-Helm/install/bash .bash_aliases
 echo ""
-echo " Press any key to start configuring the cluster"
-echo ""
 nano ~/config.yaml
 echo ""
 echo ""
