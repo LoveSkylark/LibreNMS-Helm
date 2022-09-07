@@ -59,9 +59,9 @@ spec:
             - name: LIBRENMS_BASE_URL
               value: {{ .Values.application.baseURL | quote }}
             - name: LIBRENMS_WEATHERMAP
-              value: {{ .Values.application.weathermap | quote }}
+              value: {{ .Values.application.weathermap.enable | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE
-              value: {{ .Values.application.weathermapSchedule | quote }}
+              value: {{ .Values.application.weathermap.schedule | quote }}
           securityContext:
             capabilities:
               add:

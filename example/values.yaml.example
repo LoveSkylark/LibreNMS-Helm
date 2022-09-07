@@ -1,24 +1,33 @@
----
+#########################################################
+##  Edit this file to configure the monitoring cluster ##
+##  whole configuration template can be found under:   ##
+##        LibreNMS-Helm/librenms/values.yaml           ##
+#########################################################
+
 global:
   TZ: "Atlantic/Reykjavik"
 
 Company: "TEST CO"
 
 application:
-  hostFQDN: "nms.test.local"
-  volumeSize: "60Gi"
-  realIPfrom: "0.0.0.0/32"
-  SNMPcommunity: "'test','public'"
-  weathermap: "true"
-  weathermapSchedule: "*/5 * * * *"
+
+  host:
+    FQDN: "nms.test.local"
+    volumeSize: "20Gi"
+
+  SNMPcommunity: 
+    - "community-string-1"
+    - "community-string-2"
+
+  dispatcher:
+    # 1 replica per 100 devices
+    replicas: "1"
 
 storage:
-  path: "/opt/kubes/storage/"
+  path: "/data/"
 
-## Services
 mariadb:
-  database: "librenms"
-  volumeSize: "50Gi"
+  volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
     user: "foo"
@@ -34,12 +43,12 @@ msmtpd:
       password: "bar"   
 
 smokeping:
-  hostFQDN: "smokeping.test.local"
+  host:
+    FQDN: "smokeping.test.local"
 
 oxidized:
-  enable: "1"
-  hostFQDN: "ox.test.local"
-
+  host:
+    FQDN: "ox.test.local"
   credentials:
     user: "deviceadmin"
     password: "devicepassword"

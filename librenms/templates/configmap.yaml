@@ -7,66 +7,30 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
 data:
-  TZ: {{ .Values.global.TZ | quote }}
-  PUID: {{ .Values.global.puid | quote }}
-  PGID: {{ .Values.global.pgid | quote }}
-  REAL_IP_FROM: {{ .Values.application.realIPfrom | quote }}
-  REAL_IP_HEADER: {{ .Values.application.realIPheader | quote }}
-  LOG_IP_VAR: {{ .Values.application.logIP | quote }}
-  UPLOAD_MAX_SIZE: {{ .Values.application.uploadMAXsize | quote }}
-  MEMORY_LIMIT: {{ .Values.application.MemoryLimit | quote }}
-  OPCACHE_MEM_SIZE: {{ .Values.application.opcacheMEMsize | quote }}
-  DB_HOST: "database"
-  DB_NAME: {{ .Values.mariadb.database  | quote }}
-  DB_TIMEOUT: {{ .Values.mariadb.timeout  | quote }}
-  REDIS_HOST: "redis"
-  REDIS_PORT: "6379"
-  REDIS_SCHEME: "tcp"
-  REDIS_DB: "0"
-  CACHE_DRIVER: "redis"
-  SESSION_DRIVER: "redis"
-  RRDCACHED_SERVER: "rrdcached:42217"
-  LIBRENMS_SNMP_COMMUNITY: {{ .Values.application.SNMPcommunity | quote }}
-  mysql_user: {{ .Values.mariadb.credentials.user | quote }}
-  mysql_password: {{ .Values.mariadb.credentials.password | quote }}
-  mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-file
-  namespace: {{ .Release.Name }}
-  labels:
-{{ include "common.labels" . | indent 4 }}
-data:
-  config.php: |-
-    <?php
-    $config['enable_syslog'] =                      {{ .Values.application.syslogng.enable | quote }};
-    $config['syslog_purge'] =                       {{ .Values.application.syslogng.purge | quote }};
-
-    $config['snmp']['community'] =                  array( {{ .Values.application.SNMPcommunity }} );
-
-    $config['enable_billing'] =                     {{ .Values.application.billing.enable | quote }};
-    $config['billing_data_purge'] =                 {{ .Values.application.billing.purge | quote }};
-    $config['billing']['95th_default_agg'] =        {{ .Values.application.billing.default95 | quote }};
-
-    $config['customers_descr'][] =                  {{ .Values.application.parsing.customers | quote }};
-    $config['transit_descr'][] =                    {{ .Values.application.parsing.transit | quote }};
-    $config['peering_descr'][] =                    {{ .Values.application.parsing.peering | quote }};
-    $config['core_descr'][] =                       {{ .Values.application.parsing.core | quote }};
-
-    //$config['oxidized.enabled'][] =                 {{ .Values.oxidized.enable | quote }};
-    $config['oxidized']['url'] =                    "http://oxidized:8888";
-    //$config['oxidized']['default_group'] =          {{ .Values.oxidized.default_group | quote }};
-    //$config['oxidized']['features']['versioning'] = {{ .Values.oxidized.featureVers | quote }};
-    //$config['oxidized']['group_support'] =          {{ .Values.oxidized.groupSupport | quote }};
-    //$config['oxidized']['reload_nodes'] =           {{ .Values.oxidized.reloadNodes | quote }};
-    $config['oxidized']['enabled']                  = TRUE;
-    $config['oxidized']['features']['versioning']   = true;
-    $config['oxidized']['group_support']            = true;
-    $config['oxidized']['default_group']            = 'default';
-     $config['oxidized']['reload_nodes']             = true;
+  TZ:                   {{ .Values.global.TZ | quote }}
+  PUID:                 {{ .Values.global.puid | quote }}
+  PGID:                 {{ .Values.global.pgid | quote }}
+  REAL_IP_FROM:         {{ .Values.application.host.realIPfrom | quote }}
+  REAL_IP_HEADER:       {{ .Values.application.host.realIPheader | quote }}
+  UPLOAD_MAX_SIZE:      {{ .Values.application.uploadMAXsize | quote }}
+  MEMORY_LIMIT:         {{ .Values.application.php.memoryLimit | quote }}
+  OPCACHE_MEM_SIZE:     {{ .Values.application.php.opcacheMemSize | quote }}
+  MAX_INPUT_VAR:        {{ .Values.application.php.maxInputVars | quote }}
+  LOG_IP_VAR:           {{ .Values.application.logIP | quote }}
+  DB_HOST:              "database"
+  DB_NAME:              {{ .Values.mariadb.database  | quote }}
+  DB_TIMEOUT:           {{ .Values.mariadb.timeout  | quote }}
+  REDIS_HOST:           "redis"
+  REDIS_PORT:           "6379"
+  REDIS_SCHEME:         "tcp"
+  REDIS_DB:             "0"
+  CACHE_DRIVER:         "redis"
+  SESSION_DRIVER:       "redis"
+  RRDCACHED_SERVER:     "rrdcached:42217"
+  ### only for testing
+  #mysql_user: {{ .Values.mariadb.credentials.user | quote }}
+  #mysql_password: {{ .Values.mariadb.credentials.password | quote }}
+  #mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
 
 ---
 apiVersion: v1

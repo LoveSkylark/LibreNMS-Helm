@@ -41,10 +41,6 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
-            - name: DISPATCHER_NODE_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: DISPATCHER_ARGS
               value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
@@ -55,18 +51,12 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
-            - name: config-file
-              mountPath: /data/config/config.php
-              subPath: config.php
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
               subPath: Xmatters.php
             - name: application
               mountPath: /data
       volumes:
-        - name: config-file
-          configMap:
-            name: config-file
         - name: xmatters-transport-file
           configMap:
             name: xmatters-transport-file
