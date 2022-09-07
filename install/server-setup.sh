@@ -12,12 +12,6 @@ echo ""
 apt install vim nano git -y
 echo ""
 echo ""
-echo "############## Adding alias for KUBE & HELM##############"
-echo ""
-mv .bash_aliases .bash_aliases.backup
-cp LibreNMS-Helm/install/bash .bash_aliases
-echo ""
-echo ""
 echo "############## Downloading and installing K3S ##############"
 echo ""
 export INSTALL_K3S_BIN_DIR=/usr/local/bin
@@ -40,7 +34,15 @@ echo "############## Fetching helm chart ##############"
 echo ""
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
 cp LibreNMS-Helm/example/values.yaml.example ~/config.yaml
-
+echo ""
+echo ""
+echo "############## Adding alias for KUBE & HELM##############"
+echo ""
+mv .bash_aliases .bash_aliases.backup
+cp LibreNMS-Helm/install/bash .bash_aliases
+echo ""
+echo " Press any key to start configuring the cluster"
+echo ""
 nano ~/config.yaml
 echo ""
 echo ""
