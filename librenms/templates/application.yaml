@@ -72,18 +72,12 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - name: config-file
-              mountPath: /data/config/config.php
-              subPath: config.php
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
               subPath: Xmatters.php
             - name: application
               mountPath: /data
       volumes:
-        - name: config-file
-          configMap:
-            name: config-file
         - name: xmatters-transport-file
           configMap:
             name: xmatters-transport-file

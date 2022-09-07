@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: depl-oxidized
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+      - name: depl-oxidized
+        image: {{ .Values.application.image | quote }}
+        args:
+          - /bin/sh 
+          - "-c"
+          - |
+            su librenms 
+            lnms config:set oxidized.enabled.+ {{ .Values.oxidized.enable | quote }};
+            lnms config:set oxidized.url "http://oxidized:8888";
+            lnms config:set oxidized.default_group {{ .Values.oxidized.default_group | quote }};
+            lnms config:set oxidized.features.versioning {{ .Values.oxidized.featureVers | quote }};
+            lnms config:set oxidized.group_support {{ .Values.oxidized.groupSupport | quote }};
+            lnms config:set oxidized.reload_nodes  {{ .Values.oxidized.reloadNodes | quote }};
+        env:
+          - name: DB_HOST
+            value: "database"
+          - name: DB_NAME 
+            value: {{ .Values.mariadb.database | quote }}
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_password
+      restartPolicy: Never
+  backoffLimit: 4
