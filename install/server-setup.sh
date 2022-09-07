@@ -9,7 +9,7 @@ echo ""
 echo ""
 echo "############## Installing basic tools ##############"
 echo ""
-apt install vim git
+apt install vim nano git -y
 echo ""
 echo ""
 echo "############## Adding alias for KUBE & HELM##############"
