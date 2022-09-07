@@ -59,9 +59,9 @@ spec:
             - name: LIBRENMS_BASE_URL
               value: {{ .Values.application.baseURL | quote }}
             - name: LIBRENMS_WEATHERMAP
-              value: {{ .Values.application.weathermap | quote }}
+              value: {{ .Values.application.weathermap.enable | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE
-              value: {{ .Values.application.weathermapSchedule | quote }}
+              value: {{ .Values.application.weathermap.schedule | quote }}
           securityContext:
             capabilities:
               add:
@@ -72,18 +72,12 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
-            - name: config-file
-              mountPath: /data/config/config.php
-              subPath: config.php
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
               subPath: Xmatters.php
             - name: application
               mountPath: /data
       volumes:
-        - name: config-file
-          configMap:
-            name: config-file
         - name: xmatters-transport-file
           configMap:
             name: xmatters-transport-file

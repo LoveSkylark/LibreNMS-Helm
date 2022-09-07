@@ -1,0 +1,97 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: depl-basic
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+      - name: depl-basic
+        image: {{ .Values.application.image | quote }}
+        args:
+          - /bin/sh 
+          - "-c"
+          - |
+            su librenms 
+            lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}';
+                        
+            lnms config:set snmp.community            {{ .Values.application.SNMPcommunity }};
+            lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }};
+            lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }};
+            lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }};
+            lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }};
+
+            
+            lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }};
+            lnms config:set billing_data_purge        {{ .Values.application.lnms.billing.purge | quote }};
+            lnms config:set billing.95th_default_agg  {{ .Values.application.lnms.billing.default95 | quote }};
+            
+            lnms config:set customers_descr.+         {{ .Values.application.lnms.parsing.customers | quote }};
+            lnms config:set transit_descr.+           {{ .Values.application.lnms.parsing.transit | quote }};
+            lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }};
+            lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }};
+        env:
+          - name: DB_HOST
+            value: "database"
+          - name: DB_NAME 
+            value: {{ .Values.mariadb.database | quote }}
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_password
+      restartPolicy: Never
+  backoffLimit: 4
+  
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: depl-oxidized
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      containers:
+      - name: depl-oxidized
+        image: {{ .Values.application.image | quote }}
+        args:
+          - /bin/sh 
+          - "-c"
+          - |
+            su librenms 
+            lnms config:set oxidized.url "http://oxidized:8888";
+            
+            lnms config:set oxidized.enabled.+            {{ .Values.oxidized.enable | quote }};
+            lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }};
+            lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }};
+            lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }};
+            lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }};
+        env:
+          - name: DB_HOST
+            value: "database"
+          - name: DB_NAME 
+            value: {{ .Values.mariadb.database | quote }}
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_user
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-sec
+                key: mysql_password
+      restartPolicy: Never
+  backoffLimit: 4

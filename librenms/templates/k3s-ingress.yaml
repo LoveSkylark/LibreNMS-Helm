@@ -11,7 +11,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-  - host: {{ .Values.application.hostFQDN | quote }}
+  - host: {{ .Values.application.host.FQDN | quote }}
     http:
       paths:
       - path: /
@@ -21,7 +21,7 @@ spec:
             name: application
             port:
               number: 8000
-  - host: {{ .Values.smokeping.hostFQDN | quote }}
+  - host: {{ .Values.smokeping.host.FQDN | quote }}
     http:
       paths:
       - path: /
@@ -31,7 +31,7 @@ spec:
             name: smokeping
             port:
               number: 8081
-  - host: {{ .Values.oxidized.hostFQDN | quote }}
+  - host: {{ .Values.oxidized.host.FQDN | quote }}
     http:
       paths:
       - path: /

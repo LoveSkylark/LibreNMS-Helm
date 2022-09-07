@@ -83,12 +83,6 @@ spec:
             - name: application
               mountPath: /data
       volumes:
-        - name: config-file
-          configMap:
-            name: config-file
-        - name: xmatters-transport-file
-          configMap:
-            name: xmatters-transport-file
         - name: application
           persistentVolumeClaim:
             claimName: application
