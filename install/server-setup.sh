@@ -23,6 +23,7 @@ echo ""
 echo "############## Downloading and installing K9S ##############"
 echo ""
 curl -sS https://webinstall.dev/k9s | bash
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo ""
 echo ""
 echo "############## Downloading and installing HELM ##############"
