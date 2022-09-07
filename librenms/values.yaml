@@ -16,7 +16,6 @@ application:
     volumeSize: "20Gi"
     baseURL: ""
   logIP: "remote_addr"
-  uploadMAXsize: "16M"
   nodePort: "30080"
   SNMPcommunity: 
     - "community-string-1"
