@@ -47,7 +47,8 @@ vim -f config.yaml
 echo ""
 echo "############## Staring up the Cluster ##############"
 echo ""
-helm install lnms LibreNMS-Helm/librenms -f config.yaml
+kubectl create namespace librenms
+helm install librenms LibreNMS-Helm/librenms -f config.yaml
 clear
 echo ""
 echo ""

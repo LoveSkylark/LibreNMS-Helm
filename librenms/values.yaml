@@ -3,7 +3,7 @@ global:
   puid: "1000"
   pgid: "1000"
 
-Company: "TEST CO"
+company: "TEST CO"
 
 application:
   replicas: "1"

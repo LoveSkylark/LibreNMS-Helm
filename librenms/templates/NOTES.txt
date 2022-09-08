@@ -1,12 +1,10 @@
 You have deployed the following release: {{ .Release.Name }}.
 
+Company: {{ .Values.company }}
+
 Sites:
 LibreNMS:       http://{{ .Values.application.host.FQDN }}
 Oxidized:       http://{{ .Values.oxidized.host.FQDN }}
 SmokePing:      http://{{ .Values.smokeping.host.FQDN }}
 
-
-To view the correct namespace, you can run the command:
-  $ kubectl config set-context --current --namespace={{ .Release.Name }}
-
-  
+Data located at {{ .Values.storage.path }}{{ .Release.Name }}
