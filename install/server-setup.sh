@@ -42,7 +42,7 @@ echo ""
 mv .bash_aliases .bash_aliases.backup
 cp LibreNMS-Helm/install/bash .bash_aliases
 echo ""
-nano config.yaml
+vi config.yaml
 echo ""
 echo ""
 echo "############## Staring up the Cluster ##############"
