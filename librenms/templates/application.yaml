@@ -100,6 +100,6 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: {{ .Values.application.volumeSize }}
+      storage: {{ .Values.application.host.volumeSize }}
   volumeName: "{{ .Release.Name }}-application"
 

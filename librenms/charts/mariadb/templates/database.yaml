@@ -95,7 +95,7 @@ spec:
   storageClassName: ""
   resources:
     requests:
-      storage: {{ .Values.volumeSize }}
+      storage: {{ .Values.host.volumeSize }}
   volumeName: "{{ .Release.Name }}-database"
 
 
