@@ -3,7 +3,8 @@ database: "libreDB"
 timeout: "60"
 image: "mariadb:10.5"
 allow_empty_password: "yes"
-volumeSize: "1Gi"
+host:
+  volumeSize: "1Gi"
 
 credentials:
   rootPassword: "fooRootPassword"

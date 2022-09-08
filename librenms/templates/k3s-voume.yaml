@@ -10,7 +10,7 @@ metadata:
 spec:
   storageClassName: ""
   capacity:
-    storage: {{ .Values.mariadb.volumeSize }}
+    storage: {{ .Values.mariadb.host.volumeSize }}
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -28,7 +28,7 @@ metadata:
 spec:
   storageClassName: ""
   capacity:
-    storage: {{ .Values.application.volumeSize }}
+    storage: {{ .Values.application.host.volumeSize }}
   accessModes:
     - ReadWriteOnce
   hostPath:

@@ -1,4 +1,3 @@
----
 global:
   TZ: "Atlantic/Reykjavik"
   puid: "1000"
@@ -49,16 +48,14 @@ application:
     memoryLimit: "256M"
     maxInputVars: "1000"
     opcacheMemSize: "128"
-  
-
 
 storage:
   path: "/opt/kubes/storage/"
 
-## Services
 mariadb:
   database: "librenms"
-  volumeSize: "20Gi"
+  host:
+    volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
     user: "foo"

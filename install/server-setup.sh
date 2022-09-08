@@ -1,6 +1,4 @@
 #!/bin/sh
-
-cd ~
 echo "############## Updatinga Linux ##############"
 echo ""
 export DEBIAN_FRONTEND=noninteractive
@@ -33,8 +31,10 @@ echo ""
 echo ""
 echo "############## Fetching helm chart ##############"
 echo ""
+mkdir /data /data/chart
+cd /data/chart
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
-cp LibreNMS-Helm/example/values.yaml.example ~/config.yaml
+cp LibreNMS-Helm/example/values.yaml.example config.yaml
 echo ""
 echo ""
 echo "############## Adding alias for KUBE & HELM##############"
@@ -42,7 +42,7 @@ echo ""
 mv .bash_aliases .bash_aliases.backup
 cp LibreNMS-Helm/install/bash .bash_aliases
 echo ""
-nano ~/config.yaml
+nano config.yaml
 echo ""
 echo ""
 echo "############## Staring up the Cluster ##############"
