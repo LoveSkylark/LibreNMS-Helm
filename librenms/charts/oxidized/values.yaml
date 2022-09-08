@@ -1,7 +1,8 @@
 ---
 image: "oxidized/oxidized:latest"
 reloadInterval: 600
-hostFQDN: "ox.test.local"
+host:
+  FQDN: "ox.test.local"
 enable: true
 groupSupport: true
 featureVers: true

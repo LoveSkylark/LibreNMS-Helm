@@ -1,9 +1,9 @@
 You have deployed the following release: {{ .Release.Name }}.
 
 Sites:
-LibreNMS:       http://{{ .Values.application.hostFQDN }}
-Oxidized:       http://{{ .Values.oxidized.hostFQDN }}
-SmokePing:      http://{{ .Values.smokeping.hostFQDN }}
+LibreNMS:       http://{{ .Values.application.host.FQDN }}
+Oxidized:       http://{{ .Values.oxidized.host.FQDN }}
+SmokePing:      http://{{ .Values.smokeping.host.FQDN }}
 
 
 To view the correct namespace, you can run the command:
