@@ -29,15 +29,6 @@ echo ""
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 echo ""
 echo ""
-echo "############## Adding alias for KUBE & HELM##############"
-echo ""
-cd ~
-mv .bash_aliases .bash_aliases.backup
-cp LibreNMS-Helm/install/bash .bash_aliases
-echo ""
-vi config.yaml
-echo ""
-echo ""
 echo "############## Fetching helm chart ##############"
 echo ""
 mkdir /data /data/chart
@@ -46,13 +37,20 @@ git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
 cp LibreNMS-Helm/example/values.yaml.example config.yaml
 echo ""
 echo ""
+echo "############## Adding alias for KUBE & HELM##############"
+echo ""
+mv ~/.bash_aliases ~/.bash_aliases.backup
+cp LibreNMS-Helm/install/bash ~/.bash_aliases
+echo ""
+echo ""
+vi config.yaml
+echo ""
 echo "############## Staring up the Cluster ##############"
 echo ""
 helm install librenms LibreNMS-Helm/librenms -f config.yaml
 clear
 echo ""
-echo ""
-echo ""
+echo "############## seting up Libre cluster ##############"
 echo ""
 echo " usefull short cuts:"
 echo "    k=kubectl"
@@ -75,3 +73,4 @@ echo "                     1. configure your cluster by editing values.yaml (can
 echo "                     2. build the cluster using 'hin <clustername> LibreNMS-Helm/librenms config.yaml (or  <corportation>.yaml)"
 echo ""
 echo ""
+
