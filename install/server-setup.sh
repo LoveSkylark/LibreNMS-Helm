@@ -1,4 +1,5 @@
 #!/bin/sh
+
 echo "############## Updatinga Linux ##############"
 echo ""
 export DEBIAN_FRONTEND=noninteractive
@@ -46,10 +47,13 @@ echo ""
 vim -f config.yaml
 echo ""
 echo "############## Staring up the Cluster ##############"
-echo ""
-kubectl create namespace librenms
-helm install librenms LibreNMS-Helm/librenms -f config.yaml
-clear
+echo " this may take some time" 
+function LibreClusterInstall() 
+        {
+                helm install librenms /data/chart/LibreNMS-Helm/librenms -f /data/chart/config.yaml
+        }
+
+LibreClusterInstall
 echo ""
 echo ""
 echo "          k9s         = manage the kube cluster"
