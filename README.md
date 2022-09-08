@@ -11,13 +11,7 @@ To install KUBE & HELM simply run:
 * chmod +x server-setup.sh
 * server-setup.sh
 
-
-To start the cluster:
-* edit values.yaml (with your setup reqierments)
-* hin "clustername" LibreNMS-Helm/librenms config.yaml
-
-    
-
+ 
 ## Contains:
     * LibreNMS - Application (with weathermap)
     * LibreNMS - Poller
