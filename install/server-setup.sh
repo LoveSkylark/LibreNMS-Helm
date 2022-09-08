@@ -47,7 +47,7 @@ vim -f config.yaml
 echo ""
 echo "############## Staring up the Cluster ##############"
 echo ""
-helm install librenms LibreNMS-Helm/librenms -f config.yaml
+helm install lnms LibreNMS-Helm/librenms -f config.yaml
 clear
 echo ""
 echo ""
@@ -57,4 +57,8 @@ echo "          nms-edit    = change cluster configuration"
 echo "          nms-help    = libreNMS cli commands"
 echo ""
 echo "          lnms        = libreNMS cli commands"
+echo ""
+echo ""
+echo ""
+echo "  it will take few minutes to build the LibreNMS cluster, you can monitor the proccess by typing 'k9s'"
 

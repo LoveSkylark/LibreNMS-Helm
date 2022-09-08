@@ -71,7 +71,7 @@ hun() {
 
 # LibreNMS commands
 
-alias lnms="kubectl exec --namespace=librenms --stdin --tty dispatcher-0 -- /usr/bin/lnms"
+alias lnms="kubectl exec --namespace=lnms --stdin --tty dispatcher-0 -- /usr/bin/lnms"
 
-alias nms-edit="cd /data/chart/ && vim -f config.yaml  && helm upgrade librenms LibreNMS-Helm/librenms/ -f config.yaml"
+alias nms-edit="cd /data/chart/ && vim -f config.yaml  && helm upgrade lnms LibreNMS-Helm/librenms/ -f config.yaml"
 alias nms-help="cat /data/chart/install/info.txt"

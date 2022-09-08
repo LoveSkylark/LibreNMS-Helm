@@ -4,6 +4,10 @@ kind: Job
 metadata:
   name: depl-basic
   namespace: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -58,6 +62,10 @@ kind: Job
 metadata:
   name: depl-oxidized
   namespace: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
