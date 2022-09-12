@@ -7,7 +7,43 @@ enable: true
 groupSupport: true
 featureVers: true
 reloadNodes: true
-default_group: "group"
+
+ignore:
+  types: 
+    - "server"
+    - "power"
+    - "ciscosb"
+    - "jetdirect"
+  os: 
+    - "linux"
+    - "windows"
+    - "ciscosb"
+    - "jetdirect"
+  groups:
+    - ""
+  
+default_group: "default"
+group:
+  one:
+    user: ""
+    pass: ""
+    string: "/^ox-group-1/"
+  two:
+    user: ""
+    pass: ""
+    string: "/^ox-group-2/"
+  three:
+    user: ""
+    pass: ""
+    string: "/^ox-group-3/"
+  four:
+    user: ""
+    pass: ""
+    string: "/^ox-group-4/"
+  five:
+    user: ""
+    pass: ""
+    string: "/^ox-group-5/"
 
 credentials:
   user: "foo"

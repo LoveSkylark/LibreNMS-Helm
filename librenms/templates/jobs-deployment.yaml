@@ -81,12 +81,27 @@ spec:
           - |
             su librenms 
             lnms config:set oxidized.url "http://oxidized:8888";
-            
+            # Basic config
             lnms config:set oxidized.enabled.+            {{ .Values.oxidized.enable | quote }};
             lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }};
             lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }};
             lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }};
             lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }};
+            # Ignore devices
+            lnms config:set oxidized.ignore_os            {{ .Values.oxidized.ignore.os | quote }};
+            lnms config:set oxidized.ignore_types         {{ .Values.oxidized.ignore.types | quote }};
+            lnms config:set oxidized.ignore_groups       {{ .Values.oxidized.ignore.groups | quote }};
+            # Create special groups groups:
+            lnms config:set oxidized.maps.group.purpose.1 '{"regex": {{ .Values.oxidized.group.one.string | quote }};, "value": "One"}'
+            lnms config:set oxidized.maps.group.purpose.2 '{"regex": {{ .Values.oxidized.group.two.string | quote }};, "value": "Two"}'
+            lnms config:set oxidized.maps.group.purpose.3 '{"regex": {{ .Values.oxidized.group.three.string | quote }};, "value": "Three"}'
+            lnms config:set oxidized.maps.group.purpose.4 '{"regex": {{ .Values.oxidized.group.four.string | quote }};, "value": "Four"}'
+            lnms config:set oxidized.maps.group.purpose.5 '{"regex": {{ .Values.oxidized.group.five.string | quote }};, "value": "Five"}'
+            lnms config:set oxidized.maps.group.notes.1 '{"regex": {{ .Values.oxidized.group.one.string | quote }};, "value": "One"}'
+            lnms config:set oxidized.maps.group.notes.2 '{"regex": {{ .Values.oxidized.group.two.string | quote }};, "value": "Two"}'
+            lnms config:set oxidized.maps.group.notes.3 '{"regex": {{ .Values.oxidized.group.three.string | quote }};, "value": "Three"}'
+            lnms config:set oxidized.maps.group.notes.4 '{"regex": {{ .Values.oxidized.group.four.string | quote }};, "value": "Four"}'
+            lnms config:set oxidized.maps.group.notes.5 '{"regex": {{ .Values.oxidized.group.five.string | quote }};, "value": "Five"}'
         env:
           - name: DB_HOST
             value: "database"

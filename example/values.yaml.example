@@ -53,3 +53,25 @@ oxidized:
     user: "deviceadmin"
     password: "devicepassword"
     token: "API-token-generated-inside-LIBRE"
+  # Device can be grouped by as string in device NOTE or DESCRIPTION
+  group:
+    one:
+      user: ""
+      pass: ""
+      string: "/^ox-group-1/"
+    two:
+      user: ""
+      pass: ""
+      string: "/^ox-group-2/"
+    three:
+      user: ""
+      pass: ""
+      string: "/^ox-group-3/"
+    four:
+      user: ""
+      pass: ""
+      string: "/^ox-group-4/"
+    five:
+      user: ""
+      pass: ""
+      string: "/^ox-group-5/"
