@@ -29,10 +29,10 @@ spec:
             # Billing;
             lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }}
             # Parsing;
-            lnms config:set customers_descr.+         {{ .Values.application.lnms.parsing.customers | quote }}
-            lnms config:set transit_descr.+           {{ .Values.application.lnms.parsing.transit | quote }}
-            lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }}
-            lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }}
+            lnms config:set customers_descr.2         {{ .Values.application.lnms.parsing.customers | quote }}
+            lnms config:set transit_descr.2           {{ .Values.application.lnms.parsing.transit | quote }}
+            lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
+            lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
             # Adding server to SNMP;
             lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
         env:
