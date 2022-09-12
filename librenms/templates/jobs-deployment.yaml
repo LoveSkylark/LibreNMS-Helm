@@ -21,7 +21,7 @@ spec:
           - |
             su librenms 
             lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}'
-            lnms config:set snmp.community            {{ .Values.application.SNMPcommunity | quote }}
+            lnms config:set snmp.community            {{- range .Values.application.SNMPcommunity }} {{.}}{{- end }}
             lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }}
             lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }}
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
