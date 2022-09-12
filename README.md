@@ -7,15 +7,11 @@ This is conversion of librenms/docker + docker-compose to helm + kube, whit alot
 Goal is to build a fully functual monitoring system on fresh install of ubunut.
 
 To install KUBE & HELM simply run:
-* curl -sfL 'https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Helm/main/install/server-setup.sh' | sh -
+* wget'https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Helm/main/install/server-setup.sh'
+* chmod +x server-setup.sh
+* server-setup.sh
 
-
-To start the cluster:
-* edit values.yaml (with your setup reqierments)
-* hin "clustername" LibreNMS-Helm/librenms config.yaml
-
-    
-
+ 
 ## Contains:
     * LibreNMS - Application (with weathermap)
     * LibreNMS - Poller

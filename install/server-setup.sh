@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "############## Updatinga Linux ##############"
 echo ""
@@ -22,6 +22,7 @@ echo ""
 echo "############## Downloading and installing K9S ##############"
 echo ""
 curl -sS https://webinstall.dev/k9s | bash
+source ~/.config/envman/PATH.env
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo ""
 echo ""
@@ -51,8 +52,10 @@ echo ""
 echo ""
 vim -f config.yaml
 echo ""
-echo "############## Staring up the Cluster ##############"
-echo " this may take some time" 
+echo "################## Staring up the Cluster ##################"
+echo "it will take few minutes to build the LibreNMS cluster, you" 
+echo "can monitor the proccess by typing 'k9s' in another shell"
+
 function LibreClusterInstall() 
         {
                 helm install librenms /data/chart/LibreNMS-Helm/librenms -f /data/chart/config.yaml
