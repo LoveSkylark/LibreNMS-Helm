@@ -6,7 +6,6 @@ metadata:
   namespace: {{ .Release.Name }}
   annotations:
     "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
@@ -38,7 +37,7 @@ spec:
             lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }};
             lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }};
             # Adding server to SNMP
-            lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
+            #lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
         env:
           - name: DB_HOST
             value: "database"
@@ -64,8 +63,7 @@ metadata:
   name: depl-oxidized
   namespace: {{ .Release.Name }}
   annotations:
-    "helm.sh/hook": post-install
-    "helm.sh/hook-weight": "2"
+    "helm.sh/hook": post-install    
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
