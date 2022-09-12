@@ -52,7 +52,9 @@ spec:
                 key: mysql_password
       restartPolicy: Never
   backoffLimit: 4
-  
+
+
+
 ---
 apiVersion: batch/v1
 kind: Job
