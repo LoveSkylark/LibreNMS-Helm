@@ -28,16 +28,17 @@ spec:
             lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }};
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }};
             lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }};
-
-            
+            # Billing
             lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }};
             lnms config:set billing_data_purge        {{ .Values.application.lnms.billing.purge | quote }};
             lnms config:set billing.95th_default_agg  {{ .Values.application.lnms.billing.default95 | quote }};
-            
+            # Parsing
             lnms config:set customers_descr.+         {{ .Values.application.lnms.parsing.customers | quote }};
             lnms config:set transit_descr.+           {{ .Values.application.lnms.parsing.transit | quote }};
             lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }};
             lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }};
+            # Adding server to SNMP
+            lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.lnms.host.FQDN | quote }};
         env:
           - name: DB_HOST
             value: "database"

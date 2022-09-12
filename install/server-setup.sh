@@ -8,7 +8,7 @@ echo ""
 echo ""
 echo "############## Installing basic tools ##############"
 echo ""
-apt install vim nano git -y
+apt install vim nano git snmpd -y
 echo ""
 echo ""
 echo "############## Downloading and installing K3S ##############"
@@ -42,6 +42,11 @@ echo "############## Adding alias for KUBE & HELM##############"
 echo ""
 mv ~/.bash_aliases ~/.bash_aliases.backup
 cp LibreNMS-Helm/install/bash ~/.bash_aliases
+echo ""
+echo ""
+echo "############## Setting up SNMP ##############"
+echo ""
+cp LibreNMS-Helm/install/snmp.conf /etc/snmp/snmpd.conf.d
 echo ""
 echo ""
 vim -f config.yaml
