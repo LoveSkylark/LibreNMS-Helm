@@ -22,7 +22,7 @@ spec:
             su librenms 
             lnms config:set oxidized.url "http://oxidized:8888"
             # Basic config
-            lnms config:set oxidized.enabled.+            {{ .Values.oxidized.enable | quote }}
+            lnms config:set oxidized.enabled              {{ .Values.oxidized.enable | quote }}
             lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }}
             lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }}
             lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }}

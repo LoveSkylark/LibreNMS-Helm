@@ -18,8 +18,11 @@ ignore:
   groups:
     - ""
   
-default_group: "default"
+default_group: "core"
 group:
+  core:
+    user: "deviceuser"
+    password: "devicepassword"  
   one:
     user: ""
     pass: ""
@@ -42,6 +45,4 @@ group:
     string: "/^ox-group-5/"
 
 credentials:
-  user: "foo"
-  password: "bar"  
   token: 'ff7dd1796524fee831b52da61937d793'

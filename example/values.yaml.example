@@ -50,11 +50,13 @@ oxidized:
   host:
     FQDN: "ox.test.local"
   credentials:
-    user: "deviceadmin"
-    password: "devicepassword"
     token: "API-token-generated-inside-LIBRE"
+    
   # Device can be grouped by as string in device NOTE or DESCRIPTION
   group:
+    core:
+      user: "deviceuser"
+      password: "devicepassword"
     one:
       user: ""
       pass: ""

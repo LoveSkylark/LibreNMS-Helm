@@ -20,11 +20,9 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
 data:
   config: |-
-    username: {{ .Values.credentials.user }}
-    password: {{ .Values.credentials.password }}
-    model: junos
+    model: cisco
     resolve_dns: true
-    interval: 3600
+    interval: 72000
     use_syslog: false
     debug: false
     threads: 30
@@ -32,25 +30,36 @@ data:
     timeout: 20
     retries: 3
     prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
+    rest: 0.0.0.0:8888  
     next_adds_job: false
     vars: {}
     groups:
-      other:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
-      juniper:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
-      cisco:
-        username: {{ .Values.credentials.user }}
-        password: {{ .Values.credentials.password }}
-    group_map: {}
+      core:
+        username: {{ .Values.group.core.user }}
+        password: {{ .Values.group.core.password }}
+      one:
+        username: {{ .Values.group.one.user }}
+        password: {{ .Values.group.one.password }}
+      two:
+        username: {{ .Values.group.two.user }}
+        password: {{ .Values.group.two.password }}
+      three:
+        username: {{ .Values.group.three.user }}
+        password: {{ .Values.group.three.password }}
+      four:
+        username: {{ .Values.group.four.user }}
+        password: {{ .Values.group.four.password }}
+      five:
+        username: {{ .Values.group.five.user }}
+        password: {{ .Values.group.five.password }}
     models: {}
     model_map:
       juniper: junos
       cisco: ios
+      cisco: iosxe
       mikrotik: routeros
       ubiquiti: airos
+   
     pid: "/root/.config/oxidized/pid"
     crash:
       directory: "/root/.config/oxidized/crashes"
@@ -65,27 +74,23 @@ data:
       ftp:
         passive: true
       utf8_encoded: true
-
-    rest: 0.0.0.0:8888
     output:
       default: git
       git:
           user: Oxidized
-          email: oxidized@example.com
+          email: noc@sensa.is
           repo: "~/.config/oxidized/configs"
     source:
       default: http
       debug: false
       http:
         url: http://application:8000/api/v0/oxidized
-        file: "~/.config/oxidized/router.db"
-        delimiter: !ruby/regexp /:/
+        scheme: http
+        secure: false
         map:
           name: hostname
           model: os
-          username: username
-          password: password
           group: group
+          ip: ip
         headers:
           X-Auth-Token: {{ .Values.credentials.token }}
-    
