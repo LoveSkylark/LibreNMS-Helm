@@ -20,27 +20,8 @@ spec:
           - "-c"
           - |
             su librenms 
-<<<<<<< HEAD
-            lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}';
-                        
-            lnms config:set snmp.community            {{ .Values.application.SNMPcommunity }};
-            lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }};
-            lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }};
-            lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }};
-            lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }};
-            # Billing
-            lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }};
-            lnms config:set billing_data_purge        {{ .Values.application.lnms.billing.purge | quote }};
-            lnms config:set billing.95th_default_agg  {{ .Values.application.lnms.billing.default95 | quote }};
-            # Parsing
-            lnms config:set customers_descr.+         {{ .Values.application.lnms.parsing.customers | quote }};
-            lnms config:set transit_descr.+           {{ .Values.application.lnms.parsing.transit | quote }};
-            lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }};
-            lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }};
-            # Adding server to SNMP
-=======
             lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}'
-            lnms config:set snmp.community            {{ .Values.application.SNMPcommunity | toStrings }}
+            lnms config:set snmp.community            '{{ .Values.application.SNMPcommunity | toJson }}'
             lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }}
             lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }}
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
@@ -53,7 +34,6 @@ spec:
             lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
             lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
             # Adding server to SNMP;
->>>>>>> d2f35a462b1b3eaf419cd600a351e967890267a7
             lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
         env:
           - name: DB_HOST
