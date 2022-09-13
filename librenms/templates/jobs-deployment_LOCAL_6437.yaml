@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Release.Name }}
   annotations:
     "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
@@ -20,7 +21,6 @@ spec:
           - "-c"
           - |
             su librenms 
-<<<<<<< HEAD
             lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}';
                         
             lnms config:set snmp.community            {{ .Values.application.SNMPcommunity }};
@@ -38,22 +38,6 @@ spec:
             lnms config:set peering_descr.+           {{ .Values.application.lnms.parsing.peering | quote }};
             lnms config:set core_descr.+              {{ .Values.application.lnms.parsing.core | quote }};
             # Adding server to SNMP
-=======
-            lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}'
-            lnms config:set snmp.community            {{ .Values.application.SNMPcommunity | toStrings }}
-            lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }}
-            lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }}
-            lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
-            lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }}
-            # Billing;
-            lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }}
-            # Parsing;
-            lnms config:set customers_descr.2         {{ .Values.application.lnms.parsing.customers | quote }}
-            lnms config:set transit_descr.2           {{ .Values.application.lnms.parsing.transit | quote }}
-            lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
-            lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
-            # Adding server to SNMP;
->>>>>>> d2f35a462b1b3eaf419cd600a351e967890267a7
             lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
         env:
           - name: DB_HOST
@@ -72,9 +56,7 @@ spec:
                 key: mysql_password
       restartPolicy: Never
   backoffLimit: 4
-
-
-
+  
 ---
 apiVersion: batch/v1
 kind: Job
@@ -82,7 +64,8 @@ metadata:
   name: depl-oxidized
   namespace: {{ .Release.Name }}
   annotations:
-    "helm.sh/hook": post-install    
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "2"
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
@@ -97,17 +80,17 @@ spec:
           - "-c"
           - |
             su librenms 
-            lnms config:set oxidized.url "http://oxidized:8888"
+            lnms config:set oxidized.url "http://oxidized:8888";
             # Basic config
-            lnms config:set oxidized.enabled.+            {{ .Values.oxidized.enable | quote }}
-            lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }}
-            lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }}
-            lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }}
-            lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }}
+            lnms config:set oxidized.enabled.+            {{ .Values.oxidized.enable | quote }};
+            lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }};
+            lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }};
+            lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }};
+            lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }};
             # Ignore devices
-            lnms config:set oxidized.ignore_os            {{ .Values.oxidized.ignore.os | quote }}
-            lnms config:set oxidized.ignore_types         {{ .Values.oxidized.ignore.types | quote }}
-            lnms config:set oxidized.ignore_groups       {{ .Values.oxidized.ignore.groups | quote }}
+            lnms config:set oxidized.ignore_os            {{ .Values.oxidized.ignore.os | quote }};
+            lnms config:set oxidized.ignore_types         {{ .Values.oxidized.ignore.types | quote }};
+            lnms config:set oxidized.ignore_groups       {{ .Values.oxidized.ignore.groups | quote }};
             # Create special groups groups:
             lnms config:set oxidized.maps.group.purpose.1 '{"regex": {{ .Values.oxidized.group.one.string | quote }};, "value": "One"}'
             lnms config:set oxidized.maps.group.purpose.2 '{"regex": {{ .Values.oxidized.group.two.string | quote }};, "value": "Two"}'
