@@ -10,15 +10,11 @@ reloadNodes: true
 
 ignore:
   types: 
-    - "server"
-    - "power"
-    - "ciscosb"
-    - "jetdirect"
+    - server
+    - power
   os: 
-    - "linux"
-    - "windows"
-    - "ciscosb"
-    - "jetdirect"
+    - linux
+    - windows
   groups:
     - ""
   

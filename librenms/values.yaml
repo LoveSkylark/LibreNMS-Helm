@@ -84,15 +84,11 @@ oxidized:
     token: "API-token-generated-inside-LIBRE"
   ignore:
     types: 
-      - "server"
-      - "power"
-      - "ciscosb"
-      - "jetdirect"
+      - server
+      - power
     os: 
-      - "linux"
-      - "windows"
-      - "ciscosb"
-      - "jetdirect"
+      - linux
+      - windows
     groups:
       - ""
   # Device can be grouped by as string in device NOTE or DESCRIPTION

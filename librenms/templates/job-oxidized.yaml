@@ -28,9 +28,9 @@ spec:
             lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }}
             lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }}
             # Ignore devices
-            lnms config:set oxidized.ignore_os            '{{ .Values.oxidized.ignore.os | toJson }}'
-            lnms config:set oxidized.ignore_types         '{{ .Values.oxidized.ignore.types | toJson }}'
-            lnms config:set oxidized.ignore_groups        '{{ .Values.oxidized.ignore.groups | toJson }}'
+            lnms config:set oxidized.ignore_os            '{{ .Values.oxidized.ignore.os | toJson }}' --ignore-checks
+            lnms config:set oxidized.ignore_types         '{{ .Values.oxidized.ignore.types | toJson }}' --ignore-checks
+            lnms config:set oxidized.ignore_groups        '{{ .Values.oxidized.ignore.groups | toJson }}' --ignore-checks
             # Create special groups groups:
             lnms config:set oxidized.maps.group.purpose.1 '{"regex": {{ .Values.oxidized.group.one.string | quote }}, "value": "One"}' --ignore-checks
             lnms config:set oxidized.maps.group.purpose.2 '{"regex": {{ .Values.oxidized.group.two.string | quote }}, "value": "Two"}' --ignore-checks
