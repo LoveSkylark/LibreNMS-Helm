@@ -33,8 +33,6 @@ spec:
             lnms config:set transit_descr.2           {{ .Values.application.lnms.parsing.transit | quote }}
             lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
             lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
-            # Adding server to SNMP;
-            lnms device:add -2 -r 1161 -c locallibremon -d LibreNMS {{ .Values.application.host.FQDN | quote }};
         env:
           - name: DB_HOST
             value: "database"
@@ -53,8 +51,6 @@ spec:
       restartPolicy: Never
   backoffLimit: 4
 
-
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -62,7 +58,7 @@ metadata:
   name: depl-oxidized
   namespace: {{ .Release.Name }}
   annotations:
-    "helm.sh/hook": post-install    
+    "helm.sh/hook": post-install
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
