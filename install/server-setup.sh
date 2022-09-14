@@ -64,8 +64,8 @@ function LibreClusterInstall()
 echo ""
 echo "################## Finding LibreNMS IP and adding to SNMP ##################"
 
-ip_eth = $((/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
-ip_ens = $((/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
+ip_eth=$((/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
+ip_ens=$((/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
 
 if [ $ip_ens ]
 then 

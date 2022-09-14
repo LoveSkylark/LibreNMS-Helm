@@ -41,16 +41,6 @@ spec:
             name: oxidized
             port:
               number: 8888
-  - host: "*"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: application
-            port:
-              number: 8000
 
 ---
 apiVersion: v1
