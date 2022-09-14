@@ -61,6 +61,29 @@ function LibreClusterInstall()
                 helm install librenms /data/chart/LibreNMS-Helm/librenms -f /data/chart/config.yaml
         }
 
+echo ""
+echo "################## Finding LibreNMS IP and adding to SNMP ##################"
+
+ip_eth = $((/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
+ip_ens = $((/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
+
+if [ $ip_ens ]
+then 
+        echo "Adding $ip_ens to SNMP monitoring"
+        lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_ens 
+
+elif [ $ip_eth ]
+then
+        echo "Adding $ip_eth to SNMP monitoring"
+        lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_eth 
+
+else 
+        echo "No IP could be found"
+fi
+
+
+echo "################## Staring up the Cluster ##################"
+
 LibreClusterInstall
 echo ""
 echo ""
