@@ -48,6 +48,7 @@ echo ""
 echo "############## Setting up SNMP ##############"
 echo ""
 cp LibreNMS-Helm/install/snmp.conf /etc/snmp/snmpd.conf.d
+systemctl restart snmpd
 echo ""
 echo ""
 vim -f config.yaml
