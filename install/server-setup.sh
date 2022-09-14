@@ -56,16 +56,25 @@ echo "################## Staring up the Cluster ##################"
 echo "it will take few minutes to build the LibreNMS cluster, you" 
 echo "can monitor the proccess by typing 'k9s' in another shell"
 
+
+echo "################## Staring up the Cluster ##################"
+
 function LibreClusterInstall() 
         {
                 helm install librenms /data/chart/LibreNMS-Helm/librenms -f /data/chart/config.yaml
         }
 
-echo ""
-echo "################## Finding LibreNMS IP and adding to SNMP ##################"
+LibreClusterInstall
 
-ip_eth=$((/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
-ip_ens=$((/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1) > /dev/null 2>&1)
+echo "################## Finding LibreNMS IP and adding to SNMP ##################"
+echo ""
+function LibreSNMPadd()
+        {
+        ip_eth=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+        ip_ens=$(/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1)
+        }
+
+LibreSNMPadd > /dev/null 2>&1
 
 if [ $ip_ens ]
 then 
@@ -80,11 +89,10 @@ then
 else 
         echo "No IP could be found"
 fi
-
-
-echo "################## Staring up the Cluster ##################"
-
-LibreClusterInstall
+echo ""
+echo ""
+echo "################## Install complete ##################"
+echo ""
 echo ""
 echo ""
 echo "          k9s         = manage the kube cluster"
