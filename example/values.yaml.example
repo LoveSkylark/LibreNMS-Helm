@@ -9,25 +9,23 @@ global:
 
 Company: "TEST CO"
 
-application:
+storage:
+  path: "/data/"
 
+application:
   host:
     FQDN: "nms.test.local"
     volumeSize: "20Gi"
-
   SNMPcommunity: 
     - "community-string-1"
     - "community-string-2"
-
   dispatcher:
     # 1 replica per 100 devices
     replicas: "1"
 
-storage:
-  path: "/data/"
-
 mariadb:
-  volumeSize: "20Gi"
+  host:
+    volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
     user: "foo"
