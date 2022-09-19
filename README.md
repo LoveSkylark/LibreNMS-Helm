@@ -28,10 +28,8 @@ To install KUBE & HELM simply run:
   This is a work in progress.
 
 ## TODO:
-    * https & cert deploymetn for K3S ingress
-    * Weathermap is broken (PHP8 & rrdcahced issues)
-    * Oxidized gui no fully intergratin
-    * implement Smokeping
+    * https & cert deployment for K3S ingress
+    * Implement Smokeping
     
     
     
