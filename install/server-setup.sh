@@ -105,5 +105,4 @@ echo "          lnms        = libreNMS cli commands"
 echo ""
 echo ""
 echo ""
-echo "  it will take few minutes to build the LibreNMS cluster, you can monitor the proccess by typing 'k9s'"
 /bin/bash
