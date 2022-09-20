@@ -35,6 +35,8 @@ application:
     graphs:
       type: "svg"
       dynamic: "true"
+    services:
+      enable: "false"
     billing:
       enable: "true"
       purge: "95"
