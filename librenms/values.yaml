@@ -56,6 +56,10 @@ application:
 storage:
   path: "/opt/kubes/storage/"
 
+rrdcached:
+  host: "lnms-rrdcached"
+  port: "42217"
+  
 redis:
   lnms:
     host: "lnms-redis"

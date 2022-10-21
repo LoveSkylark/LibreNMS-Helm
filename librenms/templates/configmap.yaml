@@ -26,7 +26,7 @@ data:
   REDIS_DB:             {{ .Values.redis.lnms.database | quote }}
   CACHE_DRIVER:         {{ .Values.redis.lnms.cacheDriver | quote }}
   SESSION_DRIVER:       {{ .Values.redis.lnms.sessionDriver | quote }}
-  RRDCACHED_SERVER:     "{{ .Values.rrdcached.host }}:{{ .Values.rrdcached.host }}"
+  RRDCACHED_SERVER:     "{{ .Values.rrdcached.host }}:{{ .Values.rrdcached.port }}"
   ### only for testing
   #mysql_user: {{ .Values.mariadb.credentials.user | quote }}
   #mysql_password: {{ .Values.mariadb.credentials.password | quote }}
