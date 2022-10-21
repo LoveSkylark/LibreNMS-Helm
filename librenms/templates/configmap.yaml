@@ -19,14 +19,14 @@ data:
   LOG_IP_VAR:           {{ .Values.application.logIP | quote }}
   DB_HOST:              {{ .Values.mariadb.host.name | quote }}
   DB_NAME:              {{ .Values.mariadb.database  | quote }}
-  DB_TIMEOUT:           {{ .Values.mariadb.timeout  | quote }}
-  REDIS_HOST:           "redis"
-  REDIS_PORT:           "6379"
-  REDIS_SCHEME:         "tcp"
-  REDIS_DB:             "0"
-  CACHE_DRIVER:         "redis"
-  SESSION_DRIVER:       "redis"
-  RRDCACHED_SERVER:     "rrdcached:42217"
+  DB_TIMEOUT:           {{ .Values.mariadb.timeout | quote }}
+  REDIS_HOST:           {{ .Values.redis.lnms.host | quote }}
+  REDIS_PORT:           {{ .Values.redis.lnms.port | quote }}
+  REDIS_SCHEME:         {{ .Values.redis.lnms.scheme | quote }}
+  REDIS_DB:             {{ .Values.redis.lnms.database | quote }}
+  CACHE_DRIVER:         {{ .Values.redis.lnms.cacheDriver | quote }}
+  SESSION_DRIVER:       {{ .Values.redis.lnms.sessionDriver | quote }}
+  RRDCACHED_SERVER:     "{{ .Values.rrdcached.host }}:{{ .Values.rrdcached.host }}"
   ### only for testing
   #mysql_user: {{ .Values.mariadb.credentials.user | quote }}
   #mysql_password: {{ .Values.mariadb.credentials.password | quote }}

@@ -4,3 +4,11 @@ logLevel: "notice"
 
 global:
   TZ: "Europe/London"
+
+lnms:
+  host: "lnms-redis"
+  port: "6379"
+  database: "0"
+  scheme: "tcp"
+  cacheDriver: "redis"
+  sessionDriver: "redis"

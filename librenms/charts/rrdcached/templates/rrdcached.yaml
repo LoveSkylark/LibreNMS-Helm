@@ -2,54 +2,53 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: rrdcached
+  name: {{.Values.hostname}}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   selector:
-    app: rrdcached
+    app: {{.Values.hostname}}
   ports:
-    - name: rrdcached
+    - name: {{.Values.hostname}}
       protocol: TCP
       port: 42217
-      targetPort: rrdcached
+      targetPort: {{.Values.hostname}}
 
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rrdcached
+  name: {{.Values.hostname}}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: rrdcached
+    app: {{.Values.hostname}}
 spec:
-  serviceName: rrdcached
-  replicas: 1
+  serviceName: {{.Values.hostname}}
+  replicas: {{.Values.replicas}}
   selector:
     matchLabels:
-      app: rrdcached
+      app: {{.Values.hostname}}
   template:
     metadata:
       labels:
-        app: rrdcached
+        app: {{.Values.hostname}}
     spec:
-      #hostname: {{.Release.Name}}-rrdcached
       restartPolicy: Always
       containers:
-        - name: rrdcached
+        - name: {{.Values.hostname}}
           image: {{.Values.image}}
           envFrom:
             - configMapRef:
-                name: rrdcached
+                name: {{.Values.hostname}}
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
                 - NET_RAW
           ports:
-            - name: rrdcached
+            - name: {{.Values.hostname}}
               containerPort: 42217
               protocol: TCP
           volumeMounts:

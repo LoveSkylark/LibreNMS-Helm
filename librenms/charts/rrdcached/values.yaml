@@ -1,11 +1,14 @@
 ---
 image: "crazymax/rrdcached"
+host: " rrdcached"
+port: "42217"
+replicas: "1"
 writeThreads: "4"
 writeTimeout: "1800"
 writeJitter: "1800"
 flushDeadDataInterval: "3600"
 logLevel: "LOG_INFO"
-
+ 
 global:
   TZ: "Europe/London"
   puid: "1000"

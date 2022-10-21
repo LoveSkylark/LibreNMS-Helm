@@ -2,47 +2,47 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis
+  name: {{ .Values.lnms.host | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   type: ClusterIP
   selector:
-    app: redis
+    app: {{ .Values.lnms.host | quote }}
   ports:
-    - name: redis
+    - name: {{ .Values.lnms.host | quote }}
       protocol: TCP
       port: 6379
-      targetPort: redis
+      targetPort: {{ .Values.lnms.host | quote }}
 
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis
+  name: {{ .Values.lnms.host | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: redis
+    app: {{ .Values.lnms.host | quote }}
 spec:
-  serviceName: redis
+  serviceName: {{ .Values.lnms.host | quote }}
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: {{ .Values.lnms.host | quote }}
   template:
     metadata:
       labels:
-        app: redis
+        app: {{ .Values.lnms.host | quote }}
     spec:
       restartPolicy: Always
       containers:
-        - name: redis
+        - name: {{ .Values.lnms.host | quote }}
           image: {{.Values.image}}
           envFrom:
             - configMapRef:
-                name: redis
+                name: {{ .Values.lnms.host | quote }}
           ports:
-            - name: redis
+            - name: {{ .Values.lnms.host | quote }}
               containerPort: 6379
