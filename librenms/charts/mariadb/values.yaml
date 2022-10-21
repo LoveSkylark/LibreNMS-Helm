@@ -4,6 +4,7 @@ timeout: "60"
 image: "mariadb:10.5"
 allow_empty_password: "yes"
 host:
+  name: "database"
   volumeSize: "1Gi"
 
 credentials:

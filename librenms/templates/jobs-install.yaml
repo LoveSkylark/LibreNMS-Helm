@@ -2,10 +2,10 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: depl-basic
+  name: depl-librenms
   namespace: {{ .Release.Name }}
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}
@@ -13,7 +13,7 @@ spec:
   template:
     spec:
       containers:
-      - name: depl-basic
+      - name: depl-librenms
         image: {{ .Values.application.image | quote }}
         args:
           - /bin/sh 
@@ -26,8 +26,8 @@ spec:
             lnms config:set webui.dynamic_graphs      {{ .Values.application.lnms.graphs.dynamic | quote }}
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
             lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }}
-            #lnms config:set show_services             {{ .Values.application.lnms.services.enable | quote }}
-            #lnms config:set service_services_enabled  {{ .Values.application.lnms.services.enable | quote }}
+            lnms config:set show_services             {{ .Values.application.lnms.services.enable | quote }}
+            lnms config:set service_services_enabled  {{ .Values.application.lnms.services.enable | quote }}
             # Billing;
             lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }}
             # Parsing;
@@ -37,7 +37,7 @@ spec:
             lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
         env:
           - name: DB_HOST
-            value: "database"
+            value: {{ .Values.mariadb.host.name }}
           - name: DB_NAME 
             value: {{ .Values.mariadb.database | quote }}
           - name: DB_USER

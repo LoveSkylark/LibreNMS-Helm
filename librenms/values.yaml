@@ -3,7 +3,9 @@ global:
   puid: "1000"
   pgid: "1000"
 
-company: "TEST CO"
+company:
+  name: "TEST CO"
+  
 
 application:
   replicas: "1"
@@ -32,11 +34,11 @@ application:
     enable: "true"
     purge: "95"
   lnms:
+    services:
+      enable: "true"
     graphs:
       type: "svg"
       dynamic: "true"
-    services:
-      enable: "false"
     billing:
       enable: "true"
       purge: "95"
@@ -57,6 +59,7 @@ storage:
 mariadb:
   database: "librenms"
   host:
+    name: "database"
     volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
@@ -81,22 +84,24 @@ oxidized:
   host:
     FQDN: "ox.test.local"
   credentials:
+    user: "deviceadmin"
+    password: "devicepassword"
     token: "API-token-generated-inside-LIBRE"
   ignore:
     types: 
-      - server
-      - power
+      - "server"
+      - "power"
+      - "ciscosb"
+      - "jetdirect"
     os: 
-      - linux
-      - windows
+      - "linux"
+      - "windows"
+      - "ciscosb"
+      - "jetdirect"
     groups:
       - ""
   # Device can be grouped by as string in device NOTE or DESCRIPTION
-  default_group: "core"
   group:
-    core:
-      user: "deviceuser"
-      password: "devicepassword"
     one:
       user: ""
       pass: ""

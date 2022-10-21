@@ -5,7 +5,7 @@ metadata:
   name: depl-oxidized
   namespace: {{ .Release.Name }}
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
   labels:
 {{ include "common.labels" . | indent 4 }}

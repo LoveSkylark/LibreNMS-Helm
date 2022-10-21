@@ -26,7 +26,7 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
     app: database
 spec:
-  serviceName: database
+  serviceName: {{ .Values.host.name }}
   replicas: 1
   selector:
     matchLabels:
@@ -38,7 +38,7 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-        - name: database
+        - name: {{ .Values.host.name }}
           image: {{ .Values.image }}
           args:
             - mysqld

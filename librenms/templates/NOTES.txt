@@ -1,6 +1,6 @@
 You have deployed the following release: {{ .Release.Name }}.
 
-Company: {{ .Values.company }}
+Company: {{ .Values.company.name }}
 
 Sites:
 LibreNMS:       http://{{ .Values.application.host.FQDN }}
