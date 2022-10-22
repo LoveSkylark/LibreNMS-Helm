@@ -2,30 +2,29 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: msmtpd
+  name: {{ .Values.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: msmtpd
+    app: {{ .Values.host.name | quote }}
 spec:
-  serviceName: msmtpd
-  replicas: 1
+  serviceName: {{ .Values.host.name | quote }}
+  replicas: {{ .Values.replicas | quote }}
   selector:
     matchLabels:
-      app: msmtpd
+      app: {{ .Values.host.name | quote }}
   template:
     metadata:
       labels:
-        app: msmtpd
+        app: {{ .Values.host.name | quote }}
     spec:
-      #hostname: "{{.Release.Name}}-msmtpd"
       restartPolicy: Always
       containers:
-        - name: msmtpd
+        - name: {{ .Values.host.name | quote }}
           image: "{{.Values.image}}"
           envFrom:
             - configMapRef:
-                name: msmtpd
+                name: {{ .Values.host.name | quote }}
           env:
             - name: SMTP_USER
               valueFrom:

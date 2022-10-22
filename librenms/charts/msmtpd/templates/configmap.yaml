@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: msmtpd
+  name: {{ .Values.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 data:
-  SMTP_HOST: {{ .Values.host | quote }}
-  SMTP_PORT: {{ .Values.port | quote }}
+  SMTP_HOST: {{ .Values.host.FQDN | quote }}
+  SMTP_PORT: {{ .Values.host.port | quote }}
   SMTP_TLS: {{ .Values.TLS | quote }}
   SMTP_STARTTLS: {{ .Values.startTLS | quote }}
   SMTP_TLS_CHECKCERT: {{ .Values.TLSchecker | quote }}

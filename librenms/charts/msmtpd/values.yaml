@@ -1,7 +1,10 @@
 ---
 image: "crazymax/msmtpd:latest"
-host: "smtp.gmail.com"
-port: "587"
+host:
+  name: "msmtpd"
+  FQDN: "smtp.gmail.com"
+  port: "587"
+replicas: 1
 from: "foo@gmail.com"
 TLS: "on"
 startTLS: "on"
