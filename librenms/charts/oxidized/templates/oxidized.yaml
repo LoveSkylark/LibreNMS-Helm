@@ -2,53 +2,53 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: oxidized
+  name: {{ .Values.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   selector:
-    app: oxidized
+    app: {{ .Values.host.name | quote }}
   ports:
-    - name: oxidized
+    - name: {{ .Values.host.name | quote }}
       protocol: TCP
       port: 8888
-      targetPort: oxidized
+      targetPort: {{ .Values.host.name | quote }}
 
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: oxidized
+  name: {{ .Values.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: oxidized
+    app: {{ .Values.host.name | quote }}
 spec:
-  serviceName: oxidized
+  serviceName: {{ .Values.host.name | quote }}
   replicas: 1
   selector:
     matchLabels:
-      app: oxidized
+      app: {{ .Values.host.name | quote }}
   template:
     metadata:
       labels:
-        app: oxidized
+        app: {{ .Values.host.name | quote }}
     spec:
       restartPolicy: Always
       containers:
-        - name: oxidized
+        - name: {{ .Values.host.name | quote }}
           image: {{ .Values.image | quote }}
           envFrom:
             - configMapRef:
-                name: oxidized
+                name: {{ .Values.host.name | quote }}
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
                 - NET_RAW
           ports:
-            - name: oxidized
+            - name: {{ .Values.host.name | quote }}
               containerPort: 8888
               protocol: TCP
           volumeMounts:

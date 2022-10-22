@@ -2,53 +2,53 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Values.host }}
+  name: {{.Values.host.name }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   selector:
-    app: {{.Values.host }}
+    app: {{.Values.host.name }}
   ports:
-    - name: {{.Values.host }}
+    - name: {{.Values.host.name }}
       protocol: TCP
       port: 42217
-      targetPort: {{.Values.host }}
+      targetPort: {{.Values.host.name }}
 
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{.Values.host }}
+  name: {{.Values.host.name }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: {{.Values.host }}
+    app: {{.Values.host.name }}
 spec:
-  serviceName: {{.Values.host }}
+  serviceName: {{.Values.host.name }}
   replicas: {{.Values.replicas}}
   selector:
     matchLabels:
-      app: {{.Values.host }}
+      app: {{.Values.host.name }}
   template:
     metadata:
       labels:
-        app: {{.Values.host }}
+        app: {{.Values.host.name }}
     spec:
       restartPolicy: Always
       containers:
-        - name: {{.Values.host }}
-          image: {{.Values.image}}
+        - name: {{.Values.host.name }}
+          image: {{.Values.host.image}}
           envFrom:
             - configMapRef:
-                name: {{.Values.host }}
+                name: {{.Values.host.name }}
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
                 - NET_RAW
           ports:
-            - name: {{.Values.host }}
+            - name: {{.Values.host.name }}
               containerPort: 42217
               protocol: TCP
           volumeMounts:

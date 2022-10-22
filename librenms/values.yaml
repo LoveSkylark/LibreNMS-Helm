@@ -12,6 +12,7 @@ application:
   image: "librenms/librenms:latest"
   host:
     FQDN: "nms.test.local"
+    name: "lnms-app"
     realIPfrom: "0.0.0.0/32"
     realIPheader: "X-Forwarded-For" 
     volumeSize: "20Gi"
@@ -26,16 +27,18 @@ application:
     enable: "true"
     schedule: "*/5 * * * *"
   dispatcher:
+    name: "lnms-dispatcher"
     replicas: "1"
     nodeID: "poller 1"
     args: ""
   syslogng:
+    name: "lnms-syslog"
     replicas: "1"
     enable: "true"
     purge: "95"
   lnms:
     services:
-      enable: "true"
+      enable: "false"
     graphs:
       type: "svg"
       dynamic: "true"
@@ -57,9 +60,10 @@ storage:
   path: "/opt/kubes/storage/"
 
 rrdcached:
-  host: "lnms-rrdcached"
-  port: "42217"
-  
+  host:
+    name: "lnms-rrdcached"
+    port: "42217"
+
 redis:
   lnms:
     host: "lnms-redis"

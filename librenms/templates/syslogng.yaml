@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: syslogng
+  name: {{ .Values.application.syslogng.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   type: ClusterIP
   selector:
-    app: syslogng
+    app: {{ .Values.application.syslogng.name | quote }}
   ports:
     - name: syslog-tcp
       protocol: TCP
@@ -24,26 +24,26 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: syslogng
+  name: {{ .Values.application.syslogng.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: syslogng
+    app: {{ .Values.application.syslogng.name | quote }}
 spec:
-  serviceName: syslogng
+  serviceName: {{ .Values.application.syslogng.name | quote }}
   replicas: {{ .Values.application.syslogng.replicas }}
   selector:
     matchLabels:
-      app: syslogng
+      app: {{ .Values.application.syslogng.name | quote }}
   template:
     metadata:
       labels:
-        app: syslogng
+        app: {{ .Values.application.syslogng.name | quote }}
     spec:
       hostname: {{.Release.Name}}-syslogng
       restartPolicy: Always
       containers:
-        - name: syslogng
+        - name: {{ .Values.application.syslogng.name | quote }}
           image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:

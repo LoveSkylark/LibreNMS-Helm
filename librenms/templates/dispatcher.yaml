@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: dispatcher
+  name: {{ .Values.application.dispatcher.name }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: dispatcher
+    app: {{ .Values.application.dispatcher.name }}
 spec:
-  serviceName: dispatcher
+  serviceName: {{ .Values.application.dispatcher.name }}
   replicas: {{ .Values.application.dispatcher.replicas }}
   selector:
     matchLabels:
-      app: dispatcher
+      app: {{ .Values.application.dispatcher.name }}
   template:
     metadata:
       labels:
-        app: dispatcher
+        app: {{ .Values.application.dispatcher.name }}
     spec:
       hostname: {{ .Release.Name }}-dispatcher
       restartPolicy: Always
       containers:
-        - name: dispatcher
+        - name: {{ .Values.application.dispatcher.name }}
           image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
@@ -37,7 +37,7 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
-            - name: DISPATCHER_ARGS
+            - name: {{ .Values.application.dispatcher.name }}_ARGS
               value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
               value: "1"

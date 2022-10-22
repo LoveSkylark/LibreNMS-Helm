@@ -1,7 +1,10 @@
 ---
-image: "crazymax/rrdcached"
-host: " rrdcached"
-port: "42217"
+
+host:
+  name: "rrdcached"
+  port: "42217"
+  image: "crazymax/rrdcached"
+ 
 replicas: "1"
 writeThreads: "4"
 writeTimeout: "1800"
