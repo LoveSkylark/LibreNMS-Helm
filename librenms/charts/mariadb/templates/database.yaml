@@ -34,7 +34,7 @@ spec:
   template:
     metadata:
       labels:
-        app: databa{{ .Values.host.name | quote }}se
+        app: {{ .Values.host.name | quote }}
     spec:
       restartPolicy: Always
       containers:
