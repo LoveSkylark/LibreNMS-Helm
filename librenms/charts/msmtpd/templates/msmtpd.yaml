@@ -9,7 +9,7 @@ metadata:
     app: {{ .Values.host.name | quote }}
 spec:
   serviceName: {{ .Values.host.name | quote }}
-  replicas: {{ .Values.replicas | quote }}
+  replicas: {{ .Values.host.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.host.name | quote }}
