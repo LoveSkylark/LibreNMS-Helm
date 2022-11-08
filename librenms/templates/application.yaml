@@ -2,45 +2,45 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.application.host.name }}
+  name: {{ .Values.application.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Values.application.host.name }}
+    app: {{ .Values.application.host.name | quote }}
   ports:
-    - name: {{ .Values.application.host.name }}
+    - name: {{ .Values.application.host.name | quote }}
       protocol: TCP
       port: 8000
-      targetPort: {{ .Values.application.host.name }}
+      targetPort: {{ .Values.application.host.name | quote }}
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.application.host.name }}
+  name: {{ .Values.application.host.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: {{ .Values.application.host.name }}
+    app: {{ .Values.application.host.name | quote }}
 spec:
   replicas: {{ .Values.application.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.application.host.name }}
+      app: {{ .Values.application.host.name | quote }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Values.application.host.name }}
+        app: {{ .Values.application.host.name | quote }}
     spec:
-      hostname: {{ .Values.application.host.name }}
+      hostname: {{ .Values.application.host.name | quote }}
       restartPolicy: Always
       containers:
-        - name: {{ .Values.application.host.name }}
+        - name: {{ .Values.application.host.name | quote }}
           image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
@@ -68,7 +68,7 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           ports:
-            - name: {{ .Values.application.host.name }}
+            - name: {{ .Values.application.host.name | quote }}
               containerPort: 8000
               protocol: TCP
           volumeMounts:

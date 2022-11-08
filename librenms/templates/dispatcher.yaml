@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.application.dispatcher.name }}
+  name: {{ .Values.application.dispatcher.name | quote }}
   namespace: {{ .Release.Name }}
   labels:
 {{ include "common.labels" . | indent 4 }}
-    app: {{ .Values.application.dispatcher.name }}
+    app: {{ .Values.application.dispatcher.name | quote }}
 spec:
-  serviceName: {{ .Values.application.dispatcher.name }}
-  replicas: {{ .Values.application.dispatcher.replicas | quote }}
+  serviceName: {{ .Values.application.dispatcher.name | quote }}
+  replicas: {{ .Values.application.dispatcher.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.application.dispatcher.name }}
+      app: {{ .Values.application.dispatcher.name | quote }}
   template:
     metadata:
       labels:
-        app: {{ .Values.application.dispatcher.name }}
+        app: {{ .Values.application.dispatcher.name | quote }}
     spec:
       hostname: {{ .Release.Name }}-dispatcher
       restartPolicy: Always
       containers:
-        - name: {{ .Values.application.dispatcher.name }}
+        - name: {{ .Values.application.dispatcher.name | quote }}
           image: {{ .Values.application.image | quote }}
           envFrom:
             - configMapRef:
