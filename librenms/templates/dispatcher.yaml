@@ -27,6 +27,10 @@ spec:
             - configMapRef:
                 name: librenms-cfg
           env:
+            - name: DISPATCHER_NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
