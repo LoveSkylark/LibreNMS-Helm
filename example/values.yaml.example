@@ -32,8 +32,10 @@ mariadb:
     password: "bar"
 
 msmtpd:
-  host: "smtp.gmail.com"
-  port: "587"
+  host:
+    name: "msmtpd"
+    FQDN: "smtp.gmail.com"
+    port: "587"
   from: "foo@gmail.com"
   credentials:
     email:
