@@ -9,7 +9,7 @@ metadata:
     app: {{ .Values.application.dispatcher.name }}
 spec:
   serviceName: {{ .Values.application.dispatcher.name }}
-  replicas: {{ .Values.application.dispatcher.replicas }}
+  replicas: {{ .Values.application.dispatcher.replicas | quote }}
   selector:
     matchLabels:
       app: {{ .Values.application.dispatcher.name }}
