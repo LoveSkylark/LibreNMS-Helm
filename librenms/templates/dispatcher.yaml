@@ -37,7 +37,7 @@ spec:
                 secretKeyRef:
                   name: mysql-sec
                   key: mysql_password
-            - name: {{ .Values.application.dispatcher.name }}_ARGS
+            - name: DISPATCHER_ARGS
               value: {{ .Values.application.dispatcher.args | quote }}
             - name: SIDECAR_DISPATCHER
               value: "1"
