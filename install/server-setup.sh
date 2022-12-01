@@ -80,12 +80,12 @@ LibreSNMPadd > /dev/null 2>&1
 if [ $ip_ens ]
 then 
         echo "Adding $ip_ens to SNMP monitoring"
-        kubectl exec --namespace=librenms --stdin --tty dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_ens 
+        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_ens 
 
 elif [ $ip_eth ]
 then
         echo "Adding $ip_eth to SNMP monitoring"
-        kubectl exec --namespace=librenms --stdin --tty dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_eth 
+        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_eth 
 
 else 
         echo "No IP could be found"
