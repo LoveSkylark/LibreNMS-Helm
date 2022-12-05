@@ -9,6 +9,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   rules:
   - host: {{ .Values.application.host.FQDN | quote }}
@@ -41,7 +43,12 @@ spec:
             name: oxidized
             port:
               number: 8888
-
+  tls:
+  - hosts:
+    - {{ .Values.application.host.FQDN }}
+    - {{ .Values.smokeping.host.FQDN }}
+    - {{ .Values.oxidized.host.FQDN }}
+    secretName: https-cert
 ---
 apiVersion: v1
 kind: Service
