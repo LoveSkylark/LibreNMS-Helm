@@ -52,9 +52,9 @@ application:
       peering: "p"
       core: "i"
   php:
-    memoryLimit: "256M"
+    memoryLimit: "1024M"
     maxInputVars: "1000"
-    opcacheMemSize: "128"
+    opcacheMemSize: "256"
 
 storage:
   path: "/opt/kubes/storage/"
