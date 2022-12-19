@@ -60,9 +60,9 @@ data:
       mikrotik: routeros
       ubiquiti: airos
    
-    pid: "~/.config/oxidized/pid"
+    pid: "/home/oxidized/.config/oxidized/pid"
     crash:
-      directory: "~/.config/oxidized/crashes"
+      directory: "/home/oxidized/.config/oxidized/crashes"
       hostnames: false
     stats:
       history_size: 10
@@ -79,7 +79,7 @@ data:
       git:
           user: Oxidized
           email: noc@sensa.is
-          repo: "~/.config/oxidized/configs"
+          repo: "/home/oxidized/.config/oxidized/configs"
     source:
       default: http
       debug: false
