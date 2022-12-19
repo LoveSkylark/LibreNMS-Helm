@@ -60,9 +60,9 @@ data:
       mikrotik: routeros
       ubiquiti: airos
    
-    pid: "/root/.config/oxidized/pid"
+    pid: "~/.config/oxidized/pid"
     crash:
-      directory: "/root/.config/oxidized/crashes"
+      directory: "~/.config/oxidized/crashes"
       hostnames: false
     stats:
       history_size: 10
