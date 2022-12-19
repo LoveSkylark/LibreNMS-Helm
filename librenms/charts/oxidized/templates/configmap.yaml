@@ -84,7 +84,7 @@ data:
       default: http
       debug: false
       http:
-        url: http://application:8000/api/v0/oxidized
+        url: http://lnms-app:8000/api/v0/oxidized
         scheme: http
         secure: false
         map:
