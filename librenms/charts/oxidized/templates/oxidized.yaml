@@ -53,10 +53,10 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: application
-              mountPath: /root/.config/oxidized/
+              mountPath: ~/.config/oxidized/
               subPath: oxidized
             - name: oxidized-file
-              mountPath: /root/.config/oxidized/config
+              mountPath: ~/.config/oxidized/config
               subPath: config
       volumes:
         - name: application
