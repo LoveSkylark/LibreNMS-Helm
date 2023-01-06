@@ -104,8 +104,6 @@ oxidized:
   host:
     FQDN: "ox.test.local"
   credentials:
-    user: "deviceadmin"
-    password: "devicepassword"
     token: "API-token-generated-inside-LIBRE"
   ignore:
     types: 
@@ -120,25 +118,28 @@ oxidized:
       - "jetdirect"
     groups:
       - ""
-  # Device can be grouped by as string in device NOTE or DESCRIPTION
+  # Device can be grouped by as string in the device NOTE or DESCRIPTION
   group:
+    core:
+      user: "deviceadmin"
+      password: "devicepassword"
     one:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-1/"
     two:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-2/"
     three:
-      user: ""
+      password: ""
       pass: ""
       string: "/^ox-group-3/"
     four:
-      user: ""
+      password: ""
       pass: ""
       string: "/^ox-group-4/"
     five:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-5/"
