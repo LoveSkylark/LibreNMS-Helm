@@ -109,8 +109,7 @@ oxidized:
     types: 
       - "server"
       - "power"
-      - "ciscosb"
-      - "jetdirect"
+      - "storage"
     os: 
       - "linux"
       - "windows"
