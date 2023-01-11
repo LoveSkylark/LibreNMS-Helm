@@ -59,6 +59,8 @@ data:
       cisco: iosxe
       mikrotik: routeros
       ubiquiti: airos
+      fortigate: fortios
+      fortiswitch: fortios
    
     pid: "/home/oxidized/.config/oxidized/pid"
     crash:
