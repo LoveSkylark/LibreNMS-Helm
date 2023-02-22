@@ -59,21 +59,21 @@ oxidized:
       password: "devicepassword"
     one:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-1/"
     two:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-2/"
     three:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-3/"
     four:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-4/"
     five:
       user: ""
-      pass: ""
+      password: ""
       string: "/^ox-group-5/"
