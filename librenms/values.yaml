@@ -2,10 +2,10 @@ global:
   TZ: "Atlantic/Reykjavik"
   puid: "1000"
   pgid: "1000"
-
-company:
-  name: "TEST CO"
-  
+  company:
+    name: "SENSA"  
+    address: ""
+    contact: ""
 
 application:
   replicas: "1"
@@ -73,6 +73,11 @@ redis:
     cacheDriver: "redis"
     sessionDriver: "redis"
 
+xmatters:
+  enable: "true"
+  URL: "company.xmatters.com"
+  APIkey: ""
+  APIsecret: ""
 
 mariadb:
   database: "librenms"

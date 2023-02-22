@@ -61,7 +61,7 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    app: syslogng
+    app: {{ .Values.application.syslogng.name | quote }}
   ports:
     - name: syslog-tcp
       protocol: TCP
@@ -80,7 +80,7 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    app: syslogng
+    app: {{ .Values.application.syslogng.name | quote }}
   ports:
     - name: syslog-udp
       protocol: UDP
