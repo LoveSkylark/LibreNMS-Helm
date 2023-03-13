@@ -1,5 +1,9 @@
 ---
-image: "lscr.io/linuxserver/smokeping:latest"
+host:
+  image:    "lscr.io/linuxserver/smokeping:latest"
+  name:     "smokeping"
+  FQDN:     "sp.test.local"
+  replicas: "1"
 
 global:
   TZ: "Europe/London"

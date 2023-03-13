@@ -1,0 +1,17 @@
+---
+host:
+  image: "loveskylark/xmatters-xa:latest"
+  name: "xmatters-xa"
+enable: "true"
+URL: "company.xmatters.com"
+APIkey: ""
+APIsecret: ""
+proxy:
+  auto: "false"
+  IP: ""
+  port: ""
+  user: ""
+  password: ""
+  domain: ""
+  bypass: ""
+  PacFile: ""

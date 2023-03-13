@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.host.name | quote }}
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  XMATTERS_HOSTNAME:  {{ .Values.URL | quote }}
+  XMATTERS_KEY:       {{ .Values.APIsecret | quote }}
+  API_KEY:            {{ .Values.APIkey | quote }}
+
+  XA_PROXY_AUTO:      {{ .Values.proxy.auto | quote }}
+  XA_PROXY_PAC:       {{ .Values.proxy.PacFile | quote }}
+  XA_PROXY_IP:        {{ .Values.proxy.IP | quote }}
+  XA_PROXY_PORT:      {{ .Values.proxy.port | quote }}
+  XA_PROXY_USER:      {{ .Values.proxy.user | quote }}
+  XA_PROXY_PASS:      {{ .Values.proxy.password | quote }}
+  XA_PROXY_DOMAIN:    {{ .Values.proxy.domain | quote }}
+  XA_PROXY_BYPASS:    {{ .Values.proxy.bypass | quote }}
+
+  FRIENDLY_NAME:      "{{ .Values.global.company.name }}-librenms-agent"
