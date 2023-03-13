@@ -23,6 +23,11 @@ spec:
       containers:
         - name: {{ .Values.application.dispatcher.name | quote }}
           image: {{ .Values.application.image | quote }}
+          args:
+            - /bin/sh 
+            - "-c"
+            - |
+              sed -i "s/\$this->fill(\$api->getCoordinates(\$this->location))/\$this->fill(\$api->getCoordinates(preg_replace(\$this->'\/\\\\\(.*?\\\\\)\/';, '', \$this->location)))/" app/Models/Location.php
           envFrom:
             - configMapRef:
                 name: librenms-cfg
