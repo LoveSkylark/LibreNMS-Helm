@@ -2,12 +2,12 @@
 host:
   image: "loveskylark/xmatters-xa:latest"
   name: "xmatters-xa"
-enable: "true"
+enable: false
 URL: "company.xmatters.com"
 APIkey: ""
 APIsecret: ""
 proxy:
-  auto: "false"
+  auto: false
   IP: ""
   port: ""
   user: ""
