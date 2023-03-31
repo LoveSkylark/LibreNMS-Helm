@@ -74,7 +74,7 @@ redis:
     sessionDriver: "redis"
 
 xmatters:
-  enable: "true"
+  enable: false
   URL: "company.xmatters.com"
   APIkey: ""
   APIsecret: ""
