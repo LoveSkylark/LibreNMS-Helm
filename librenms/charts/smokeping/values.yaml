@@ -5,6 +5,8 @@ host:
   FQDN:     "sp.test.local"
   replicas: "1"
 
+enable: false
+
 global:
   TZ: "Europe/London"
   puid: "1000"
