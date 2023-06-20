@@ -32,6 +32,7 @@ data:
   #mysql_password: {{ .Values.mariadb.credentials.password | quote }}
   #mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
 
+{{- if .Values.xmatters.enable }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -164,8 +165,9 @@ data:
             ];
         }
     }
+{{- end }}
 
-
+{{- if .Values.smokeping.enable }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -179,5 +181,5 @@ data:
     /opt/librenms/lnms smokeping:generate --targets > /data/smokeping/config/librenms-targets.conf
     /opt/librenms/lnms smokeping:generate --probes  > /data/smokeping/config/librenms-probes.conf
 
+{{- end }}
 
-  
