@@ -1,4 +1,5 @@
 ---
+{{- if .Values.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -46,3 +47,4 @@ data:
             Here you will learn all about the latency of our network.
 
     @include /config/librenms-targets.conf
+{{- end }}

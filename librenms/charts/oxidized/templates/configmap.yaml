@@ -1,4 +1,5 @@
 ---
+{{- if .Values.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -96,3 +97,4 @@ data:
           ip: ip
         headers:
           X-Auth-Token: {{ .Values.credentials.token }}
+{{- end }}

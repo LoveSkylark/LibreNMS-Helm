@@ -1,5 +1,5 @@
 ---
-{{- if .application.syslogng.enable }}
+{{- if .Values.application.syslogng.enable }}
 apiVersion: v1
 kind: Service
 metadata:

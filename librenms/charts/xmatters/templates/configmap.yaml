@@ -1,4 +1,5 @@
 ---
+{{- if .Values.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -21,3 +22,4 @@ data:
   XA_PROXY_BYPASS:    {{ .Values.proxy.bypass | quote }}
 
   FRIENDLY_NAME:      "{{ .Values.global.company.name }}-librenms-agent"
+{{- end }}

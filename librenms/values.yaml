@@ -53,21 +53,21 @@ application:
     nodeID: "poller 1"
     args: ""
   weathermap:
-    enable: "true"
+    enable: true
     schedule: "*/5 * * * *"
   syslogng:
-    enable: "true"
+    enable: true
     name: "lnms-syslog"
     replicas: "1"
     purge: "95"
   lnms:
     services:
-      enable: "false"
+      enable: false
     graphs:
       type: "svg"
-      dynamic: "true"
+      dynamic: true
     billing:
-      enable: "true"
+      enable: true
       purge: "95"
       default95: "1"
     parsing:
@@ -84,13 +84,13 @@ storage:
   path: "/opt/kubes/storage/"
 
 xmatters:
-  enable: "false"
+  enable: false
   URL: "company.xmatters.com"
   APIkey: ""
   APIsecret: ""
 
 msmtpd:
-  enable: "true"
+  enable: true
   host:
     name: "msmtpd"
     FQDN: "smtp.gmail.com"
@@ -102,7 +102,7 @@ msmtpd:
       password: "bar"   
 
 oxidized:
-  enable: "true"
+  enable: true
   host:
     FQDN: "ox.test.local"
   credentials:
@@ -146,6 +146,6 @@ oxidized:
       string: "/^ox-group-5/"
 
 smokeping:
-  enable: "false"
+  enable: false
   host:
     FQDN: "smokeping.test.local"
