@@ -1,11 +1,11 @@
 ---
+enable: false
+
 host:
   image:    "lscr.io/linuxserver/smokeping:latest"
   name:     "smokeping"
   FQDN:     "sp.test.local"
   replicas: "1"
-
-enable: false
 
 global:
   TZ: "Europe/London"

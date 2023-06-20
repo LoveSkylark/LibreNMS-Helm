@@ -7,6 +7,30 @@ global:
     address: ""
     contact: ""
 
+mariadb:
+  database: "librenms"
+  host:
+    name: "database"
+    volumeSize: "20Gi"
+  credentials:
+    rootPassword: "fooRootPassword"
+    user: "foo"
+    password: "bar"
+
+rrdcached:
+  host:
+    name: "lnms-rrdcached"
+    port: "42217"
+
+redis:
+  lnms:
+    host: "lnms-redis"
+    port: "6379"
+    database: "0"
+    scheme: "tcp"
+    cacheDriver: "redis"
+    sessionDriver: "redis"
+
 application:
   replicas: "1"
   image: "librenms/librenms:latest"
@@ -23,18 +47,18 @@ application:
   SNMPcommunity: 
     - "community-string-1"
     - "community-string-2"
-  weathermap:
-    enable: "true"
-    schedule: "*/5 * * * *"
   dispatcher:
     name: "lnms-dispatcher"
     replicas: "1"
     nodeID: "poller 1"
     args: ""
+  weathermap:
+    enable: "true"
+    schedule: "*/5 * * * *"
   syslogng:
+    enable: "true"
     name: "lnms-syslog"
     replicas: "1"
-    enable: "true"
     purge: "95"
   lnms:
     services:
@@ -59,37 +83,14 @@ application:
 storage:
   path: "/opt/kubes/storage/"
 
-rrdcached:
-  host:
-    name: "lnms-rrdcached"
-    port: "42217"
-
-redis:
-  lnms:
-    host: "lnms-redis"
-    port: "6379"
-    database: "0"
-    scheme: "tcp"
-    cacheDriver: "redis"
-    sessionDriver: "redis"
-
 xmatters:
-  enable: false
+  enable: "false"
   URL: "company.xmatters.com"
   APIkey: ""
   APIsecret: ""
 
-mariadb:
-  database: "librenms"
-  host:
-    name: "database"
-    volumeSize: "20Gi"
-  credentials:
-    rootPassword: "fooRootPassword"
-    user: "foo"
-    password: "bar"
-
 msmtpd:
+  enable: "true"
   host:
     name: "msmtpd"
     FQDN: "smtp.gmail.com"
@@ -99,10 +100,6 @@ msmtpd:
     email:
       user: "foo"
       password: "bar"   
-
-smokeping:
-  host:
-    FQDN: "smokeping.test.local"
 
 oxidized:
   enable: "true"
@@ -147,3 +144,8 @@ oxidized:
       user: ""
       password: ""
       string: "/^ox-group-5/"
+
+smokeping:
+  enable: "false"
+  host:
+    FQDN: "smokeping.test.local"

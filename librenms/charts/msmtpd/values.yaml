@@ -1,5 +1,8 @@
 ---
+enable: true
+
 image: "crazymax/msmtpd:latest"
+replicas: "1"
 host:
   name: "msmtpd"
   FQDN: "smtp.gmail.com"

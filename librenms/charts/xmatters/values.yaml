@@ -1,8 +1,10 @@
 ---
+enable: false
+
 host:
   image: "loveskylark/xmatters-xa:latest"
   name: "xmatters-xa"
-enable: false
+
 URL: "company.xmatters.com"
 APIkey: ""
 APIsecret: ""

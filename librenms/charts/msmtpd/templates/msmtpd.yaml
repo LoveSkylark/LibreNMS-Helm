@@ -1,4 +1,5 @@
 ---
+{{- if .Values.enable }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -9,7 +10,7 @@ metadata:
     app: {{ .Values.host.name | quote }}
 spec:
   serviceName: {{ .Values.host.name | quote }}
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.host.name | quote }}
@@ -36,3 +37,4 @@ spec:
                 secretKeyRef:
                   name: msmtpd-sec
                   key: email_password
+{{- end }}

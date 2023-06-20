@@ -7,7 +7,8 @@
 global:
   TZ: "Atlantic/Reykjavik"
 
-Company: "TEST CO"
+Company:
+   name: "TEST CO"
 
 storage:
   path: "/data/"
@@ -24,14 +25,13 @@ application:
     replicas: "1"
 
 mariadb:
-  host:
-    volumeSize: "20Gi"
   credentials:
     rootPassword: "fooRootPassword"
     user: "foo"
     password: "bar"
 
 msmtpd:
+  enable: "true"
   host:
     name: "msmtpd"
     FQDN: "smtp.gmail.com"
@@ -43,10 +43,12 @@ msmtpd:
       password: "bar"   
 
 smokeping:
+  enable: "false"
   host:
     FQDN: "smokeping.test.local"
 
 oxidized:
+  enable: "true"
   host:
     FQDN: "ox.test.local"
   credentials:
@@ -77,3 +79,9 @@ oxidized:
       user: ""
       password: ""
       string: "/^ox-group-5/"
+
+xmatters:
+  enable: "false"
+  URL: "company.xmatters.com"
+  APIkey: ""
+  APIsecret: ""

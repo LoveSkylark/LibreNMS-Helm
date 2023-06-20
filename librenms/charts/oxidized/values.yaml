@@ -1,10 +1,13 @@
 ---
+enable: true
+
 image: "oxidized/oxidized:latest"
+replicas: "1"
 reloadInterval: 600
 host:
   name: "oxidized"
   FQDN: "ox.test.local"
-enable: true
+
 groupSupport: true
 featureVers: true
 reloadNodes: true
