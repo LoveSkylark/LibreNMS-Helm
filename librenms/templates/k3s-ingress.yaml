@@ -8,9 +8,13 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
   annotations:
     kubernetes.io/ingress.class: traefik
+
+{{- if .Values.ingress.https }}  
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+{{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    # traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    # traefik.ingress.kubernetes.io/router.tls: "true"
+{{- end }}
 spec:
   rules:
   - host: {{ .Values.application.host.FQDN | quote }}
@@ -23,6 +27,7 @@ spec:
             name: {{ .Values.application.host.name }}
             port:
               number: 8000
+{{- if .Values.smokeping.enable }}
   - host: {{ .Values.smokeping.host.FQDN | quote }}
     http:
       paths:
@@ -33,6 +38,8 @@ spec:
             name: smokeping
             port:
               number: 8081
+{{- end }}
+{{- if .Values.oxidized.enable }}
   - host: {{ .Values.oxidized.host.FQDN | quote }}
     http:
       paths:
@@ -43,13 +50,22 @@ spec:
             name: oxidized
             port:
               number: 8888
+{{- end }}
+{{- if .Values.ingress.https }}  
   tls:
   - hosts:
     - {{ .Values.application.host.FQDN }}
+{{- if .Values.smokeping.enable }}
     - {{ .Values.smokeping.host.FQDN }}
+{{- end }}
+{{- if .Values.oxidized.enable }}
     - {{ .Values.oxidized.host.FQDN }}
+{{- end }}
     secretName: https-cert
+{{- end }}
+
 ---
+{{- if .Values.application.syslogng.enable }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -86,7 +102,7 @@ spec:
       protocol: UDP
       port: 514
       targetPort: syslog-udp
-
+{{- end }}
 ---
 apiVersion: v1
 kind: Service

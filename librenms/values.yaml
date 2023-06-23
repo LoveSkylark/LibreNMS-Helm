@@ -7,6 +7,9 @@ global:
     address: ""
     contact: ""
 
+ingress:
+  https: disabled
+
 mariadb:
   database: "librenms"
   host:
