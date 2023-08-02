@@ -77,11 +77,6 @@ spec:
             - name: config-file
               mountPath: /data/config/config.php
               subPath: config.php
-            - name: xmatters-transport-file
-              mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
-              subPath: Xmatters.php
-            - name: application
-              mountPath: /data
       volumes:
         - name: application
           persistentVolumeClaim:

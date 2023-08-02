@@ -8,7 +8,9 @@ global:
     contact: ""
 
 ingress:
-  https: disabled
+  # befor you can enable hhtp you need to install a cert:
+  # kubectl create secret tls https-cert --cert=<certificate-file> --key=<key-file> --namespace librenms
+  https: false
 
 mariadb:
   database: "librenms"

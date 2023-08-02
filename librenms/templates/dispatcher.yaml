@@ -51,15 +51,19 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
+{{- if .Values.xmatters.enable }}
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
               subPath: Xmatters.php
+{{- end }}
             - name: application
               mountPath: /data
       volumes:
+{{- if .Values.xmatters.enable }}
         - name: xmatters-transport-file
           configMap:
             name: xmatters-transport-file
+{{- end }}
         - name: application
           persistentVolumeClaim:
             claimName: application
