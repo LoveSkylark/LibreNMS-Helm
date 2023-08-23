@@ -1,5 +1,5 @@
 ---
-enable: false
+enable: true
 
 host:
   image: "loveskylark/xmatters-xa:latest"

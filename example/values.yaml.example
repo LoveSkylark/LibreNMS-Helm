@@ -31,7 +31,7 @@ mariadb:
     password: "bar"
 
 msmtpd:
-  enable: "true"
+  enable: true
   host:
     name: "msmtpd"
     FQDN: "smtp.gmail.com"
@@ -43,12 +43,12 @@ msmtpd:
       password: "bar"   
 
 smokeping:
-  enable: "false"
+  enable: false
   host:
     FQDN: "smokeping.test.local"
 
 oxidized:
-  enable: "true"
+  enable: true
   host:
     FQDN: "ox.test.local"
   credentials:
@@ -81,7 +81,7 @@ oxidized:
       string: "/^ox-group-5/"
 
 xmatters:
-  enable: "false"
+  enable: false
   URL: "company.xmatters.com"
   APIkey: ""
   APIsecret: ""
