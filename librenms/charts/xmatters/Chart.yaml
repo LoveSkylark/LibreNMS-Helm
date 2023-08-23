@@ -1,5 +1,5 @@
 apiVersion: v2
-name: xmatters-xa
+name: xmatters
 description: LibreNMS supporting services
 type: application
 version: 1.0.0
