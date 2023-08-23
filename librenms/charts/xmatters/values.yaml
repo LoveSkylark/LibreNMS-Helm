@@ -3,7 +3,7 @@ enable: false
 
 host:
   image: "loveskylark/xmatters-xa:latest"
-  name: "xmatters-xa"
+  name: "xmatters"
 
 URL: "company.xmatters.com"
 APIkey: ""
