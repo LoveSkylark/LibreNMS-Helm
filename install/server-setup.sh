@@ -72,7 +72,7 @@ echo ""
 echo "################## Downloading and installing Helm ##################"
 echo "This step installs Helm, the Kubernetes package manager."
 echo ""
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sh
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 echo ""
 
 
