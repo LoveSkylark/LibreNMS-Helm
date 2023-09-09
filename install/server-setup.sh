@@ -1,107 +1,136 @@
 #!/bin/bash
 
-echo "############## Updatinga Linux ##############"
-echo ""
-export DEBIAN_FRONTEND=noninteractive
-apt update && apt upgrade -y
-echo ""
-echo ""
-echo "############## Installing basic tools ##############"
-echo ""
-apt install vim nano git snmpd -y
-echo ""
-echo ""
-echo "############## Downloading and installing K3S ##############"
-echo ""
-export INSTALL_K3S_BIN_DIR=/usr/local/bin
-grep -qxF 'KUBECONFIG="/etc/rancher/k3s/k3s.yaml"' /etc/environment || echo 'KUBECONFIG="/etc/rancher/k3s/k3s.yaml"' >> /etc/environment
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-curl -sfL 'https://get.k3s.io' | sh -
-echo ""
-echo ""
-echo "############## Downloading and installing K9S ##############"
-echo ""
-curl -sS https://webinstall.dev/k9s | bash
-source ~/.config/envman/PATH.env
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-echo ""
-echo ""
-echo "############## Downloading and installing HELM ##############"
-echo ""
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-echo ""
-echo ""
-echo "############## Fetching helm chart ##############"
-echo ""
-mkdir /data /data/chart
-cd /data/chart
-git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
-cp LibreNMS-Helm/example/values.yaml.example config.yaml
-echo ""
-echo ""
-echo "############## Adding alias for KUBE & HELM##############"
-echo ""
-mv ~/.bash_aliases ~/.bash_aliases.backup
-cp LibreNMS-Helm/install/bash ~/.bash_aliases
-echo ""
-echo ""
-echo "############## Setting up SNMP ##############"
-echo ""
-cp LibreNMS-Helm/install/snmp.conf /etc/snmp/snmpd.conf.d
-systemctl restart snmpd
-echo ""
-echo ""
-vim -f config.yaml
-echo ""
-echo "################## Staring up the Cluster ##################"
-echo "it will take few minutes to build the LibreNMS cluster, you" 
-echo "can monitor the proccess by typing 'k9s' in another shell"
+# Define variables
+BIN_DIR="/usr/local/bin"
+K3S_INSTALL_SCRIPT="https://get.k3s.io"
+K9S_INSTALL_SCRIPT="https://webi.sh/k9s"
+CHART_DIR="/data/chart"
+LIBRENMS_CHART="LibreNMS-Helm/librenms/"
+CONFIG_FILE="$CHART_DIR/config.yaml"
+
+# Function to install LibreNMS cluster
+function LibreClusterInstall() {
+    helm install librenms "$CHART_DIR/$LIBRENMS_CHART" -f "$CONFIG_FILE"
+}
+
+# Function to add LibreNMS IP to SNMP monitoring
+function LibreSNMPadd() {
+    ip_eth=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+    ip_ens=$(/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1)
+
+    if [ "$ip_ens" ]; then
+        echo "Adding $ip_ens to SNMP monitoring..."
+        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS "$ip_ens"
+    elif [ "$ip_eth" ]; then
+        echo "Adding $ip_eth to SNMP monitoring..."
+        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS "$ip_eth"
+    else
+        echo "No IP address could be found for SNMP monitoring."
+    fi
+}
+
+# Start of the script
+
+echo "################## Updating Linux ##################"
+sudo apt update && sudo apt upgrade -y
 
 
-echo "################## Staring up the Cluster ##################"
-
-function LibreClusterInstall() 
-        {
-                helm install librenms /data/chart/LibreNMS-Helm/librenms -f /data/chart/config.yaml
-        }
-
-LibreClusterInstall
-
-echo "################## Finding LibreNMS IP and adding to SNMP ##################"
 echo ""
-function LibreSNMPadd()
-        {
-        ip_eth=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
-        ip_ens=$(/sbin/ip -o -4 addr list ens160 | awk '{print $4}' | cut -d/ -f1)
-        }
+echo "################## Installing essential tools ##################"
+sudo apt install -y curl git vim
 
-LibreSNMPadd > /dev/null 2>&1
 
-if [ $ip_ens ]
-then 
-        echo "Adding $ip_ens to SNMP monitoring"
-        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_ens 
+echo ""
+echo "################## Downloading and installing K3S ##################"
+echo "This step installs K3s, a lightweight Kubernetes distribution."
+echo ""
+# Set KUBECONFIG for all users by creating a script in /etc/profile.d/
+echo 'export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"' | sudo tee /etc/profile.d/kubeconfig.sh > /dev/null
+export INSTALL_K3S_BIN_DIR="$BIN_DIR"
+curl -sfL "$K3S_INSTALL_SCRIPT" | sudo sh -
+echo ""
 
-elif [ $ip_eth ]
-then
-        echo "Adding $ip_eth to SNMP monitoring"
-        kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms device:add -2 -c locallibremon -r 1161 -d LibreNMS $ip_eth 
 
-else 
-        echo "No IP could be found"
+echo "################## Downloading and installing K9S ##################"
+echo "This step installs K9s, a terminal-based Kubernetes dashboard."
+echo ""
+curl -sS "$K9S_INSTALL_SCRIPT" | sudo sh -
+
+# Move k9s binary to the BIN_DIR if it exists
+if [ "$(id -u)" -eq 0 ]; then
+    if [ -f "/root/.local/bin/k9s" ]; then
+        sudo mv "/root/.local/bin/k9s" "$BIN_DIR/"
+    fi
+else
+    if [ -f "/home/$USER/.local/bin/k9s" ]; then
+        sudo mv "/home/$USER/.local/bin/k9s" "$BIN_DIR/"
+    fi
 fi
 echo ""
+
+
+echo "################## Downloading and installing Helm ##################"
+echo "This step installs Helm, the Kubernetes package manager."
 echo ""
-echo "################## Install complete ##################"
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sh
+echo ""
+
+
+echo "################## Fetching Helm chart for LibreNMS ##################"
+echo "This step fetches the LibreNMS Helm chart from the repository."
+echo ""
+mkdir -p "$CHART_DIR"
+cd "$CHART_DIR"
+git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
+cp "$CHART_DIR/LibreNMS-Helm/example/values.yaml.example" "$CONFIG_FILE"
+echo ""
+
+
+echo "################## Adding aliases for KUBE & HELM ##################"
+echo "This step sets up convenient aliases for managing Kubernetes and Helm."
+echo ""
+sudo cp "$CHART_DIR/LibreNMS-Helm/install/aliases.sh" /etc/profile.d/aliases.sh
+echo ""
+
+
+
+echo "################## Setting up SNMP for LibreNMS ##################"
+echo "This step configures SNMP for LibreNMS monitoring."
+echo ""
+sudo cp "$CHART_DIR/LibreNMS-Helm/install/snmp.conf" /etc/snmp/snmpd.conf.d
+sudo systemctl restart snmpd
+echo ""
+
+
+echo "################## Configuring LibreNMS cluster ##################"
+echo "This step allows you to configure your LibreNMS cluster."
+echo "Please make any necessary changes in the configuration file: $CONFIG_FILE"
+echo ""
+vim -f "$CONFIG_FILE"
+echo ""
+
+
+echo "################## Starting up the LibreNMS Cluster ##################"
+echo "It will take a few minutes to build the LibreNMS cluster."
+echo "You can monitor the process by typing 'k9s' in another shell."
+echo ""
+# Install LibreNMS cluster
+LibreClusterInstall
+echo ""
+
+echo "################## Adding host to LibreNMS monitoring ##################"
+echo "The host is being added to LibreNMS monitoring."
+echo ""
+# Add LibreNMS IP to SNMP monitoring
+LibreSNMPadd
+echo ""
+
+echo "################## Installation complete ##################"
 echo ""
 echo ""
-echo ""
-echo "          k9s         = manage the kube cluster"
-echo ""
-echo "          nms-edit    = change cluster configuration"
-echo "          nms-help    = libreNMS cli commands"
-echo ""
-echo "          lnms        = libreNMS cli commands"
+echo "To manage the Kubernetes cluster, use 'k9s' command."
+echo "To edit Cluster configuration, use 'nms' command."
+echo "For LibreNMS CLI commands, use 'lnms' command."
 echo ""
 echo ""
 echo ""
