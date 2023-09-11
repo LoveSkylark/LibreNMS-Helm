@@ -83,7 +83,9 @@ echo ""
 mkdir -p "$CHART_DIR"
 cd "$CHART_DIR"
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
-cp "$CHART_DIR/LibreNMS-Helm/example/values.yaml.example" "$CONFIG_FILE"
+if [ ! -f "$CONFIG_FILE" ]; then
+    cp "$CHART_DIR/LibreNMS-Helm/example/values.yaml.example" "$CONFIG_FILE"
+fi
 echo ""
 
 
