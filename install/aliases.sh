@@ -1,11 +1,5 @@
-# ALIAS COMMANDS
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias g="goto"
-alias grep='grep --color'
-
 # Kubectl commands
+
 alias k="kubectl"
 
 kn() {
@@ -73,5 +67,42 @@ hun() {
 
 alias lnms="kubectl exec --namespace=librenms --stdin --tty lnms-dispatcher-0 -- /usr/bin/lnms"
 
-alias nms-edit="cd /data/chart/ && vim -f config.yaml && knd && helm upgrade librenms LibreNMS-Helm/librenms/ -f config.yaml"
-alias nms-help="cat /data/chart/install/info.txt"
+nms() {
+    local CHART_DIR="/data/chart"
+    local CONFIG_FILE="$CHART_DIR/config.yaml"
+    local LIBRENMS_CHART="LibreNMS-Helm/librenms/"
+
+    # Store the current directory
+    ORIGINAL_DIR=$(pwd)
+
+    case "$1" in
+        "edit")
+            cd "$CHART_DIR" || return 1
+            vim -f "$CONFIG_FILE"
+            if [ $? -eq 0 ]; then
+                helm upgrade librenms "$LIBRENMS_CHART" -f "$CONFIG_FILE"
+            else
+                echo "Editing configuration failed."
+            fi
+            ;;
+        "help")
+            cat "$CHART_DIR/install/info.txt" || return 1
+            ;;
+        "update")
+            cd "$CHART_DIR" || return 1
+            helm upgrade librenms "$LIBRENMS_CHART" -f "$CONFIG_FILE" || return 1
+            ;;
+        "weathermap")
+            local pod_name=$(kubectl get pods -n librenms | grep lnms-app | awk '{print $1}')
+            if [ -n "$pod_name" ]; then
+                kubectl exec -it "$pod_name" --namespace=librenms -- php /opt/librenms/html/plugins/Weathermap/map-poller.php
+            else
+                echo "Error: LibreNMS pod not found."
+            fi
+            ;;
+        *)
+            echo "Usage: $0 {edit|update|weathermap|help}"
+            return 1
+            ;;
+    esac
+}
