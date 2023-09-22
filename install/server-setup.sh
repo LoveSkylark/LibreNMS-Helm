@@ -40,11 +40,17 @@ echo "################## Installing essential tools ##################"
 sudo apt install -y curl git vim
 
 
+echo "################## Adding aliases  ##################"
+echo "This step sets up convenient aliases for managing Kubernetes and Helm."
+echo ""
+sudo cp "$CHART_DIR/LibreNMS-Helm/install/aliases.sh" /etc/profile.d/aliases.sh
+echo ""
+
+
 echo ""
 echo "################## Downloading and installing K3S ##################"
 echo "This step installs K3s, a lightweight Kubernetes distribution."
 echo ""
-# Set KUBECONFIG for all users by creating a script in /etc/profile.d/
 grep -qxF 'KUBECONFIG="/etc/rancher/k3s/k3s.yaml"' /etc/environment || echo 'KUBECONFIG="/etc/rancher/k3s/k3s.yaml"' >> /etc/environment
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 export INSTALL_K3S_BIN_DIR="$BIN_DIR"
@@ -85,15 +91,6 @@ cd "$CHART_DIR"
 git clone https://github.com/LoveSkylark/LibreNMS-Helm.git
 cp "$CHART_DIR/LibreNMS-Helm/example/values.yaml.example" "$CONFIG_FILE"
 echo ""
-
-
-echo "################## Adding aliases for KUBE & HELM ##################"
-echo "This step sets up convenient aliases for managing Kubernetes and Helm."
-echo ""
-sudo cp "$CHART_DIR/LibreNMS-Helm/install/aliases.sh" /etc/profile.d/aliases.sh
-echo ""
-
-
 
 echo "################## Setting up SNMP for LibreNMS ##################"
 echo "This step configures SNMP for LibreNMS monitoring."
