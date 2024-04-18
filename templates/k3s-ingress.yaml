@@ -27,6 +27,13 @@ spec:
             name: {{ .Values.application.host.name }}
             port:
               number: 8000
+      - path: /post
+        pathType: Prefix
+        backend:
+          service:
+            name: post-to-put
+            port:
+              number: 5000
 {{- if .Values.smokeping.enable }}
   - host: {{ .Values.smokeping.host.FQDN | quote }}
     http:
