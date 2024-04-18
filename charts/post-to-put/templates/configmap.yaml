@@ -1,0 +1,13 @@
+---
+{{- if .Values.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.host.name | quote }}
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  API_KEY: {{ .Values.target.token | quote }}
+  TARGET_HOST: {{ .Values.target.host | quote }}
+{{- end }}

@@ -1,0 +1,11 @@
+---
+enable: true
+
+image: "loveskylark/post-to-put-proxy:0.0.1"
+replicas: "1"
+host:
+  name: "post-to-put"
+
+target:
+  host: "http://lnms-app:8000/api/v0/"
+  token: ""
