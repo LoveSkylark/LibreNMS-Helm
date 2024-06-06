@@ -9,7 +9,7 @@ To install Kube and Helm along with the LibreNMS-Helm setup, follow these steps:
    ````bash
    sudo -i
    curl -fsSL https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Installer/main/LibreNMS-Install | sudo bash
-   ```
+   ````
 ### The script will take some time to install
 - Git
 - SNMP (client)
@@ -25,7 +25,7 @@ Startup Instructions
    ````bash
    sudo -i
    nms start
-   ```
+   ````
 
 When that is done it will prompt you to configure the cluster
 
@@ -43,8 +43,7 @@ Other configuration can be adjusted after the initial install
 press "a" to start editing the configuration and when your done press "esc" then type ":wq"
 
 
-
-## 3. While the cluster is being built you can open another shell and type "k9s" as SUDO to monitor its process
+## While the cluster is being built you can open another shell and type "k9s" as SUDO to monitor its process
 
 K9S allows you to:
 - terminal directly into a pod to run test
