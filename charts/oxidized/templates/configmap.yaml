@@ -36,8 +36,8 @@ data:
     vars: {}
     groups:
       core:
-        username: {{ .Values.group.Gcore.user }}
-        password: {{ .Values.group.Gcore.password }}
+        username: {{ .Values.group.core.user }}
+        password: {{ .Values.group.core.password }}
       1:
         username: {{ .Values.group.G1.user }}
         password: {{ .Values.group.G1.password }}
