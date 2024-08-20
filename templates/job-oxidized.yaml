@@ -37,33 +37,33 @@ spec:
             lnms config:set oxidized.maps.group.purpose.G3 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "3"}' --ignore-checks
             lnms config:set oxidized.maps.group.purpose.G4 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "4"}' --ignore-checks
             lnms config:set oxidized.maps.group.purpose.G5 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "5"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G6 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "6"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G7 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "7"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G8 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "8"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G9 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "9"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G10 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "10"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G11 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "11"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G12 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "12"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G13 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "13"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G14 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "14"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G15 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "15"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G16 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "16"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G6 '{"regex": {{ .Values.oxidized.group.G6.string | quote }}, "value": "6"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G7 '{"regex": {{ .Values.oxidized.group.G7.string | quote }}, "value": "7"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G8 '{"regex": {{ .Values.oxidized.group.G8.string | quote }}, "value": "8"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G9 '{"regex": {{ .Values.oxidized.group.G9.string | quote }}, "value": "9"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G10 '{"regex": {{ .Values.oxidized.group.G10.string | quote }}, "value": "10"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G11 '{"regex": {{ .Values.oxidized.group.G11.string | quote }}, "value": "11"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G12 '{"regex": {{ .Values.oxidized.group.G12.string | quote }}, "value": "12"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G13 '{"regex": {{ .Values.oxidized.group.G13.string | quote }}, "value": "13"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G14 '{"regex": {{ .Values.oxidized.group.G14.string | quote }}, "value": "14"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G15 '{"regex": {{ .Values.oxidized.group.G15.string | quote }}, "value": "15"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.G16 '{"regex": {{ .Values.oxidized.group.G16.string | quote }}, "value": "16"}' --ignore-checks
             lnms config:set oxidized.maps.group.notes.G1 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "1"}' --ignore-checks
             lnms config:set oxidized.maps.group.notes.G2 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "2"}' --ignore-checks
             lnms config:set oxidized.maps.group.notes.G3 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "3"}' --ignore-checks
             lnms config:set oxidized.maps.group.notes.G4 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "4"}' --ignore-checks
             lnms config:set oxidized.maps.group.notes.G5 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "5"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G6 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "6"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G7 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "7"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G8 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "8"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G9 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "9"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G10 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "10"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G11 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "11"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G12 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "12"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G13 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "13"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G14 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "14"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G15 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "15"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G16 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "16"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G6 '{"regex": {{ .Values.oxidized.group.G6.string | quote }}, "value": "6"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G7 '{"regex": {{ .Values.oxidized.group.G7.string | quote }}, "value": "7"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G8 '{"regex": {{ .Values.oxidized.group.G8.string | quote }}, "value": "8"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G9 '{"regex": {{ .Values.oxidized.group.G9.string | quote }}, "value": "9"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G10 '{"regex": {{ .Values.oxidized.group.G10.string | quote }}, "value": "10"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G11 '{"regex": {{ .Values.oxidized.group.G11.string | quote }}, "value": "11"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G12 '{"regex": {{ .Values.oxidized.group.G12.string | quote }}, "value": "12"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G13 '{"regex": {{ .Values.oxidized.group.G13.string | quote }}, "value": "13"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G14 '{"regex": {{ .Values.oxidized.group.G14.string | quote }}, "value": "14"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G15 '{"regex": {{ .Values.oxidized.group.G15.string | quote }}, "value": "15"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.G16 '{"regex": {{ .Values.oxidized.group.G16.string | quote }}, "value": "16"}' --ignore-checks
         env:
           - name: DB_HOST
             value: "database"
