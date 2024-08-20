@@ -36,56 +36,56 @@ data:
     vars: {}
     groups:
       core:
-        username: {{ .Values.group.core.user }}
-        password: {{ .Values.group.core.password }}
+        username: {{ .Values.group.Gcore.user }}
+        password: {{ .Values.group.Gcore.password }}
       1:
-        username: {{ .Values.group.1.user }}
-        password: {{ .Values.group.1.password }}
+        username: {{ .Values.group.G1.user }}
+        password: {{ .Values.group.G1.password }}
       2:
-        username: {{ .Values.group.2.user }}
-        password: {{ .Values.group.2.password }}
+        username: {{ .Values.group.G2.user }}
+        password: {{ .Values.group.G2.password }}
       3:
-        username: {{ .Values.group.3.user }}
-        password: {{ .Values.group.3.password }}
+        username: {{ .Values.group.G3.user }}
+        password: {{ .Values.group.G3.password }}
       4:
-        username: {{ .Values.group.4.user }}
-        password: {{ .Values.group.4.password }}
+        username: {{ .Values.group.G4.user }}
+        password: {{ .Values.group.G4.password }}
       5:
-        username: {{ .Values.group.5.user }}
-        password: {{ .Values.group.5.password }}
+        username: {{ .Values.group.G5.user }}
+        password: {{ .Values.group.G5.password }}
       6:
-        username: {{ .Values.group.6.user }}
-        password: {{ .Values.group.6.password }}
+        username: {{ .Values.group.G6.user }}
+        password: {{ .Values.group.G6.password }}
       7:
-        username: {{ .Values.group.7.user }}
-        password: {{ .Values.group.7.password }}
+        username: {{ .Values.group.G7.user }}
+        password: {{ .Values.group.G7.password }}
       8:
-        username: {{ .Values.group.8.user }}
-        password: {{ .Values.group.8.password }}
+        username: {{ .Values.group.G8.user }}
+        password: {{ .Values.group.G8.password }}
       9:
-        username: {{ .Values.group.9.user }}
-        password: {{ .Values.group.9.password }}
+        username: {{ .Values.group.G9.user }}
+        password: {{ .Values.group.G9.password }}
       10:
-        username: {{ .Values.group.10.user }}
-        password: {{ .Values.group.10.password }}
+        username: {{ .Values.group.G10.user }}
+        password: {{ .Values.group.G10.password }}
       11:
-        username: {{ .Values.group.11.user }}
-        password: {{ .Values.group.11.password }}
+        username: {{ .Values.group.G11.user }}
+        password: {{ .Values.group.G11.password }}
       12:
-        username: {{ .Values.group.12.user }}
-        password: {{ .Values.group.12.password }}
+        username: {{ .Values.group.G12.user }}
+        password: {{ .Values.group.G12.password }}
       13:
-        username: {{ .Values.group.13.user }}
-        password: {{ .Values.group.13.password }}
+        username: {{ .Values.group.G13.user }}
+        password: {{ .Values.group.G13.password }}
       14:
-        username: {{ .Values.group.14.user }}
-        password: {{ .Values.group.14.password }}
+        username: {{ .Values.group.G14.user }}
+        password: {{ .Values.group.G14.password }}
       15:
-        username: {{ .Values.group.15.user }}
-        password: {{ .Values.group.15.password }}
+        username: {{ .Values.group.G15.user }}
+        password: {{ .Values.group.G15.password }}
       16:
-        username: {{ .Values.group.16.user }}
-        password: {{ .Values.group.16.password }}
+        username: {{ .Values.group.G16.user }}
+        password: {{ .Values.group.G16.password }}
     models: {}
     model_map:
       juniper: junos
