@@ -27,26 +27,69 @@ group:
   core:
     user: "deviceuser"
     password: "devicepassword"  
-  1:
+  G1:
     user: ""
     password: ""
     string: "/^ox-group-1/"
-  2:
+  G2:
     user: ""
     password: ""
     string: "/^ox-group-2/"
-  3:
+  G3:
     user: ""
     password: ""
     string: "/^ox-group-3/"
-  4:
+  G4:
     user: ""
     password: ""
     string: "/^ox-group-4/"
-  5:
+  G5:
     user: ""
     password: ""
     string: "/^ox-group-5/"
-
+  G6:
+    user: ""
+    password: ""
+    string: ""
+  G7:
+    user: ""
+    password: ""
+    string: ""
+  G8:
+    user: ""
+    password: ""
+    string: ""
+  G9:
+    user: ""
+    password: ""
+    string: ""
+  G10:
+    user: ""
+    password: ""
+    string: ""
+  G11:
+    user: ""
+    password: ""
+    string: ""
+  G12:
+    user: ""
+    password: ""
+    string: ""
+  G13:
+    user: ""
+    password: ""
+    string: ""
+  G14:
+    user: ""
+    password: ""
+    string: ""
+  G15:
+    user: ""
+    password: ""
+    string: ""
+  G16:
+    user: ""
+    password: ""
+    string: ""
 credentials:
   token: 'ff7dd1796524fee831b52da61937d793'
