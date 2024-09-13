@@ -80,6 +80,7 @@ application:
       transit: "t"
       peering: "p"
       core: "i"
+    installPlugins: ""
   php:
     memoryLimit: "1024M"
     maxInputVars: "1000"

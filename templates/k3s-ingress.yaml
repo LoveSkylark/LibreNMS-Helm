@@ -7,11 +7,12 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
   annotations:
-    kubernetes.io/ingress.class: traefik
+    spec.ingressClassName: traefik
 
 {{- if .Values.ingress.https }}  
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: redirect-to-https@kubernetescrd
 {{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
@@ -51,6 +52,17 @@ spec:
             port:
               number: 8888
 {{- end }}
+  # Catch-all rule for IP access
+  - host: "*"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.application.host.name }}  # Main application service
+            port:
+              number: 8000
 {{- if .Values.ingress.https }}  
   tls:
   - hosts:
@@ -63,6 +75,17 @@ spec:
 {{- end }}
     secretName: https-cert
 {{- end }}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: {{ .Release.Name }}  # Use the appropriate namespace
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
 
 ---
 {{- if .Values.application.syslogng.enable }}
