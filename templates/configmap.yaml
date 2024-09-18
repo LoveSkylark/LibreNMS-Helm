@@ -17,7 +17,7 @@ data:
   OPCACHE_MEM_SIZE:     {{ .Values.application.php.opcacheMemSize | quote }}
   MAX_INPUT_VAR:        {{ .Values.application.php.maxInputVars | quote }}
   LOG_IP_VAR:           {{ .Values.application.logIP | quote }}
-  INSTALL_PLUGINS:      {{ .Values.application.installPlugins | quote }}
+  INSTALL_PLUGINS:      {{ .Values.application.lnms.installPlugins | quote }}
   DB_HOST:              {{ .Values.mariadb.host.name | quote }}
   DB_NAME:              {{ .Values.mariadb.database  | quote }}
   DB_TIMEOUT:           {{ .Values.mariadb.timeout | quote }}
