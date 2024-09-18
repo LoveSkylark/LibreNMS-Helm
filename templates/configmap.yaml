@@ -17,6 +17,7 @@ data:
   OPCACHE_MEM_SIZE:     {{ .Values.application.php.opcacheMemSize | quote }}
   MAX_INPUT_VAR:        {{ .Values.application.php.maxInputVars | quote }}
   LOG_IP_VAR:           {{ .Values.application.logIP | quote }}
+  INSTALL_PLUGINS:      {{ .Values.application.installPlugins | quote }}
   DB_HOST:              {{ .Values.mariadb.host.name | quote }}
   DB_NAME:              {{ .Values.mariadb.database  | quote }}
   DB_TIMEOUT:           {{ .Values.mariadb.timeout | quote }}
@@ -26,7 +27,6 @@ data:
   REDIS_DB:             {{ .Values.redis.lnms.database | quote }}
   CACHE_DRIVER:         {{ .Values.redis.lnms.cacheDriver | quote }}
   SESSION_DRIVER:       {{ .Values.redis.lnms.sessionDriver | quote }}
-  INSTALL_PLUGINS:      {{ .Values.redis.lnms.installPlugins | quote }}
   RRDCACHED_SERVER:     "{{ .Values.rrdcached.host.name }}:{{ .Values.rrdcached.host.port }}"
   ### only for testing
   #mysql_user: {{ .Values.mariadb.credentials.user | quote }}
