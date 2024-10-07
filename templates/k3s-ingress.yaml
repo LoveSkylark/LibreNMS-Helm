@@ -52,9 +52,8 @@ spec:
             port:
               number: 8888
 {{- end }}
-  # Catch-all rule for IP access
-  - host: "*"
-    http:
+  # Catch-all rule for IP access (no host specified)
+  - http:
       paths:
       - path: /
         pathType: Prefix
