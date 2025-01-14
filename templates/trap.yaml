@@ -1,0 +1,84 @@
+---
+{{- if .Values.application.trap.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.application.trap.name | quote }}
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.application.trap.name | quote }}
+  ports:
+    - name: trap-tcp
+      protocol: TCP
+      port: 162
+      targetPort: 162
+    - name: trap-udp
+      protocol: UDP
+      port: 162
+      targetPort: 162
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.application.trap.name | quote }}
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+    app: {{ .Values.application.trap.name | quote }}
+spec:
+  serviceName: {{ .Values.application.trap.name | quote }}
+  replicas: {{ .Values.application.trap.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.application.trap.name | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.application.trap.name | quote }}
+    spec:
+      hostname: {{.Release.Name}}-trap
+      restartPolicy: Always
+      containers:
+        - name: {{ .Values.application.trap.name | quote }}
+          image: {{ .Values.application.image | quote }}
+          envFrom:
+            - configMapRef:
+                name: librenms-cfg
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-sec
+                  key: mysql_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-sec
+                  key: mysql_password
+            - name: SIDECAR_SNMPTRAPD
+              value: "1"
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          ports:
+            - name: syslog-tcp
+              containerPort: 162
+              protocol: TCP
+            - name: syslog-udp
+              containerPort: 162
+              protocol: UDP                
+          volumeMounts:
+            - name: application
+              mountPath: /data
+      volumes:
+        - name: application
+          persistentVolumeClaim:
+            claimName: application
+{{- end }}

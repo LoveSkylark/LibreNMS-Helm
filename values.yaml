@@ -65,6 +65,11 @@ application:
     name: "lnms-syslog"
     replicas: "1"
     purge: "95"
+  trap:
+    enable: true
+    name: "lnms-trap"
+    replicas: "1"
+    purge: "95"
   lnms:
     services:
       enable: false

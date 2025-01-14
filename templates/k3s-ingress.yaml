@@ -125,6 +125,47 @@ spec:
       port: 514
       targetPort: syslog-udp
 {{- end }}
+
+---
+{{- if .Values.application.trap.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-trap-tcp"
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ .Values.application.trap.name | quote }}
+  ports:
+    - name: trap-tcp
+      protocol: TCP
+      port: 162
+      targetPort: trap-tcp
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-trap-udp"
+  namespace: {{ .Release.Name }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ .Values.application.trap.name | quote }}
+  ports:
+    - name: trap-udp
+      protocol: UDP
+      port: 162
+      targetPort: trap-udp
+{{- end }}
+
 ---
 apiVersion: v1
 kind: Service
