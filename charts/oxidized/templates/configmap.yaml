@@ -25,7 +25,7 @@ data:
     resolve_dns: true
     interval: 72000
     use_syslog: false
-    debug: false
+    debug: true
     threads: 30
     use_max_threads: false
     timeout: 20
@@ -53,7 +53,12 @@ data:
       five:
         username: {{ .Values.group.five.user }}
         password: {{ .Values.group.five.password }}
-    models: {}
+    models:
+      fortios:
+        timeout: 900
+        vars:
+          fullconfig: false
+          timeout: 900
     model_map:
       juniper: junos
       cisco: ios
@@ -71,7 +76,7 @@ data:
       history_size: 10
     input:
       default: ssh, telnet
-      debug: false
+      debug: true
       ssh:
         secure: false
       ftp:
@@ -85,7 +90,7 @@ data:
           repo: "/home/oxidized/.config/oxidized/configs"
     source:
       default: http
-      debug: false
+      debug: true
       http:
         url: http://lnms-app:8000/api/v0/oxidized
         scheme: http
