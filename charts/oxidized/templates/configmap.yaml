@@ -38,54 +38,71 @@ data:
       core:
         username: {{ .Values.group.core.user }}
         password: {{ .Values.group.core.password }}
+        {{ .Values.group.core.var }}
       G1:
         username: {{ .Values.group.G1.user }}
         password: {{ .Values.group.G1.password }}
+        {{ .Values.group.G1.var }}
       G2:
         username: {{ .Values.group.G2.user }}
         password: {{ .Values.group.G2.password }}
+        {{ .Values.group.G2.var }}
       G3:
         username: {{ .Values.group.G3.user }}
         password: {{ .Values.group.G3.password }}
+        {{ .Values.group.G3.var }}
       G4:
         username: {{ .Values.group.G4.user }}
         password: {{ .Values.group.G4.password }}
+        {{ .Values.group.G4.var }}
       G5:
         username: {{ .Values.group.G5.user }}
         password: {{ .Values.group.G5.password }}
+        {{ .Values.group.G5.var }}
       G6:
         username: {{ .Values.group.G6.user }}
         password: {{ .Values.group.G6.password }}
+        {{ .Values.group.G6.var }}
       G7:
         username: {{ .Values.group.G7.user }}
         password: {{ .Values.group.G7.password }}
+        {{ .Values.group.G7.var }}
       G8:
         username: {{ .Values.group.G8.user }}
         password: {{ .Values.group.G8.password }}
+        {{ .Values.group.G8.var }}
       G9:
         username: {{ .Values.group.G9.user }}
         password: {{ .Values.group.G9.password }}
+        {{ .Values.group.G9.var }}
       G10:
         username: {{ .Values.group.G10.user }}
         password: {{ .Values.group.G10.password }}
+        {{ .Values.group.G10.var }}
       G11:
         username: {{ .Values.group.G11.user }}
         password: {{ .Values.group.G11.password }}
+        {{ .Values.group.G11.var }}
       G12:
         username: {{ .Values.group.G12.user }}
         password: {{ .Values.group.G12.password }}
+        {{ .Values.group.G12.var }}
       G13:
         username: {{ .Values.group.G13.user }}
         password: {{ .Values.group.G13.password }}
+        {{ .Values.group.G13.var }}
       G14:
         username: {{ .Values.group.G14.user }}
         password: {{ .Values.group.G14.password }}
+        {{ .Values.group.G14.var }}
       G15:
         username: {{ .Values.group.G15.user }}
         password: {{ .Values.group.G15.password }}
+        {{ .Values.group.G15.var }}
       G16:
         username: {{ .Values.group.G16.user }}
         password: {{ .Values.group.G16.password }}
+        {{ .Values.group.G16.var }}
     models: {}
     model_map:
       juniper: junos
