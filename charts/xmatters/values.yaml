@@ -1,5 +1,6 @@
 ---
 enable: true
+agent: true
 
 host:
   image: "loveskylark/xmatters-xa:latest"

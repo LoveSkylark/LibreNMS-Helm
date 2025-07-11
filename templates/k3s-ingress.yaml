@@ -76,17 +76,6 @@ spec:
 {{- end }}
 
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: redirect-to-https
-  namespace: {{ .Release.Name }}  # Use the appropriate namespace
-spec:
-  redirectScheme:
-    scheme: https
-    permanent: true
-
----
 {{- if .Values.application.syslogng.enable }}
 apiVersion: v1
 kind: Service

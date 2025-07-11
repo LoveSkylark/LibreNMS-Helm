@@ -1,5 +1,6 @@
 ---
 {{- if .Values.enable }}
+{{- if .Values.agent }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -31,4 +32,5 @@ spec:
               add:
                 - NET_ADMIN
                 - NET_RAW
+{{- end }}
 {{- end }}
