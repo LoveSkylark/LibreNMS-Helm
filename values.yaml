@@ -126,7 +126,6 @@ oxidized:
     os: 
       - "linux"
       - "windows"
-      - "ciscosb"
       - "jetdirect"
     groups:
       - ""
