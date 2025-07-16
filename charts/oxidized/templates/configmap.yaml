@@ -108,6 +108,7 @@ data:
       juniper: junos
       cisco: ios
       cisco: iosxe
+      cisco: ciscosb
       mikrotik: routeros
       ubiquiti: airos
       fortigate: fortios
