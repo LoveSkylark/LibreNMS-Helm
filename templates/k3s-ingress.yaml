@@ -1,22 +1,33 @@
 ---
+{{- $tlsSecretName := default .Values.ingress.tls.secretName .Values.ingress.tls.existingSecretName }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: "{{ .Release.Name }}-applicaton"
-  namespace: {{ .Release.Name }}
+  name: "{{ .Release.Name }}-application"
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
   annotations:
-    spec.ingressClassName: traefik
-
 {{- if .Values.ingress.https }}  
+{{- if .Values.ingress.redirectToHttps.enabled }}
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-https-redirect" .Release.Name) | quote }}
+{{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+{{- end }}
     traefik.ingress.kubernetes.io/router.tls: "true"
-    #traefik.ingress.kubernetes.io/router.middlewares: redirect-to-https@kubernetescrd
 {{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
+{{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled (not .Values.ingress.tls.existingSecretName) }}
+{{- if eq .Values.ingress.letsEncrypt.issuerKind "Issuer" }}
+    cert-manager.io/issuer: {{ .Values.ingress.letsEncrypt.issuerName | quote }}
+{{- else }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.letsEncrypt.issuerName | quote }}
+{{- end }}
+{{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
   - host: {{ .Values.application.host.FQDN | quote }}
     http:
@@ -72,7 +83,7 @@ spec:
 {{- if .Values.oxidized.enable }}
     - {{ .Values.oxidized.host.FQDN }}
 {{- end }}
-    secretName: https-cert
+    secretName: {{ $tlsSecretName | quote }}
 {{- end }}
 
 ---
@@ -81,7 +92,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Release.Name }}-syslog-tcp"
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -100,7 +111,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Release.Name }}-syslog-udp"
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -121,7 +132,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Release.Name }}-trap-tcp"
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -140,7 +151,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: "{{ .Release.Name }}-trap-udp"
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -155,41 +166,4 @@ spec:
       targetPort: trap-udp
 {{- end }}
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: "{{ .Release.Name }}-snmptrapd-tcp"
-  namespace: {{ .Release.Name }}
-  labels:
-{{ include "common.labels" . | indent 4 }}
-spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  selector:
-    app: snmptrapd
-  ports:
-    - name: snmptrapd-tcp
-      protocol: TCP
-      port: 162
-      targetPort: snmptrapd-tcp
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: "{{ .Release.Name }}-snmptrapd-udp"
-  namespace: {{ .Release.Name }}
-  labels:
-{{ include "common.labels" . | indent 4 }}
-spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  selector:
-    app: snmptrapd
-  ports:
-    - name: snmptrapd-udp
-      protocol: UDP
-      port: 162
-      targetPort: snmptrapd-udp
-      

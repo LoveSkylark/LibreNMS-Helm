@@ -1,53 +1,114 @@
 # LibreNMS-Helm
 
-LibreNMS-Helm is a project that aims to provide a fully functional monitoring system on a fresh installation of Ubuntu using Kubernetes (Kube) and Helm. It is a conversion of the original LibreNMS Docker setup to a Kubernetes-based setup with Helm, incorporating various new features and enhancements.
+LibreNMS-Helm deploys LibreNMS on Kubernetes using Helm, including optional supporting services.
 
-To install Kube and Helm along with the LibreNMS-Helm setup, follow these steps:
+## Installation
 
-## Run the shell script blow:
+Run the installer script:
 
-   ````bash
-   sudo -i
-   curl -fsSL https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Installer/main/LibreNMS-Install | sudo bash
-   ````
-### The script will take some time to install
+```bash
+sudo -i
+curl -fsSL https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Installer/main/LibreNMS-Install | sudo bash
+```
+
+The script installs:
 - Git
-- SNMP (client)
-- K3S (Kubernetes Server)
-- K9S (Kubernetes Management)
-- HELM (Kubernetes Deployment)
-- LibreNMS (monitoring cluster)
+- SNMP client
+- K3s
+- K9s
+- Helm
+- LibreNMS stack
 
-Startup Instructions
+## Start The Stack
 
-## After installation has completed you need to open a new Terminal to the server and run:
+After installation, open a new terminal and run:
 
-   ````bash
-   sudo -i
-   nms start
-   ````
+```bash
+sudo -i
+nms start
+```
 
-When that is done it will prompt you to configure the cluster
+When prompted, set these values first:
+- `storage.path`
+- `application.host.FQDN`
+- `application.host.volumeSize`
+- `mariadb.host.volumeSize`
+- `mariadb.credentials.rootPassword`
+- `mariadb.credentials.user`
+- `mariadb.credentials.password`
 
-You need to correctly configure:
-- storage>path
-- application>host>FQDN
-- application>host>volumeSize
-- mariadb>host>volumeSize
-- mariadb>credentials>rootPassword
-- mariadb>credentials>user
-- mariadb>credentials>password
+Save in the editor with `a`, then `Esc`, then `:wq`.
 
-Other configuration can be adjusted after the initial install
+## HTTPS And TLS Options
 
-press "a" to start editing the configuration and when your done press "esc" then type ":wq"
+Use one of these TLS modes.
 
+### 1) Manual TLS Secret
 
-## While the cluster is being built you can open another shell and type "k9s" as SUDO to monitor its process
+Set:
+- `ingress.https=true`
+- `ingress.tls.secretName=<secret-name>`
 
-K9S allows you to:
-- terminal directly into a pod to run test
-- view log files 
-- kill pods for reconfiguration or just if they behave badly
+Create the secret:
 
-Please note that this project is still a work in progress, and improvements and updates are being made.
+```bash
+kubectl create secret tls <secret-name> \
+  --cert=<certificate-file> \
+  --key=<key-file> \
+  --namespace <namespace>
+```
+
+### 2) Manual Wildcard TLS Secret
+
+If you already installed a wildcard certificate secret, set:
+- `ingress.https=true`
+- `ingress.tls.existingSecretName=<wildcard-secret-name>`
+
+Optional:
+- `ingress.redirectToHttps.enabled=true`
+
+When `ingress.tls.existingSecretName` is set, the chart uses that secret and skips the Let's Encrypt issuer flow.
+
+### 3) Let's Encrypt Via Existing Issuer
+
+Prerequisite: cert-manager installed and an `Issuer` or `ClusterIssuer` already created.
+
+Set:
+- `ingress.https=true`
+- `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
+- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.tls.secretName=<certificate-secret-name>`
+
+### 4) Let's Encrypt With Bundled Issuer (Chart Creates It)
+
+Set:
+- `ingress.https=true`
+- `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=true`
+- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
+- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.letsEncrypt.email=<your-email>`
+- `ingress.letsEncrypt.environment=production` or `staging`
+- `ingress.letsEncrypt.privateKeySecretName=<acme-account-secret-name>`
+- `ingress.tls.secretName=<certificate-secret-name>`
+
+Optional:
+- `ingress.redirectToHttps.enabled=true`
+
+## Monitoring During Deploy
+
+Open another shell and run:
+
+```bash
+sudo k9s
+```
+
+With K9s you can:
+- Open a shell in pods
+- View logs
+- Restart or delete pods during troubleshooting
+
+## Notes
+
+This project is still in active development and improvements are ongoing.

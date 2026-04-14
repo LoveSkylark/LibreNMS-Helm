@@ -3,15 +3,27 @@ appVersion: 1.0.1
 description: A Helm chart for Kubernetes
 name: librechart
 type: application
-version: 1.0.01
+version: 1.0.1
 
----
 dependencies:
   - name: mariadb
     condition: mariadb.enabled
-  - name: memcached
-    condition: memcached.enabled
+    repository: "file://charts/mariadb"
   - name: redis
     condition: redis.enabled
+    repository: "file://charts/redis"
   - name: rrdcached
     condition: rrdcached.enabled
+    repository: "file://charts/rrdcached"
+  - name: msmtpd
+    condition: msmtpd.enable
+    repository: "file://charts/msmtpd"
+  - name: oxidized
+    condition: oxidized.enable
+    repository: "file://charts/oxidized"
+  - name: smokeping
+    condition: smokeping.enable
+    repository: "file://charts/smokeping"
+  - name: xmatters
+    condition: xmatters.enable
+    repository: "file://charts/xmatters"

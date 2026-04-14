@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.application.host.name | quote }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -21,7 +21,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.application.host.name | quote }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: {{ .Values.application.host.name | quote }}
@@ -57,7 +57,7 @@ spec:
                   name: mysql-sec
                   key: mysql_password
             - name: LIBRENMS_BASE_URL
-              value: {{ .Values.application.baseURL | quote }}
+              value: {{ .Values.application.host.baseURL | quote }}
             - name: LIBRENMS_WEATHERMAP
               value: {{ .Values.application.weathermap.enable | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE
@@ -94,7 +94,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: application
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: application

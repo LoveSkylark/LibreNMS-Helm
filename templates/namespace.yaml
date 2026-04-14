@@ -1,6 +1,8 @@
+{{- if .Values.namespace.create }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
+{{- end }}

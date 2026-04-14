@@ -1,9 +1,10 @@
+{{- if .Values.oxidized.enable }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: depl-oxidized
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -23,50 +24,24 @@ spec:
             lnms config:set oxidized.url "http://oxidized:8888"
             # Basic config
             lnms config:set oxidized.enabled              {{ .Values.oxidized.enable | quote }}
-            lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | quote }}
-            lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | quote }}
-            lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | quote }}
-            lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | quote }}
+            lnms config:set oxidized.default_group        {{ .Values.oxidized.default_group | default "core" | quote }}
+            lnms config:set oxidized.features.versioning  {{ .Values.oxidized.featureVers | default true | quote }}
+            lnms config:set oxidized.group_support        {{ .Values.oxidized.groupSupport | default true | quote }}
+            lnms config:set oxidized.reload_nodes         {{ .Values.oxidized.reloadNodes | default true | quote }}
             # Ignore devices
             lnms config:set oxidized.ignore_os            '{{ .Values.oxidized.ignore.os | toJson }}' --ignore-checks
             lnms config:set oxidized.ignore_types         '{{ .Values.oxidized.ignore.types | toJson }}' --ignore-checks
             lnms config:set oxidized.ignore_groups        '{{ .Values.oxidized.ignore.groups | toJson }}' --ignore-checks
-            # Create special groups groups:
-            lnms config:set oxidized.maps.group.purpose.G1 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "G1"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G2 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "G2"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G3 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "G3"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G4 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "G4"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G5 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "G5"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G6 '{"regex": {{ .Values.oxidized.group.G6.string | quote }}, "value": "G6"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G7 '{"regex": {{ .Values.oxidized.group.G7.string | quote }}, "value": "G7"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G8 '{"regex": {{ .Values.oxidized.group.G8.string | quote }}, "value": "G8"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G9 '{"regex": {{ .Values.oxidized.group.G9.string | quote }}, "value": "G9"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G10 '{"regex": {{ .Values.oxidized.group.G10.string | quote }}, "value": "G10"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G11 '{"regex": {{ .Values.oxidized.group.G11.string | quote }}, "value": "G11"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G12 '{"regex": {{ .Values.oxidized.group.G12.string | quote }}, "value": "G12"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G13 '{"regex": {{ .Values.oxidized.group.G13.string | quote }}, "value": "G13"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G14 '{"regex": {{ .Values.oxidized.group.G14.string | quote }}, "value": "G14"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G15 '{"regex": {{ .Values.oxidized.group.G15.string | quote }}, "value": "G15"}' --ignore-checks
-            lnms config:set oxidized.maps.group.purpose.G16 '{"regex": {{ .Values.oxidized.group.G16.string | quote }}, "value": "G16"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G1 '{"regex": {{ .Values.oxidized.group.G1.string | quote }}, "value": "G1"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G2 '{"regex": {{ .Values.oxidized.group.G2.string | quote }}, "value": "G2"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G3 '{"regex": {{ .Values.oxidized.group.G3.string | quote }}, "value": "G3"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G4 '{"regex": {{ .Values.oxidized.group.G4.string | quote }}, "value": "G4"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G5 '{"regex": {{ .Values.oxidized.group.G5.string | quote }}, "value": "G5"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G6 '{"regex": {{ .Values.oxidized.group.G6.string | quote }}, "value": "G6"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G7 '{"regex": {{ .Values.oxidized.group.G7.string | quote }}, "value": "G7"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G8 '{"regex": {{ .Values.oxidized.group.G8.string | quote }}, "value": "G8"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G9 '{"regex": {{ .Values.oxidized.group.G9.string | quote }}, "value": "G9"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G10 '{"regex": {{ .Values.oxidized.group.G10.string | quote }}, "value": "G10"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G11 '{"regex": {{ .Values.oxidized.group.G11.string | quote }}, "value": "G11"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G12 '{"regex": {{ .Values.oxidized.group.G12.string | quote }}, "value": "G12"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G13 '{"regex": {{ .Values.oxidized.group.G13.string | quote }}, "value": "G13"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G14 '{"regex": {{ .Values.oxidized.group.G14.string | quote }}, "value": "G14"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G15 '{"regex": {{ .Values.oxidized.group.G15.string | quote }}, "value": "G15"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.G16 '{"regex": {{ .Values.oxidized.group.G16.string | quote }}, "value": "G16"}' --ignore-checks
+            # Build group mappings for every non-core group with a regex string.
+{{- range $groupName, $group := .Values.oxidized.group }}
+{{- if and (ne $groupName "core") $group.string }}
+            lnms config:set oxidized.maps.group.purpose.{{ $groupName }} '{"regex": {{ $group.string | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.{{ $groupName }} '{"regex": {{ $group.string | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
+{{- end }}
+{{- end }}
         env:
           - name: DB_HOST
-            value: "database"
+            value: {{ .Values.mariadb.host.name | quote }}
           - name: DB_NAME 
             value: {{ .Values.mariadb.database | quote }}
           - name: DB_USER
@@ -81,3 +56,4 @@ spec:
                 key: mysql_password
       restartPolicy: Never
   backoffLimit: 4
+{{- end }}
