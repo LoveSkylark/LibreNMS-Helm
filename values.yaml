@@ -115,9 +115,6 @@ application:
 storage:
   path: "/opt/kubes/storage/"
 
-namespace:
-  create: false
-
 xmatters:
   enable: false
   URL: "company.xmatters.com"
