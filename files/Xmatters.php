@@ -38,6 +38,8 @@ class Xmatters extends Transport
         $max_attempts = 3;
         $base_delay_ms = 200;   // base backoff
         $max_delay_ms  = 2000;  // cap backoff
+        $status = 0;
+        $response_body = 'no response';
 
         for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
 
@@ -61,9 +63,11 @@ class Xmatters extends Transport
 
                 // treat non-2xx as retryable
                 $status = $res->status();
+                $response_body = $res->body();
 
             } catch (\Throwable $e) {
                 $status = 0; // network-level failure
+                $response_body = $e->getMessage();
             }
 
             // ---- FINAL ATTEMPT FAILURE ----
@@ -71,7 +75,7 @@ class Xmatters extends Transport
                 throw new AlertTransportDeliveryException(
                     $alert_data,
                     $status,
-                    $res->body() ?? 'no response',
+                    $response_body,
                     'xMatters delivery failed after retries',
                     $data
                 );
