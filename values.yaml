@@ -162,13 +162,13 @@ oxidized:
     #G1:
     #  user: "branch-ops-user"
     #  password: "change-me-branch-password"
-    #  string: "/^ox-group-1/"
+    #  string: "ox-group-1"
     #  var: ""
 
     #Telnet:
     #  user: "dc-ops-user"
     #  password: "change-me-dc-password"
-    #  string: "/^ox-group-2/"
+    #  string: "ox-group-2"
     #  var: ""
 
 smokeping:

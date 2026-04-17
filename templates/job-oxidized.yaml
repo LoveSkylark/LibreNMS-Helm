@@ -35,8 +35,8 @@ spec:
             # Build group mappings for every non-core group with a regex string.
 {{- range $groupName, $group := .Values.oxidized.group }}
 {{- if and (ne $groupName "core") $group.string }}
-            lnms config:set oxidized.maps.group.purpose.{{ $groupName }} '{"regex": {{ $group.string | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
-            lnms config:set oxidized.maps.group.notes.{{ $groupName }} '{"regex": {{ $group.string | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
+            lnms config:set oxidized.maps.group.purpose.{{ $groupName }} '{"regex": {{ ternary $group.string (printf "/^%s/" $group.string) (and (hasPrefix "/^" $group.string) (hasSuffix "/" $group.string)) | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
+            lnms config:set oxidized.maps.group.notes.{{ $groupName }} '{"regex": {{ ternary $group.string (printf "/^%s/" $group.string) (and (hasPrefix "/^" $group.string) (hasSuffix "/" $group.string)) | quote }}, "value": "{{ $groupName }}"}' --ignore-checks
 {{- end }}
 {{- end }}
         env:
