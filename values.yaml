@@ -137,8 +137,10 @@ oxidized:
   enable: true
   host:
     FQDN: "ox.test.local"
+  source:
+    url: "http://lnms-app:8000/api/v0/oxidized"
   credentials:
-    token: "API-token-generated-inside-LIBRE"
+    token: ""
   ignore:
     types: 
       - "server"
@@ -155,26 +157,19 @@ oxidized:
     core:
       user: "deviceadmin"
       password: "devicepassword"
-    G1:
-      user: ""
-      password: ""
-      string: "/^ox-group-1/"
-    G2:
-      user: ""
-      password: ""
-      string: "/^ox-group-2/"
-    G3:
-      user: ""
-      password: ""
-      string: "/^ox-group-3/"
-    G4:
-      user: ""
-      password: ""
-      string: "/^ox-group-4/"
-    G5:
-      user: ""
-      password: ""
-      string: "/^ox-group-5/"
+    # Optional group examples.
+    # Include non-core groups only when user, password, and string are all set.
+    #G1:
+    #  user: "branch-ops-user"
+    #  password: "change-me-branch-password"
+    #  string: "/^ox-group-1/"
+    #  var: ""
+
+    #Telnet:
+    #  user: "dc-ops-user"
+    #  password: "change-me-dc-password"
+    #  string: "/^ox-group-2/"
+    #  var: ""
 
 smokeping:
   enable: false

@@ -1,0 +1,42 @@
+---
+# Example overrides for Oxidized group mapping.
+# Use this file as a starting point for deployment-specific values.
+
+enable: true
+
+source:
+  url: "http://lnms-app:8000/api/v0/oxidized"
+
+credentials:
+  token: "replace-with-librenms-api-token"
+
+default_group: "core"
+group:
+  core:
+    user: "oxidized-user"
+    password: "change-me-oxidized-password"
+    var: ""
+
+  # Optional group examples.
+  # Include non-core groups only when user, password, and string are all set.
+  #G1:
+  #  user: "branch-ops-user"
+  #  password: "change-me-branch-password"
+  #  string: "/^ox-group-1/"
+  #  var: ""
+
+  #Telnet:
+  #  user: "dc-ops-user"
+  #  password: "change-me-dc-password"
+  #  string: "/^ox-group-2/"
+  #  var: ""
+
+ignore:
+  types:
+    - server
+    - power
+  os:
+    - linux
+    - windows
+  groups:
+    - ""
