@@ -8,6 +8,8 @@ use LibreNMS\Util\Http;
 
 class Xmatters extends Transport
 {
+    protected string $name = 'xMatters';
+
     public function deliverAlert(array $alert_data): bool
     {
         $url = $this->config['xmatters_url']
