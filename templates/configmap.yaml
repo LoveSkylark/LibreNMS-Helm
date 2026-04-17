@@ -44,7 +44,7 @@ metadata:
 {{ include "common.labels" . | indent 4 }}
 data:
   Xmatters.php: |-
-{{ .Files.Get "files/Xmatters.php" | nindent 4 }}
+{{ .Files.Get "files/Xmatters.php" | indent 4 }}
 {{- end }}
 
 {{- if .Values.smokeping.enable }}
