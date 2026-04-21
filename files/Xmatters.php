@@ -30,11 +30,11 @@ class Xmatters extends Transport
 
         $data['properties']['event_state'] = $this->mapStateToEventState($alert_data['state']);
         $data['properties']['instance_url'] = $device_url;
-        $data['properties']['device_url'] = $device_url . '/device/' . $alert_data['device_id'];
-        $data['properties']['alert_url'] = $device_url . '/device/' . $alert_data['device_id'] . '/alerts/' . $alert_data['alert_id'];
         $data['properties']['hostname'] = $alert_data['sysName'];
         $data['properties']['ip'] = $alert_data['hostname'];
-        $data['properties']['device_groups'] = $device_groups;
+        $data['properties']['device_url'] = $device_url . '/device/' . $alert_data['device_id'];
+        $data['properties']['alert_url'] = $device_url . '/device/' . $alert_data['device_id'] . '/alerts/' . $alert_data['alert_id'];
+        $data['properties']['device_groups'] = array_values($alert_data['device_groups'] ?? $device_groups->all());
 
         // ---- RETRY CONFIG ----
         $max_attempts = 3;
@@ -101,7 +101,7 @@ class Xmatters extends Transport
             case 'critical': return 'High';
             case 'warning':  return 'Medium';
             case 'ok':       return 'Low';
-            default:         return 'invalid severity';
+            default:         return 'Low';
         }
     }
 
@@ -110,9 +110,10 @@ class Xmatters extends Transport
             case 0: return 'ok';
             case 1: return 'alert';
             case 2: return 'ack';
-            case 3: return 'better';
-            case 4: return 'worse';
-            default: return 'invalid state';
+            case 3: return 'worse';
+            case 4: return 'better';
+            case 5: return 'changed';
+            default: return 'alert';
         }
     }
 
