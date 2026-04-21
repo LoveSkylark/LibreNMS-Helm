@@ -12,10 +12,7 @@ class Xmatters extends Transport
 
     public function deliverAlert(array $alert_data): bool
     {
-        $url = $this->config['xmatters_url']
-            . '/api/integration/1/functions/'
-            . $this->config['xmatters_function']
-            . '/triggers';
+        $url = $this->config['xmatters_url'];
 
         $device_url = \Config::get('base_url');
         $device_groups = \DeviceCache::get($alert_data['device_id'])
@@ -122,15 +119,9 @@ class Xmatters extends Transport
         return [
             'config' => [
                 [
-                    'title' => 'xMatters URL',
+                    'title' => 'xMatters Trigger URL',
                     'name' => 'xmatters_url',
-                    'descr' => 'The hostname of the xMatters instance.',
-                    'type' => 'text'
-                ],
-                [
-                    'title' => 'xMatters Function',
-                    'name' => 'xmatters_function',
-                    'descr' => 'The ID of the xmatters flow http trigger or legacy inbound integration.',
+                    'descr' => 'The full xMatters trigger URL (for example: https://company.xmatters.com/api/integration/1/functions/<id>/triggers).',
                     'type' => 'text'
                 ],
                 [
@@ -148,7 +139,6 @@ class Xmatters extends Transport
             ],
             'validation' => [
                 'xmatters_url' => 'required|url',
-                'xmatters_function' => 'required|string',
                 'xmatters_api_key' => 'required|string',
                 'xmatters_api_secret' => 'required|string'
             ]
