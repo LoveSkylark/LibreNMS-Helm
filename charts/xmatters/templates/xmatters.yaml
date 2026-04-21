@@ -1,6 +1,6 @@
 ---
 {{- if .Values.enable }}
-{{- if .Values.agent }}
+{{- if .Values.agent.enable }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
