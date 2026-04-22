@@ -2,7 +2,15 @@
 {{- $issuerName := default "letsencrypt-prod" .Values.ingress.letsEncrypt.issuerName }}
 {{- $tlsSecretName := default "https-cert" .Values.ingress.tls.secretName }}
 {{- $acmeEnvironment := lower (default "production" .Values.ingress.letsEncrypt.environment) }}
-{{- $acmeDnsHost := default "" .Values.ingress.letsEncrypt.acmeDns.host }}
+{{- $acmeDnsHostRaw := default "" .Values.ingress.letsEncrypt.acmeDns.host }}
+{{- $acmeDnsHost := "" }}
+{{- if $acmeDnsHostRaw }}
+{{- if or (hasPrefix "http://" $acmeDnsHostRaw) (hasPrefix "https://" $acmeDnsHostRaw) }}
+{{- $acmeDnsHost = $acmeDnsHostRaw }}
+{{- else }}
+{{- $acmeDnsHost = printf "https://%s" $acmeDnsHostRaw }}
+{{- end }}
+{{- end }}
 {{- $useAcmeDns := ne $acmeDnsHost "" }}
 {{- $oxidizedHost := default "" .Values.oxidized.host.FQDN }}
 {{- $smokepingHost := default "" .Values.smokeping.host.FQDN }}
