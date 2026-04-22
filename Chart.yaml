@@ -6,6 +6,10 @@ type: application
 version: 1.0.1
 
 dependencies:
+  - name: cert-manager
+    version: "v1.14.0"
+    condition: ingress.certManager.enabled
+    repository: "https://charts.jetstack.io"
   - name: mariadb
     condition: mariadb.enabled
     repository: "file://charts/mariadb"

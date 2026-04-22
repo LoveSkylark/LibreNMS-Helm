@@ -1,6 +1,6 @@
 ---
 {{- if .Values.enable }}
-{{- if .Values.agent.enable }}
+{{- if and (kindIs "map" .Values.agent) .Values.agent.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

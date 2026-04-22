@@ -19,6 +19,17 @@ The script installs:
 - Helm
 - LibreNMS stack
 
+### Update Helm Dependencies
+
+After installation or when using a fresh chart copy, update dependencies:
+
+```bash
+cd /data/vault/LibreNMS-Helm
+helm dependency update
+```
+
+This downloads cert-manager and other chart dependencies. This is required before first deployment.
+
 ## Start The Stack
 
 After installation, open a new terminal and run:
@@ -99,7 +110,7 @@ Optional:
 ### 5) Let's Encrypt With ACME-DNS (Existing Secret)
 
 Prerequisites:
-- cert-manager installed in the cluster
+- cert-manager installed in the cluster (auto-deployed as dependency, or `certManager.enabled: false` if pre-installed)
 - Secret with ACME-DNS credentials already exists in the LibreNMS namespace
 - Secret contains key `acme-dns-account.json`
 
@@ -148,6 +159,26 @@ Manual secret creation example:
 kubectl create secret generic acme-dns-credentials \
   --from-file=acme-dns-account.json=/data/certs/acme-dns-account.json \
   -n librenms
+```
+
+## Cert-Manager Configuration
+
+Cert-manager is automatically installed as a chart dependency. Configure via:
+
+```yaml
+ingress:
+  certManager:
+    enabled: false                # Set to false if already installed separately
+    installCRDs: true            # Auto-install cert-manager CRDs
+    namespace: cert-manager      # Namespace where cert-manager runs
+```
+
+If cert-manager is already running in your cluster under a different name/namespace, disable the dependency:
+
+```yaml
+ingress:
+  certManager:
+    enabled: false
 ```
 
 ## Monitoring During Deploy

@@ -1,6 +1,6 @@
 ---
 {{- if .Values.enable }}
-{{- if .Values.agent.enable }}
+{{- if and (kindIs "map" .Values.agent) .Values.agent.enable }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
