@@ -139,7 +139,7 @@ msmtpd:
       password: "bar"   
 
 oxidized:
-  enable: true
+  enable: false
   host:
     FQDN: "ox.test.local"
   source:

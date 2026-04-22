@@ -4,6 +4,12 @@
 {{- $acmeEnvironment := lower (default "production" .Values.ingress.letsEncrypt.environment) }}
 {{- $acmeDnsHost := default "" .Values.ingress.letsEncrypt.acmeDns.host }}
 {{- $useAcmeDns := ne $acmeDnsHost "" }}
+{{- $oxidizedHost := default "" .Values.oxidized.host.FQDN }}
+{{- $smokepingHost := default "" .Values.smokeping.host.FQDN }}
+{{- $publicHostPattern := `^.+\.[A-Za-z]{2,}$` }}
+{{- $blockedHostPattern := `(^|\.)((local|localhost|test|invalid))$|(^|\.)example\.[A-Za-z]{2,}$` }}
+{{- $includeSmokepingTlsName := and .Values.smokeping.enable (regexMatch $publicHostPattern $smokepingHost) (not (regexMatch $blockedHostPattern $smokepingHost)) }}
+{{- $includeOxidizedTlsName := and .Values.oxidized.enable (regexMatch $publicHostPattern $oxidizedHost) (not (regexMatch $blockedHostPattern $oxidizedHost)) }}
 {{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled .Values.ingress.letsEncrypt.createIssuer (not .Values.ingress.tls.existingSecretName) }}
 ---
 apiVersion: cert-manager.io/v1
@@ -53,11 +59,11 @@ spec:
   commonName: {{ .Values.application.host.FQDN | quote }}
   dnsNames:
     - {{ .Values.application.host.FQDN | quote }}
-{{- if .Values.smokeping.enable }}
-    - {{ .Values.smokeping.host.FQDN | quote }}
+{{- if $includeSmokepingTlsName }}
+    - {{ $smokepingHost | quote }}
 {{- end }}
-{{- if .Values.oxidized.enable }}
-    - {{ .Values.oxidized.host.FQDN | quote }}
+{{- if $includeOxidizedTlsName }}
+    - {{ $oxidizedHost | quote }}
 {{- end }}
 {{- end }}
 

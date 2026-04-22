@@ -2,6 +2,10 @@
 {{- $tlsSecretName := default .Values.ingress.tls.secretName .Values.ingress.tls.existingSecretName }}
 {{- $issuerKind := default "ClusterIssuer" .Values.ingress.letsEncrypt.issuerKind }}
 {{- $issuerName := default "letsencrypt-prod" .Values.ingress.letsEncrypt.issuerName }}
+{{- $smokepingHost := default "" .Values.smokeping.host.FQDN }}
+{{- $oxidizedHost := default "" .Values.oxidized.host.FQDN }}
+{{- $includeSmokepingIngress := and .Values.smokeping.enable (ne $smokepingHost "") }}
+{{- $includeOxidizedIngress := and .Values.oxidized.enable (ne $oxidizedHost "") }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -41,8 +45,8 @@ spec:
             name: {{ .Values.application.host.name }}
             port:
               number: 8000
-{{- if .Values.smokeping.enable }}
-  - host: {{ .Values.smokeping.host.FQDN | quote }}
+{{- if $includeSmokepingIngress }}
+  - host: {{ $smokepingHost | quote }}
     http:
       paths:
       - path: /
@@ -53,8 +57,8 @@ spec:
             port:
               number: 8081
 {{- end }}
-{{- if .Values.oxidized.enable }}
-  - host: {{ .Values.oxidized.host.FQDN | quote }}
+{{- if $includeOxidizedIngress }}
+  - host: {{ $oxidizedHost | quote }}
     http:
       paths:
       - path: /
@@ -79,11 +83,11 @@ spec:
   tls:
   - hosts:
     - {{ .Values.application.host.FQDN }}
-{{- if .Values.smokeping.enable }}
-    - {{ .Values.smokeping.host.FQDN }}
+  {{- if $includeSmokepingIngress }}
+    - {{ $smokepingHost }}
 {{- end }}
-{{- if .Values.oxidized.enable }}
-    - {{ .Values.oxidized.host.FQDN }}
+  {{- if $includeOxidizedIngress }}
+    - {{ $oxidizedHost }}
 {{- end }}
     secretName: {{ $tlsSecretName | quote }}
 {{- end }}
