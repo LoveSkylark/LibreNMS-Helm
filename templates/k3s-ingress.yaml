@@ -25,13 +25,6 @@ metadata:
 {{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
-{{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled (not .Values.ingress.tls.existingSecretName) }}
-{{- if eq $issuerKind "Issuer" }}
-    cert-manager.io/issuer: {{ $issuerName | quote }}
-{{- else }}
-    cert-manager.io/cluster-issuer: {{ $issuerName | quote }}
-{{- end }}
-{{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
