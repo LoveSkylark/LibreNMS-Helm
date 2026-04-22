@@ -31,10 +31,6 @@ ingress:
     acmeDns:
       host: ""
       accountSecretName: ""
-  certManager:
-    enabled: false
-    installCRDs: true
-    namespace: cert-manager
 
 mariadb:
   enabled: true

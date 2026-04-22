@@ -1,0 +1,38 @@
+{{- if and .Values.enabled .Values.issuer.create }}
+{{- $issuerKind := default "ClusterIssuer" .Values.issuer.kind }}
+{{- $issuerName := default "letsencrypt-prod" .Values.issuer.name }}
+{{- $acmeEnv := lower (default "production" .Values.issuer.environment) }}
+{{- $solverType := lower (default "http01" .Values.issuer.solver.type) }}
+{{- $useAcmeDns := eq $solverType "acmedns" }}
+---
+apiVersion: cert-manager.io/v1
+kind: {{ $issuerKind }}
+metadata:
+  name: {{ $issuerName | quote }}
+{{- if eq $issuerKind "Issuer" }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+spec:
+  acme:
+    email: {{ .Values.issuer.email | quote }}
+{{- if eq $acmeEnv "staging" }}
+    server: {{ .Values.issuer.server.staging | quote }}
+{{- else }}
+    server: {{ .Values.issuer.server.production | quote }}
+{{- end }}
+    privateKeySecretRef:
+      name: {{ default "letsencrypt-account-key" .Values.issuer.privateKeySecretName | quote }}
+    solvers:
+{{- if $useAcmeDns }}
+      - dns01:
+          acmeDNS:
+            host: {{ .Values.issuer.solver.acmeDnsHost | quote }}
+            accountSecretRef:
+              name: {{ .Values.issuer.solver.acmeDnsAccountSecretName | quote }}
+              key: acme-dns-account.json
+{{- else }}
+      - http01:
+          ingress:
+            class: {{ .Values.issuer.solver.http01IngressClass | quote }}
+{{- end }}
+{{- end }}

@@ -28,7 +28,7 @@ cd /data/vault/LibreNMS-Helm
 helm dependency update
 ```
 
-This downloads cert-manager and other chart dependencies. This is required before first deployment.
+This downloads chart dependencies used by the LibreNMS app chart.
 
 ## Start The Stack
 
@@ -52,7 +52,7 @@ Save in the editor with `a`, then `Esc`, then `:wq`.
 
 ## HTTPS And TLS Options
 
-Use one of these TLS modes.
+Use one of these TLS modes. Cert-manager resources are deployed from the separate chart in `cert-manager/`.
 
 ### 1) Manual TLS Secret
 
@@ -91,66 +91,45 @@ Set:
 - `ingress.letsEncrypt.issuerName=letsencrypt-prod`
 - `ingress.tls.secretName=<certificate-secret-name>`
 
-### 4) Let's Encrypt With Bundled Issuer (Chart Creates It)
-
-Set:
-- `ingress.https=true`
-- `ingress.letsEncrypt.enabled=true`
-- `ingress.letsEncrypt.createIssuer=true`
-- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
-- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
-- `ingress.letsEncrypt.email=<your-email>`
-- `ingress.letsEncrypt.environment=production` or `staging`
-- `ingress.letsEncrypt.privateKeySecretName=<acme-account-secret-name>`
-- `ingress.tls.secretName=<certificate-secret-name>`
-
-Optional:
-- `ingress.redirectToHttps.enabled=true`
-
-### 5) Let's Encrypt With ACME-DNS (Existing Secret)
+### 4) Let's Encrypt With ACME-DNS (Existing Secret)
 
 Prerequisites:
-- cert-manager installed in the cluster (auto-deployed as dependency, or `certManager.enabled: false` if pre-installed)
-- Secret with ACME-DNS credentials already exists in the LibreNMS namespace
+- cert-manager installed in the cluster
+- Secret with ACME-DNS credentials exists in cert-manager cluster resource namespace (typically `cert-manager`) when using `ClusterIssuer`
 - Secret contains key `acme-dns-account.json`
 
 Set:
 - `ingress.https=true`
 - `ingress.letsEncrypt.enabled=true`
-- `ingress.letsEncrypt.createIssuer=true`
 - `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
 - `ingress.letsEncrypt.issuerName=letsencrypt-prod`
-- `ingress.letsEncrypt.email=<your-email>`
-- `ingress.letsEncrypt.environment=production` or `staging`
 - `ingress.tls.secretName=<certificate-secret-name>`
-- `ingress.letsEncrypt.acmeDns.host=<acme-dns-host>`
-- `ingress.letsEncrypt.acmeDns.accountSecretName=<existing-secret-name>`
 
-Example:
+Then deploy the dedicated cert chart with cert-specific values.
+
+Example values for `cert-manager/` chart:
 
 ```yaml
-ingress:
-  https: true
-  className: "traefik"
-  redirectToHttps:
-    enabled: true
-  tls:
-    existingSecretName: ""
-    secretName: "https-cert"
-  letsEncrypt:
-    enabled: true
-    createIssuer: true
-    issuerKind: "ClusterIssuer"
-    issuerName: "letsencrypt-prod"
-    email: "admin@example.com"
-    environment: "production"
-    privateKeySecretName: "letsencrypt-account-key"
-    server:
-      production: "https://acme-v02.api.letsencrypt.org/directory"
-      staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
-    acmeDns:
-      host: "auth.vist.is"
-      accountSecretName: "acme-dns-credentials"
+enabled: true
+issuer:
+  create: true
+  kind: "ClusterIssuer"
+  name: "letsencrypt-prod"
+  email: "admin@example.com"
+  environment: "production"
+  privateKeySecretName: "letsencrypt-account-key"
+  solver:
+    type: "acmeDNS"
+    acmeDnsHost: "auth.vist.is"
+    acmeDnsAccountSecretName: "acme-dns-credentials"
+certificate:
+  create: true
+  secretName: "https-cert"
+  commonName: "nms.example.com"
+  dnsNames:
+    - "nms.example.com"
+    - "ox.example.com"
+    - "smokeping.example.com"
 ```
 
 Manual secret creation example:
@@ -158,27 +137,36 @@ Manual secret creation example:
 ```bash
 kubectl create secret generic acme-dns-credentials \
   --from-file=acme-dns-account.json=/data/certs/acme-dns-account.json \
-  -n librenms
+  -n cert-manager
 ```
 
-## Cert-Manager Configuration
+## Deployment Order
 
-Cert-manager is automatically installed as a chart dependency. Configure via:
+Run these in order to avoid CRD race conditions:
 
-```yaml
-ingress:
-  certManager:
-    enabled: false                # Set to false if already installed separately
-    installCRDs: true            # Auto-install cert-manager CRDs
-    namespace: cert-manager      # Namespace where cert-manager runs
+```bash
+# 1) Install cert-manager controller + CRDs once
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install cert-manager jetstack/cert-manager \
+  -n cert-manager --create-namespace --set crds.enabled=true
+
+# 2) Install issuer/certificate resources from the dedicated cert chart
+helm upgrade --install librenms-cert ./cert-manager \
+  -n librenms -f /data/lnms-cert-config.yaml
+
+# 3) Install LibreNMS app chart
+helm upgrade --install librenms . \
+  -n librenms -f /data/lnms-config.yaml
 ```
 
-If cert-manager is already running in your cluster under a different name/namespace, disable the dependency:
+Validate:
 
 ```yaml
-ingress:
-  certManager:
-    enabled: false
+kubectl get crd | grep cert-manager
+kubectl get clusterissuer
+kubectl get certificate -n librenms
+kubectl get secret https-cert -n librenms
 ```
 
 ## Monitoring During Deploy

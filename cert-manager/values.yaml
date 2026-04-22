@@ -1,0 +1,24 @@
+enabled: false
+
+issuer:
+  create: false
+  kind: "ClusterIssuer"
+  name: "letsencrypt-prod"
+  email: ""
+  environment: "production"
+  privateKeySecretName: "letsencrypt-account-key"
+  server:
+    production: "https://acme-v02.api.letsencrypt.org/directory"
+    staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
+  solver:
+    type: "http01"
+    http01IngressClass: "traefik"
+    acmeDnsHost: ""
+    acmeDnsAccountSecretName: ""
+
+certificate:
+  create: true
+  secretName: "https-cert"
+  commonName: "nms.test.local"
+  dnsNames:
+    - "nms.test.local"
