@@ -11,23 +11,30 @@ dependencies:
     condition: ingress.certManager.enabled
     repository: "https://charts.jetstack.io"
   - name: mariadb
+    version: "*"
     condition: mariadb.enabled
     repository: "file://charts/mariadb"
   - name: redis
+    version: "*"
     condition: redis.enabled
     repository: "file://charts/redis"
   - name: rrdcached
+    version: "*"
     condition: rrdcached.enabled
     repository: "file://charts/rrdcached"
   - name: msmtpd
+    version: "*"
     condition: msmtpd.enable
     repository: "file://charts/msmtpd"
   - name: oxidized
+    version: "*"
     condition: oxidized.enable
     repository: "file://charts/oxidized"
   - name: smokeping
+    version: "*"
     condition: smokeping.enable
     repository: "file://charts/smokeping"
   - name: xmatters
+    version: "*"
     condition: xmatters.enable
     repository: "file://charts/xmatters"
