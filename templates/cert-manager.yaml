@@ -45,7 +45,6 @@ spec:
             host: {{ .Values.ingress.letsEncrypt.acmeDns.host | quote }}
             accountSecretRef:
               name: {{ .Values.ingress.letsEncrypt.acmeDns.accountSecretName | quote }}
-              namespace: {{ .Release.Namespace }}
               key: acme-dns-account.json
 {{- else }}
       - http01:
