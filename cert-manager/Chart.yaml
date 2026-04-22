@@ -1,6 +1,0 @@
-apiVersion: v2
-name: librenms-cert-manager
-description: Cert-manager resources for LibreNMS (Issuer and Certificate)
-type: application
-version: 1.0.0
-appVersion: 1.0.0

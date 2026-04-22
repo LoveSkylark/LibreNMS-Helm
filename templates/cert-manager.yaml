@@ -1,3 +1,66 @@
+{{- $issuerKind := default "ClusterIssuer" .Values.ingress.letsEncrypt.issuerKind }}
+{{- $issuerName := default "letsencrypt-prod" .Values.ingress.letsEncrypt.issuerName }}
+{{- $tlsSecretName := default "https-cert" .Values.ingress.tls.secretName }}
+{{- $acmeEnvironment := lower (default "production" .Values.ingress.letsEncrypt.environment) }}
+{{- $acmeDnsHost := default "" .Values.ingress.letsEncrypt.acmeDns.host }}
+{{- $useAcmeDns := ne $acmeDnsHost "" }}
+{{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled .Values.ingress.letsEncrypt.createIssuer (not .Values.ingress.tls.existingSecretName) }}
+---
+apiVersion: cert-manager.io/v1
+kind: {{ $issuerKind }}
+metadata:
+  name: {{ $issuerName | quote }}
+{{- if eq $issuerKind "Issuer" }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+spec:
+  acme:
+    email: {{ .Values.ingress.letsEncrypt.email | quote }}
+{{- if eq $acmeEnvironment "staging" }}
+    server: {{ .Values.ingress.letsEncrypt.server.staging | quote }}
+{{- else }}
+    server: {{ .Values.ingress.letsEncrypt.server.production | quote }}
+{{- end }}
+    privateKeySecretRef:
+      name: {{ default "letsencrypt-account-key" .Values.ingress.letsEncrypt.privateKeySecretName | quote }}
+    solvers:
+{{- if $useAcmeDns }}
+      - dns01:
+          acmeDNS:
+            host: {{ $acmeDnsHost | quote }}
+            accountSecretRef:
+              name: {{ .Values.ingress.letsEncrypt.acmeDns.accountSecretName | quote }}
+              key: acme-dns-account.json
+{{- else }}
+      - http01:
+          ingress:
+            class: {{ .Values.ingress.className | quote }}
+{{- end }}
+{{- end }}
+
+{{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled (not .Values.ingress.tls.existingSecretName) }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $tlsSecretName | quote }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ $tlsSecretName | quote }}
+  issuerRef:
+    kind: {{ $issuerKind | quote }}
+    name: {{ $issuerName | quote }}
+  commonName: {{ .Values.application.host.FQDN | quote }}
+  dnsNames:
+    - {{ .Values.application.host.FQDN | quote }}
+{{- if .Values.smokeping.enable }}
+    - {{ .Values.smokeping.host.FQDN | quote }}
+{{- end }}
+{{- if .Values.oxidized.enable }}
+    - {{ .Values.oxidized.host.FQDN | quote }}
+{{- end }}
+{{- end }}
+
 {{- if and .Values.ingress.https .Values.ingress.redirectToHttps.enabled }}
 ---
 apiVersion: traefik.io/v1alpha1

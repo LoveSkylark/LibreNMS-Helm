@@ -52,7 +52,7 @@ Save in the editor with `a`, then `Esc`, then `:wq`.
 
 ## HTTPS And TLS Options
 
-Use one of these TLS modes. Cert-manager resources are deployed from the separate chart in `cert-manager/`.
+Use one of these TLS modes. The main LibreNMS chart now manages the application-layer cert-manager resources when TLS automation is enabled.
 
 ### 1) Manual TLS Secret
 
@@ -87,6 +87,7 @@ Prerequisite: cert-manager installed and an `Issuer` or `ClusterIssuer` already 
 Set:
 - `ingress.https=true`
 - `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=false`
 - `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
 - `ingress.letsEncrypt.issuerName=letsencrypt-prod`
 - `ingress.tls.secretName=<certificate-secret-name>`
@@ -95,42 +96,19 @@ Set:
 
 Prerequisites:
 - cert-manager installed in the cluster
-- Secret with ACME-DNS credentials exists in cert-manager cluster resource namespace (typically `cert-manager`) when using `ClusterIssuer`
+- Secret with ACME-DNS credentials exists in the namespace expected by the issuer you reference
 - Secret contains key `acme-dns-account.json`
 
 Set:
 - `ingress.https=true`
 - `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=true`
 - `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
 - `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.letsEncrypt.email=admin@example.com`
+- `ingress.letsEncrypt.acmeDns.host=auth.example.com`
+- `ingress.letsEncrypt.acmeDns.accountSecretName=acme-dns-credentials`
 - `ingress.tls.secretName=<certificate-secret-name>`
-
-Then deploy the dedicated cert chart with cert-specific values.
-
-Example values for `cert-manager/` chart:
-
-```yaml
-enabled: true
-issuer:
-  create: true
-  kind: "ClusterIssuer"
-  name: "letsencrypt-prod"
-  email: "admin@example.com"
-  environment: "production"
-  privateKeySecretName: "letsencrypt-account-key"
-  solver:
-    type: "acmeDNS"
-    acmeDnsHost: "auth.vist.is"
-    acmeDnsAccountSecretName: "acme-dns-credentials"
-certificate:
-  create: true
-  secretName: "https-cert"
-  commonName: "nms.example.com"
-  dnsNames:
-    - "nms.example.com"
-    - "ox.example.com"
-    - "smokeping.example.com"
-```
 
 Manual secret creation example:
 
@@ -151,11 +129,7 @@ helm repo update
 helm upgrade --install cert-manager jetstack/cert-manager \
   -n cert-manager --create-namespace --set crds.enabled=true
 
-# 2) Install issuer/certificate resources from the dedicated cert chart
-helm upgrade --install librenms-cert ./cert-manager \
-  -n librenms -f /data/lnms-cert-config.yaml
-
-# 3) Install LibreNMS app chart
+# 2) Install LibreNMS app chart
 helm upgrade --install librenms . \
   -n librenms -f /data/lnms-config.yaml
 ```
