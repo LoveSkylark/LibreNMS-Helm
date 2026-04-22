@@ -18,6 +18,86 @@ APP_VALUES="/data/lnms-config.yaml"
 CERT_VALUES="/data/lnms-cert-config.yaml"
 SKIP_CONTROLLER_INSTALL="false"
 
+yaml_value() {
+  local file="$1"
+  local path="$2"
+
+  awk -v path="$path" '
+    function trim(value) {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      gsub(/^"|"$/, "", value)
+      return value
+    }
+    BEGIN {
+      split(path, keys, ".")
+    }
+    /^[[:space:]]*#/ { next }
+    {
+      line = $0
+      indent = match(line, /[^ ]/) - 1
+      if (indent < 0) {
+        next
+      }
+
+      content = substr(line, indent + 1)
+      if (content ~ /^-/) {
+        next
+      }
+      if (index(content, ":") == 0) {
+        next
+      }
+
+      key = trim(substr(content, 1, index(content, ":") - 1))
+      value = trim(substr(content, index(content, ":") + 1))
+      level = int(indent / 2) + 1
+      stack[level] = key
+      for (i = level + 1; i < 20; i++) {
+        delete stack[i]
+      }
+
+      matched = 1
+      for (i = 1; i <= length(keys); i++) {
+        if (!(i in stack) || stack[i] != keys[i]) {
+          matched = 0
+          break
+        }
+      }
+
+      if (matched && length(keys) == level && value != "") {
+        print value
+        exit
+      }
+    }
+  ' "$file"
+}
+
+validate_cert_values() {
+  local email solver_type acme_dns_host acme_dns_secret
+
+  email="$(yaml_value "$CERT_VALUES" "issuer.email")"
+  solver_type="$(yaml_value "$CERT_VALUES" "issuer.solver.type")"
+  acme_dns_host="$(yaml_value "$CERT_VALUES" "issuer.solver.acmeDnsHost")"
+  acme_dns_secret="$(yaml_value "$CERT_VALUES" "issuer.solver.acmeDnsAccountSecretName")"
+
+  if [[ -z "$email" ]]; then
+    echo "Missing issuer.email in $CERT_VALUES" >&2
+    exit 1
+  fi
+
+  if [[ "$email" =~ (example\.(com|org|net)|your-real-domain|replace-me) ]]; then
+    echo "issuer.email in $CERT_VALUES still looks like a placeholder: $email" >&2
+    echo "Use a real email address before deploying cert-manager resources." >&2
+    exit 1
+  fi
+
+  if [[ "${solver_type,,}" == "acmedns" ]]; then
+    if [[ -z "$acme_dns_host" || -z "$acme_dns_secret" ]]; then
+      echo "issuer.solver.type is acmeDNS, but acmeDnsHost or acmeDnsAccountSecretName is missing in $CERT_VALUES" >&2
+      exit 1
+    fi
+  fi
+}
+
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [options]
@@ -83,6 +163,8 @@ command -v kubectl >/dev/null 2>&1 || { echo "kubectl is required" >&2; exit 1; 
 [[ -f "$CERT_VALUES" ]] || { echo "Missing cert values file: $CERT_VALUES" >&2; exit 1; }
 [[ -f "$APP_CHART_DIR/Chart.yaml" ]] || { echo "Missing app Chart.yaml at $APP_CHART_DIR" >&2; exit 1; }
 [[ -f "$CERT_CHART_DIR/Chart.yaml" ]] || { echo "Missing cert chart at $CERT_CHART_DIR" >&2; exit 1; }
+
+validate_cert_values
 
 if [[ "$SKIP_CONTROLLER_INSTALL" != "true" ]]; then
   echo "[1/4] Installing cert-manager controller and CRDs..."
