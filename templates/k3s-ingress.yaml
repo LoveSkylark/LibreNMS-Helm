@@ -1,5 +1,7 @@
 ---
 {{- $tlsSecretName := default .Values.ingress.tls.secretName .Values.ingress.tls.existingSecretName }}
+{{- $issuerKind := default "ClusterIssuer" .Values.ingress.letsEncrypt.issuerKind }}
+{{- $issuerName := default "letsencrypt-prod" .Values.ingress.letsEncrypt.issuerName }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -20,10 +22,10 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 {{- end }}
 {{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled (not .Values.ingress.tls.existingSecretName) }}
-{{- if eq .Values.ingress.letsEncrypt.issuerKind "Issuer" }}
-    cert-manager.io/issuer: {{ .Values.ingress.letsEncrypt.issuerName | quote }}
+{{- if eq $issuerKind "Issuer" }}
+    cert-manager.io/issuer: {{ $issuerName | quote }}
 {{- else }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.letsEncrypt.issuerName | quote }}
+    cert-manager.io/cluster-issuer: {{ $issuerName | quote }}
 {{- end }}
 {{- end }}
 spec:

@@ -96,6 +96,60 @@ Set:
 Optional:
 - `ingress.redirectToHttps.enabled=true`
 
+### 5) Let's Encrypt With ACME-DNS (Existing Secret)
+
+Prerequisites:
+- cert-manager installed in the cluster
+- Secret with ACME-DNS credentials already exists in the LibreNMS namespace
+- Secret contains key `acme-dns-account.json`
+
+Set:
+- `ingress.https=true`
+- `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=true`
+- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
+- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.letsEncrypt.email=<your-email>`
+- `ingress.letsEncrypt.environment=production` or `staging`
+- `ingress.tls.secretName=<certificate-secret-name>`
+- `ingress.letsEncrypt.acmeDns.host=<acme-dns-host>`
+- `ingress.letsEncrypt.acmeDns.accountSecretName=<existing-secret-name>`
+
+Example:
+
+```yaml
+ingress:
+  https: true
+  className: "traefik"
+  redirectToHttps:
+    enabled: true
+  tls:
+    existingSecretName: ""
+    secretName: "https-cert"
+  letsEncrypt:
+    enabled: true
+    createIssuer: true
+    issuerKind: "ClusterIssuer"
+    issuerName: "letsencrypt-prod"
+    email: "admin@example.com"
+    environment: "production"
+    privateKeySecretName: "letsencrypt-account-key"
+    server:
+      production: "https://acme-v02.api.letsencrypt.org/directory"
+      staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    acmeDns:
+      host: "auth.vist.is"
+      accountSecretName: "acme-dns-credentials"
+```
+
+Manual secret creation example:
+
+```bash
+kubectl create secret generic acme-dns-credentials \
+  --from-file=acme-dns-account.json=/data/certs/acme-dns-account.json \
+  -n librenms
+```
+
 ## Monitoring During Deploy
 
 Open another shell and run:

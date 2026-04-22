@@ -14,12 +14,16 @@ spec:
 {{- end }}
 
 {{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled .Values.ingress.letsEncrypt.createIssuer (not .Values.ingress.tls.existingSecretName) }}
+{{- $issuerKind := default "ClusterIssuer" .Values.ingress.letsEncrypt.issuerKind }}
+{{- $issuerName := default "letsencrypt-prod" .Values.ingress.letsEncrypt.issuerName }}
+{{- $acmeEnv := lower (default "production" .Values.ingress.letsEncrypt.environment) }}
+{{- $useAcmeDns := and .Values.ingress.letsEncrypt.acmeDns .Values.ingress.letsEncrypt.acmeDns.host .Values.ingress.letsEncrypt.acmeDns.accountSecretName }}
 ---
 apiVersion: cert-manager.io/v1
-kind: {{ .Values.ingress.letsEncrypt.issuerKind }}
+kind: {{ $issuerKind }}
 metadata:
-  name: {{ .Values.ingress.letsEncrypt.issuerName | quote }}
-{{- if eq .Values.ingress.letsEncrypt.issuerKind "Issuer" }}
+  name: {{ $issuerName | quote }}
+{{- if eq $issuerKind "Issuer" }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
   labels:
@@ -27,15 +31,24 @@ metadata:
 spec:
   acme:
     email: {{ .Values.ingress.letsEncrypt.email | quote }}
-{{- if eq .Values.ingress.letsEncrypt.environment "staging" }}
+{{- if eq $acmeEnv "staging" }}
     server: {{ .Values.ingress.letsEncrypt.server.staging | quote }}
 {{- else }}
     server: {{ .Values.ingress.letsEncrypt.server.production | quote }}
 {{- end }}
     privateKeySecretRef:
-      name: {{ .Values.ingress.letsEncrypt.privateKeySecretName | quote }}
+      name: {{ default "letsencrypt-account-key" .Values.ingress.letsEncrypt.privateKeySecretName | quote }}
     solvers:
+{{- if $useAcmeDns }}
+      - dns01:
+          acmeDNS:
+            host: {{ .Values.ingress.letsEncrypt.acmeDns.host | quote }}
+            accountSecretRef:
+              name: {{ .Values.ingress.letsEncrypt.acmeDns.accountSecretName | quote }}
+              key: acme-dns-account.json
+{{- else }}
       - http01:
           ingress:
             class: {{ .Values.ingress.className | quote }}
+{{- end }}
 {{- end }}
