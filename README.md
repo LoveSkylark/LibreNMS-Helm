@@ -1,53 +1,161 @@
 # LibreNMS-Helm
 
-LibreNMS-Helm is a project that aims to provide a fully functional monitoring system on a fresh installation of Ubuntu using Kubernetes (Kube) and Helm. It is a conversion of the original LibreNMS Docker setup to a Kubernetes-based setup with Helm, incorporating various new features and enhancements.
+LibreNMS-Helm deploys LibreNMS on Kubernetes using Helm, including optional supporting services.
 
-To install Kube and Helm along with the LibreNMS-Helm setup, follow these steps:
+## Installation
 
-## Run the shell script blow:
+Run the installer script:
 
-   ````bash
-   sudo -i
-   curl -fsSL https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Installer/main/LibreNMS-Install | sudo bash
-   ````
-### The script will take some time to install
+```bash
+sudo -i
+curl -fsSL https://raw.githubusercontent.com/LoveSkylark/LibreNMS-Installer/main/LibreNMS-Install | sudo bash
+```
+
+The script installs:
 - Git
-- SNMP (client)
-- K3S (Kubernetes Server)
-- K9S (Kubernetes Management)
-- HELM (Kubernetes Deployment)
-- LibreNMS (monitoring cluster)
+- SNMP client
+- K3s
+- K9s
+- Helm
+- LibreNMS stack
 
-Startup Instructions
+### Update Helm Dependencies
 
-## After installation has completed you need to open a new Terminal to the server and run:
+After installation or when using a fresh chart copy, update dependencies:
 
-   ````bash
-   sudo -i
-   nms start
-   ````
+```bash
+cd /data/vault/LibreNMS-Helm
+helm dependency update
+```
 
-When that is done it will prompt you to configure the cluster
+This downloads chart dependencies used by the LibreNMS app chart.
 
-You need to correctly configure:
-- storage>path
-- application>host>FQDN
-- application>host>volumeSize
-- mariadb>host>volumeSize
-- mariadb>credentials>rootPassword
-- mariadb>credentials>user
-- mariadb>credentials>password
+## Start The Stack
 
-Other configuration can be adjusted after the initial install
+After installation, open a new terminal and run:
 
-press "a" to start editing the configuration and when your done press "esc" then type ":wq"
+```bash
+sudo -i
+nms start
+```
 
+When prompted, set these values first:
+- `storage.path`
+- `application.host.FQDN`
+- `application.host.volumeSize`
+- `mariadb.host.volumeSize`
+- `mariadb.credentials.rootPassword`
+- `mariadb.credentials.user`
+- `mariadb.credentials.password`
 
-## While the cluster is being built you can open another shell and type "k9s" as SUDO to monitor its process
+Save in the editor with `a`, then `Esc`, then `:wq`.
 
-K9S allows you to:
-- terminal directly into a pod to run test
-- view log files 
-- kill pods for reconfiguration or just if they behave badly
+## HTTPS And TLS Options
 
-Please note that this project is still a work in progress, and improvements and updates are being made.
+Use one of these TLS modes. The main LibreNMS chart now manages the application-layer cert-manager resources when TLS automation is enabled.
+
+### 1) Manual TLS Secret
+
+Set:
+- `ingress.https=true`
+- `ingress.tls.secretName=<secret-name>`
+
+Create the secret:
+
+```bash
+kubectl create secret tls <secret-name> \
+  --cert=<certificate-file> \
+  --key=<key-file> \
+  --namespace <namespace>
+```
+
+### 2) Manual Wildcard TLS Secret
+
+If you already installed a wildcard certificate secret, set:
+- `ingress.https=true`
+- `ingress.tls.existingSecretName=<wildcard-secret-name>`
+
+Optional:
+- `ingress.redirectToHttps.enabled=true`
+
+When `ingress.tls.existingSecretName` is set, the chart uses that secret and skips the Let's Encrypt issuer flow.
+
+### 3) Let's Encrypt Via Existing Issuer
+
+Prerequisite: cert-manager installed and an `Issuer` or `ClusterIssuer` already created.
+
+Set:
+- `ingress.https=true`
+- `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=false`
+- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
+- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.tls.secretName=<certificate-secret-name>`
+
+### 4) Let's Encrypt With ACME-DNS (Existing Secret)
+
+Prerequisites:
+- cert-manager installed in the cluster
+- Secret with ACME-DNS credentials exists in the namespace expected by the issuer you reference
+- Secret contains key `acme-dns-account.json`
+
+Set:
+- `ingress.https=true`
+- `ingress.letsEncrypt.enabled=true`
+- `ingress.letsEncrypt.createIssuer=true`
+- `ingress.letsEncrypt.issuerKind=ClusterIssuer` (or `Issuer`)
+- `ingress.letsEncrypt.issuerName=letsencrypt-prod`
+- `ingress.letsEncrypt.email=admin@example.com`
+- `ingress.letsEncrypt.acmeDns.host=auth.example.com`
+- `ingress.letsEncrypt.acmeDns.accountSecretName=acme-dns-credentials`
+- `ingress.tls.secretName=<certificate-secret-name>`
+
+Manual secret creation example:
+
+```bash
+kubectl create secret generic acme-dns-credentials \
+  --from-file=acme-dns-account.json=/data/certs/acme-dns-account.json \
+  -n cert-manager
+```
+
+## Deployment Order
+
+Run these in order to avoid CRD race conditions:
+
+```bash
+# 1) Install cert-manager controller + CRDs once
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install cert-manager jetstack/cert-manager \
+  -n cert-manager --create-namespace --set crds.enabled=true
+
+# 2) Install LibreNMS app chart
+helm upgrade --install librenms . \
+  -n librenms -f /data/lnms-config.yaml
+```
+
+Validate:
+
+```yaml
+kubectl get crd | grep cert-manager
+kubectl get clusterissuer
+kubectl get certificate -n librenms
+kubectl get secret https-cert -n librenms
+```
+
+## Monitoring During Deploy
+
+Open another shell and run:
+
+```bash
+sudo k9s
+```
+
+With K9s you can:
+- Open a shell in pods
+- View logs
+- Restart or delete pods during troubleshooting
+
+## Notes
+
+This project is still in active development and improvements are ongoing.

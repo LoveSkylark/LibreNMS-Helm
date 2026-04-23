@@ -1,0 +1,75 @@
+model: cisco
+resolve_dns: true
+interval: 72000
+use_syslog: false
+debug: false
+threads: 30
+use_max_threads: false
+timeout: 20
+retries: 3
+prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
+rest: 0.0.0.0:8888
+next_adds_job: false
+vars: {}
+groups:
+  core:
+    username: {{ .Values.group.core.user }}
+    password: {{ .Values.group.core.password }}
+{{- if .Values.group.core.var }}
+    {{ .Values.group.core.var }}
+{{- end }}
+{{- range $groupName := keys .Values.group | sortAlpha }}
+{{- $group := index $.Values.group $groupName }}
+{{- if and (ne $groupName "core") $group.user $group.password }}
+  {{ $groupName }}:
+    username: {{ $group.user }}
+    password: {{ $group.password }}
+{{- if $group.var }}
+    {{ $group.var }}
+{{- end }}
+{{- end }}
+{{- end }}
+models: {}
+model_map:
+  juniper: junos
+  cisco: ios
+  cisco: iosxe
+  mikrotik: routeros
+  ubiquiti: airos
+  fortigate: fortios
+  fortiswitch: fortios
+
+pid: "/home/oxidized/.config/oxidized/pid"
+crash:
+  directory: "/home/oxidized/.config/oxidized/crashes"
+  hostnames: false
+stats:
+  history_size: 10
+input:
+  default: ssh, telnet
+  debug: false
+  ssh:
+    secure: false
+  ftp:
+    passive: true
+  utf8_encoded: true
+output:
+  default: git
+  git:
+      user: Oxidized
+      email: noc@sensa.is
+      repo: "/home/oxidized/.config/oxidized/configs"
+source:
+  default: http
+  debug: false
+  http:
+    url: {{ .Values.source.url | quote }}
+    scheme: http
+    secure: false
+    map:
+      name: hostname
+      model: os
+      group: group
+      ip: ip
+    headers:
+      X-Auth-Token: {{ required "oxidized.credentials.token is required" .Values.credentials.token | quote }}

@@ -8,6 +8,9 @@ host:
   name: "oxidized"
   FQDN: "ox.test.local"
 
+source:
+  url: "http://lnms-app:8000/api/v0/oxidized"
+
 groupSupport: true
 featureVers: true
 reloadNodes: true
@@ -28,85 +31,5 @@ group:
     user: "deviceuser"
     password: "devicepassword"
     var: ""
-  G1:
-    user: ""
-    password: ""
-    string: "/^ox-group-1/"
-    var: ""
-  G2:
-    user: ""
-    password: ""
-    string: "/^ox-group-2/"
-    var: ""
-  G3:
-    user: ""
-    password: ""
-    string: "/^ox-group-3/"
-    var: ""
-  G4:
-    user: ""
-    password: ""
-    string: "/^ox-group-4/"
-    var: ""
-  G5:
-    user: ""
-    password: ""
-    string: "/^ox-group-5/"
-    var: ""
-  G6:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G7:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G8:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G9:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G10:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G11:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G12:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G13:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G14:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G15:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
-  G16:
-    user: ""
-    password: ""
-    string: ""
-    var: ""
 credentials:
-  token: 'ff7dd1796524fee831b52da61937d793'
+  token: ""

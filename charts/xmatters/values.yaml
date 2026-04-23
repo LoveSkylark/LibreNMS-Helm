@@ -1,14 +1,14 @@
 ---
 enable: true
-agent: true
+agent:
+  enable: true
+  URL: "company.xmatters.com"
+  APIkey: ""
+  APIsecret: ""
 
 host:
   image: "loveskylark/xmatters-xa:latest"
   name: "xmatters"
-
-URL: "company.xmatters.com"
-APIkey: ""
-APIsecret: ""
 proxy:
   auto: false
   IP: ""

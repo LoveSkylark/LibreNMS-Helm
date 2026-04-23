@@ -1,11 +1,11 @@
 ---
 {{- if .Values.enable }}
-{{- if .Values.agent }}
+{{- if and (kindIs "map" .Values.agent) .Values.agent.enable }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.host.name | quote }}
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "common.labels" . | indent 4 }}
     app: {{ .Values.host.name | quote }}
