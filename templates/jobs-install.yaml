@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-delete-policy": {{ ternary "before-hook-creation,hook-failed" "hook-succeeded" .Values.application.jobsInstall.keepOnSuccess | quote }}
+    "helm.sh/hook-delete-policy": {{ ternary "before-hook-creation" "hook-succeeded" .Values.application.jobsInstall.keepOnSuccess | quote }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -24,63 +24,6 @@ spec:
             set -x
 {{- end }}
             su librenms -s /bin/sh -c "true" >/dev/null 2>&1 || true
-{{- if and .Values.saml.enable (ne .Values.saml.provider "") }}
-            # Install SAML provider plugin
-{{- if eq .Values.saml.provider "github" }}
-            lnms plugin:add socialiteproviders/github
-{{- if .Values.saml.client_id }}
-            lnms config:set auth.socialite.configs.github.client_id {{ .Values.saml.client_id | quote }}
-            lnms config:set auth.socialite.configs.github.client_secret {{ .Values.saml.client_secret | quote }}
-            lnms config:set auth.socialite.configs.github.redirect {{ .Values.saml.redirect | quote }}
-            lnms config:set auth.socialite.configs.github.listener "\SocialiteProviders\GitHub\GitHubExtendSocialite"
-{{- end }}
-{{- if .Values.saml.github.scopes }}
-            lnms config:set auth.socialite.scopes {{ .Values.saml.github.scopes | toJson }}
-{{- end }}
-{{- else if eq .Values.saml.provider "microsoft" }}
-            lnms plugin:add socialiteproviders/microsoft
-{{- if .Values.saml.client_id }}
-            lnms config:set auth.socialite.configs.microsoft.client_id {{ .Values.saml.client_id | quote }}
-            lnms config:set auth.socialite.configs.microsoft.client_secret {{ .Values.saml.client_secret | quote }}
-            lnms config:set auth.socialite.configs.microsoft.redirect {{ .Values.saml.redirect | quote }}
-{{- if .Values.saml.tenant }}
-            lnms config:set auth.socialite.configs.microsoft.tenant {{ .Values.saml.tenant | quote }}
-{{- end }}
-            lnms config:set auth.socialite.configs.microsoft.listener "\SocialiteProviders\Microsoft\MicrosoftExtendSocialite"
-{{- end }}
-{{- if .Values.saml.microsoft.scopes }}
-            lnms config:set auth.socialite.scopes {{ .Values.saml.microsoft.scopes | toJson }}
-{{- end }}
-{{- else if eq .Values.saml.provider "okta" }}
-            lnms plugin:add socialiteproviders/okta
-{{- if .Values.saml.client_id }}
-            lnms config:set auth.socialite.configs.okta.client_id {{ .Values.saml.client_id | quote }}
-            lnms config:set auth.socialite.configs.okta.client_secret {{ .Values.saml.client_secret | quote }}
-            lnms config:set auth.socialite.configs.okta.redirect {{ .Values.saml.redirect | quote }}
-            lnms config:set auth.socialite.configs.okta.base_url {{ .Values.saml.base_url | quote }}
-            lnms config:set auth.socialite.configs.okta.listener "\SocialiteProviders\Okta\OktaExtendSocialite"
-{{- end }}
-{{- if .Values.saml.okta.scopes }}
-            lnms config:set auth.socialite.scopes {{ .Values.saml.okta.scopes | toJson }}
-{{- end }}
-{{- else if eq .Values.saml.provider "saml2" }}
-            lnms plugin:add socialiteproviders/saml2
-{{- if .Values.saml.saml2.metadata }}
-            lnms config:set auth.socialite.configs.saml2.metadata {{ .Values.saml.saml2.metadata | quote }}
-            lnms config:set auth.socialite.configs.saml2.listener "\SocialiteProviders\Saml2\Saml2ExtendSocialite"
-{{- end }}
-{{- end }}
-{{- if .Values.saml.claim_field }}
-            lnms config:set auth.socialite.configs.{{ .Values.saml.provider }}.claim_field {{ .Values.saml.claim_field | quote }}
-{{- end }}
-{{- if .Values.saml.claims }}
-{{- range $claim, $roles := .Values.saml.claims }}
-            lnms config:set auth.socialite.claims.{{ $claim }}.roles {{ $roles | toJson }}
-{{- end }}
-{{- end }}
-            lnms config:set auth.socialite.redirect_login {{ .Values.saml.redirect_login | quote }}
-            lnms config:set auth.socialite.default_role {{ .Values.saml.default_role | quote }}
-{{- end }}
             lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}'
             lnms config:set snmp.community            '{{ .Values.application.SNMPcommunity | toJson }}'
             lnms config:set webui.graph_type          {{ .Values.application.lnms.graphs.type | quote }}
@@ -96,6 +39,69 @@ spec:
             lnms config:set transit_descr.2           {{ .Values.application.lnms.parsing.transit | quote }}
             lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
             lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
+{{- if and .Values.saml.enable (ne .Values.saml.provider "") }}
+            # Install SAML provider plugin
+{{- if eq .Values.saml.provider "github" }}
+            lnms plugin:add socialiteproviders/github || true
+{{- if .Values.saml.client_id }}
+            lnms config:set auth.socialite.configs.github.client_id {{ .Values.saml.client_id | quote }}
+            lnms config:set auth.socialite.configs.github.client_secret {{ .Values.saml.client_secret | quote }}
+{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
+            lnms config:set auth.socialite.configs.github.redirect {{ .Values.saml.redirect | quote }}
+{{- end }}
+            lnms config:set auth.socialite.configs.github.listener "\SocialiteProviders\GitHub\GitHubExtendSocialite"
+{{- end }}
+{{- if .Values.saml.github.scopes }}
+            lnms config:set auth.socialite.scopes {{ .Values.saml.github.scopes | toJson | squote }}
+{{- end }}
+{{- else if eq .Values.saml.provider "microsoft" }}
+            lnms plugin:add socialiteproviders/microsoft || true
+{{- if .Values.saml.client_id }}
+            lnms config:set auth.socialite.configs.microsoft.client_id {{ .Values.saml.client_id | quote }}
+            lnms config:set auth.socialite.configs.microsoft.client_secret {{ .Values.saml.client_secret | quote }}
+{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
+            lnms config:set auth.socialite.configs.microsoft.redirect {{ .Values.saml.redirect | quote }}
+{{- end }}
+{{- if .Values.saml.tenant }}
+            lnms config:set auth.socialite.configs.microsoft.tenant {{ .Values.saml.tenant | quote }}
+{{- end }}
+            lnms config:set auth.socialite.configs.microsoft.listener "\SocialiteProviders\Microsoft\MicrosoftExtendSocialite"
+{{- end }}
+{{- if .Values.saml.microsoft.scopes }}
+            lnms config:set auth.socialite.scopes {{ .Values.saml.microsoft.scopes | toJson | squote }}
+{{- end }}
+{{- else if eq .Values.saml.provider "okta" }}
+            lnms plugin:add socialiteproviders/okta || true
+{{- if .Values.saml.client_id }}
+            lnms config:set auth.socialite.configs.okta.client_id {{ .Values.saml.client_id | quote }}
+            lnms config:set auth.socialite.configs.okta.client_secret {{ .Values.saml.client_secret | quote }}
+{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
+            lnms config:set auth.socialite.configs.okta.redirect {{ .Values.saml.redirect | quote }}
+{{- end }}
+            lnms config:set auth.socialite.configs.okta.base_url {{ .Values.saml.base_url | quote }}
+            lnms config:set auth.socialite.configs.okta.listener "\SocialiteProviders\Okta\OktaExtendSocialite"
+{{- end }}
+{{- if .Values.saml.okta.scopes }}
+            lnms config:set auth.socialite.scopes {{ .Values.saml.okta.scopes | toJson | squote }}
+{{- end }}
+{{- else if eq .Values.saml.provider "saml2" }}
+            lnms plugin:add socialiteproviders/saml2 || true
+{{- if .Values.saml.saml2.metadata }}
+            lnms config:set auth.socialite.configs.saml2.metadata {{ .Values.saml.saml2.metadata | quote }}
+            lnms config:set auth.socialite.configs.saml2.listener "\SocialiteProviders\Saml2\Saml2ExtendSocialite"
+{{- end }}
+{{- end }}
+{{- if .Values.saml.claim_field }}
+            lnms config:set auth.socialite.configs.{{ .Values.saml.provider }}.claim_field {{ .Values.saml.claim_field | quote }}
+{{- end }}
+{{- if .Values.saml.claims }}
+{{- range $claim, $roles := .Values.saml.claims }}
+            lnms config:set auth.socialite.claims.{{ $claim }}.roles {{ $roles | toJson | squote }}
+{{- end }}
+{{- end }}
+            lnms config:set auth.socialite.redirect_login {{ .Values.saml.redirect_login | quote }}
+            lnms config:set auth.socialite.default_role {{ .Values.saml.default_role | quote }}
+{{- end }}
         env:
           - name: DB_HOST
             value: {{ .Values.mariadb.host.name }}
