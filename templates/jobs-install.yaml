@@ -39,6 +39,9 @@ spec:
             lnms config:set auth.socialite.configs.microsoft.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.microsoft.client_secret {{ .Values.saml.client_secret | quote }}
             lnms config:set auth.socialite.configs.microsoft.redirect {{ .Values.saml.redirect | quote }}
+{{- if .Values.saml.tenant }}
+            lnms config:set auth.socialite.configs.microsoft.tenant {{ .Values.saml.tenant | quote }}
+{{- end }}
             lnms config:set auth.socialite.configs.microsoft.listener "\SocialiteProviders\Microsoft\MicrosoftExtendSocialite"
 {{- end }}
 {{- if .Values.saml.microsoft.scopes }}
