@@ -102,6 +102,14 @@ spec:
             lnms config:set auth.socialite.redirect_login {{ .Values.saml.redirect_login | quote }}
             lnms config:set auth.socialite.default_role {{ .Values.saml.default_role | quote }}
 {{- end }}
+{{- if .Values.application.jobsInstall.debug }}
+            echo "=== LibreNMS config verification ==="
+            lnms config:get device_display_default || true
+            lnms config:get snmp.community || true
+{{- if and .Values.saml.enable (ne .Values.saml.provider "") }}
+            lnms config:get auth.socialite || true
+{{- end }}
+{{- end }}
         env:
           - name: DB_HOST
             value: {{ .Values.mariadb.host.name }}
