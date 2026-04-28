@@ -45,8 +45,8 @@ spec:
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.github.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.github.client_secret {{ .Values.saml.client_secret | quote }}
-{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
-            lnms config:set auth.socialite.configs.github.redirect {{ .Values.saml.redirect | quote }}
+{{- if .Values.saml.callback }}
+            lnms config:set auth.socialite.configs.github.redirect {{ .Values.saml.callback | quote }}
 {{- end }}
             lnms config:set auth.socialite.configs.github.listener "\SocialiteProviders\GitHub\GitHubExtendSocialite"
 {{- end }}
@@ -58,8 +58,8 @@ spec:
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.microsoft.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.microsoft.client_secret {{ .Values.saml.client_secret | quote }}
-{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
-            lnms config:set auth.socialite.configs.microsoft.redirect {{ .Values.saml.redirect | quote }}
+{{- if .Values.saml.callback }}
+            lnms config:set auth.socialite.configs.microsoft.redirect {{ .Values.saml.callback | quote }}
 {{- end }}
 {{- if .Values.saml.tenant }}
             lnms config:set auth.socialite.configs.microsoft.tenant {{ .Values.saml.tenant | quote }}
@@ -74,8 +74,8 @@ spec:
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.okta.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.okta.client_secret {{ .Values.saml.client_secret | quote }}
-{{- if and .Values.saml.redirect (ne (lower .Values.saml.redirect) "true") (ne (lower .Values.saml.redirect) "false") }}
-            lnms config:set auth.socialite.configs.okta.redirect {{ .Values.saml.redirect | quote }}
+{{- if .Values.saml.callback }}
+            lnms config:set auth.socialite.configs.okta.redirect {{ .Values.saml.callback | quote }}
 {{- end }}
             lnms config:set auth.socialite.configs.okta.base_url {{ .Values.saml.base_url | quote }}
             lnms config:set auth.socialite.configs.okta.listener "\SocialiteProviders\Okta\OktaExtendSocialite"
@@ -98,7 +98,8 @@ spec:
             lnms config:set auth.socialite.claims.{{ $claim }}.roles {{ $roles | toJson | squote }}
 {{- end }}
 {{- end }}
-            lnms config:set auth.socialite.redirect_login {{ .Values.saml.redirect_login | quote }}
+            lnms config:set auth.socialite.redirect {{ .Values.saml.redirect | quote }}
+            lnms config:set auth.socialite.register {{ .Values.saml.register | quote }}
             lnms config:set auth.socialite.default_role {{ .Values.saml.default_role | quote }}
 {{- end }}
 {{- if .Values.application.jobsInstall.debug }}
