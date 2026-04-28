@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": {{ ternary "before-hook-creation,hook-failed" "hook-succeeded" .Values.application.jobsInstall.keepOnSuccess | quote }}
   labels:
 {{ include "common.labels" . | indent 4 }}
 spec:
@@ -19,7 +19,11 @@ spec:
           - /bin/sh 
           - "-c"
           - |
-            su librenms
+            set -eu
+{{- if .Values.application.jobsInstall.debug }}
+            set -x
+{{- end }}
+            su librenms -s /bin/sh -c "true" >/dev/null 2>&1 || true
 {{- if and .Values.saml.enable (ne .Values.saml.provider "") }}
             # Install SAML provider plugin
 {{- if eq .Values.saml.provider "github" }}
@@ -74,6 +78,7 @@ spec:
             lnms config:set auth.socialite.claims.{{ $claim }}.roles {{ $roles | toJson }}
 {{- end }}
 {{- end }}
+            lnms config:set auth.socialite.redirect_login {{ .Values.saml.redirect_login | quote }}
             lnms config:set auth.socialite.default_role {{ .Values.saml.default_role | quote }}
 {{- end }}
             lnms config:set device_display_default    '{{ "{{" }} $sysName_fallback }}'
