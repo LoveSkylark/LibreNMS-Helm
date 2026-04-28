@@ -39,9 +39,7 @@ spec:
             lnms config:set peering_descr.2           {{ .Values.application.lnms.parsing.peering | quote }}
             lnms config:set core_descr.2              {{ .Values.application.lnms.parsing.core | quote }}
 {{- if and .Values.saml.enable (ne .Values.saml.provider "") }}
-            # Install SAML provider plugin
 {{- if eq .Values.saml.provider "github" }}
-            lnms plugin:add socialiteproviders/github || true
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.github.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.github.client_secret {{ .Values.saml.client_secret | quote }}
@@ -54,7 +52,6 @@ spec:
             lnms config:set auth.socialite.scopes {{ .Values.saml.github.scopes | toJson | squote }}
 {{- end }}
 {{- else if eq .Values.saml.provider "microsoft" }}
-            lnms plugin:add socialiteproviders/microsoft || true
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.microsoft.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.microsoft.client_secret {{ .Values.saml.client_secret | quote }}
@@ -70,7 +67,6 @@ spec:
             lnms config:set auth.socialite.scopes {{ .Values.saml.microsoft.scopes | toJson | squote }}
 {{- end }}
 {{- else if eq .Values.saml.provider "okta" }}
-            lnms plugin:add socialiteproviders/okta || true
 {{- if .Values.saml.client_id }}
             lnms config:set auth.socialite.configs.okta.client_id {{ .Values.saml.client_id | quote }}
             lnms config:set auth.socialite.configs.okta.client_secret {{ .Values.saml.client_secret | quote }}
@@ -84,7 +80,6 @@ spec:
             lnms config:set auth.socialite.scopes {{ .Values.saml.okta.scopes | toJson | squote }}
 {{- end }}
 {{- else if eq .Values.saml.provider "saml2" }}
-            lnms plugin:add socialiteproviders/saml2 || true
 {{- if .Values.saml.saml2.metadata }}
             lnms config:set auth.socialite.configs.saml2.metadata {{ .Values.saml.saml2.metadata | quote }}
             lnms config:set auth.socialite.configs.saml2.listener "\SocialiteProviders\Saml2\Saml2ExtendSocialite"

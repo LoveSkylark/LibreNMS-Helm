@@ -42,6 +42,20 @@ spec:
       containers:
         - name: {{ .Values.application.host.name | quote }}
           image: {{ .Values.application.image | quote }}
+{{- if .Values.application.lnms.installPlugins }}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    plugins={{ .Values.application.lnms.installPlugins | quote }}
+                    for plugin in $(echo "$plugins" | tr ',;' '  '); do
+                      [ -n "$plugin" ] || continue
+                      lnms plugin:add "$plugin" || true
+                    done
+{{- end }}
           envFrom:
             - configMapRef:
                 name: librenms-cfg

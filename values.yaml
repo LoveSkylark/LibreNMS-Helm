@@ -109,6 +109,8 @@ application:
       transit: "t"
       peering: "p"
       core: "i"
+    # Installed by lnms-app container startup via INSTALL_PLUGINS.
+    # Example for Microsoft OAuth: "socialiteproviders/microsoft"
     installPlugins: ""
   php:
     memoryLimit: "1024M"
