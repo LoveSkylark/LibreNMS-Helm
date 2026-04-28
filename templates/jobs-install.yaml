@@ -31,7 +31,6 @@ spec:
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
             lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }}
             lnms config:set show_services             {{ .Values.application.lnms.services.enable | quote }}
-            lnms config:set service_services_enabled  {{ .Values.application.lnms.services.enable | quote }}
             # Billing;
             lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }}
             # Parsing;
