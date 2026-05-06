@@ -199,12 +199,7 @@ saml:
   client_id: ""
   client_secret: ""
   callback: ""  # OAuth callback URL (GitHub/Microsoft/Okta), e.g., https://nms.example.com/auth/microsoft/callback
-  # GitHub: no extra provider-specific fields required
-  tenant: ""  # Microsoft ONLY: tenant id/domain, e.g., common or contoso.onmicrosoft.com
-  base_url: ""  # Okta ONLY: instance URL, e.g., https://dev-123456.okta.com
-  # Claim field for providers that deliver roles/groups under token claims
-  # Microsoft example: claim_field: "roles"
-  claim_field: ""
+  claim_field: "roles"
   # Claims mapping: maps returned claim values to LibreNMS roles
   # Example: claim value "librenms-admin" -> admin role, "librenms-read" -> global-read role
   claims: {}
@@ -212,7 +207,12 @@ saml:
     # librenms-admin:
     #   - "admin"
     # librenms-read:
-    #   - "global-read"
+    #   - "global-read"  
+  # Provider-specific fields:
+  tenant: ""  # Microsoft ONLY: tenant id/domain, e.g., common or contoso.onmicrosoft.com
+  base_url: ""  # Okta ONLY: instance URL, e.g., https://dev-123456.okta.com
+  # Claim field for providers that deliver roles/groups under token claims
+  # Microsoft example: claim_field: "roles"
   saml2:
     metadata: ""  # SAML2 ONLY: IdP metadata URL or XML content
   # Provider-specific scopes
