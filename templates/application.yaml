@@ -71,7 +71,8 @@ spec:
                   name: mysql-sec
                   key: mysql_password
             - name: LIBRENMS_BASE_URL
-              value: {{ .Values.application.host.baseURL | quote }}
+              {{- $scheme := ternary "https" "http" .Values.ingress.https }}
+              value: {{ .Values.application.host.baseURL | default (printf "%s://%s" $scheme .Values.application.host.FQDN) | quote }}
             - name: LIBRENMS_WEATHERMAP
               value: {{ .Values.application.weathermap.enable | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE

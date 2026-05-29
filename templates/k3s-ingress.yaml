@@ -17,9 +17,10 @@ metadata:
 {{- if .Values.ingress.https }}  
 {{- if .Values.ingress.redirectToHttps.enabled }}
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-https-redirect" .Release.Name) | quote }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd,%s-%s@kubernetescrd" .Release.Namespace (printf "%s-https-redirect" .Release.Name) .Release.Namespace (printf "%s-forwarded-proto-https" .Release.Name) | quote }}
 {{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-forwarded-proto-https" .Release.Name) | quote }}
 {{- end }}
     traefik.ingress.kubernetes.io/router.tls: "true"
 {{- else }}
