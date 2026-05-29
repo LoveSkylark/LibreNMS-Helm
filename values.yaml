@@ -67,7 +67,8 @@ application:
     FQDN: "nms.test.local"
     name: "lnms-app"
     realIPfrom: "0.0.0.0/32"
-    realIPheader: "X-Forwarded-For" 
+    realIPheader: "X-Forwarded-For"
+    trustedProxies: "*"  # Trust X-Forwarded-Proto from Traefik; restrict to Traefik CIDR in production
     volumeSize: "20Gi"
     baseURL: ""
   logIP: "remote_addr"

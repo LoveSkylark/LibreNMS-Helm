@@ -12,6 +12,7 @@ data:
   PGID:                 {{ .Values.global.pgid | quote }}
   REAL_IP_FROM:         {{ .Values.application.host.realIPfrom | quote }}
   REAL_IP_HEADER:       {{ .Values.application.host.realIPheader | quote }}
+  TRUSTED_PROXIES:      {{ .Values.application.host.trustedProxies | quote }}
   UPLOAD_MAX_SIZE:      {{ .Values.application.uploadMAXsize | quote }}
   MEMORY_LIMIT:         {{ .Values.application.php.memoryLimit | quote }}
   OPCACHE_MEM_SIZE:     {{ .Values.application.php.opcacheMemSize | quote }}
