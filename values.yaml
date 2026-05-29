@@ -66,9 +66,9 @@ application:
   host:
     FQDN: "nms.test.local"
     name: "lnms-app"
-    realIPfrom: "0.0.0.0/32"
+    realIPfrom: "10.42.0.0/16"  # k3s default pod CIDR; set this to your cluster's internal CIDR scope
     realIPheader: "X-Forwarded-For"
-    trustedProxies: "*"  # Trust X-Forwarded-Proto from Traefik; restrict to Traefik CIDR in production
+    trustedProxies: ""  # Optional override. Empty means APP_TRUSTED_PROXIES defaults to realIPfrom.
     volumeSize: "20Gi"
     baseURL: ""
   logIP: "remote_addr"
