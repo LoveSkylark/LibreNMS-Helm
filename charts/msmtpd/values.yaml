@@ -12,6 +12,10 @@ TLS: "on"
 startTLS: "on"
 TLSchecker: "on"
 auth: "on"
+network:
+  hostNetwork: false
+scheduling:
+  nodeName: ""
 
 credentials:
   email:

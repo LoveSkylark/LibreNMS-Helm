@@ -138,6 +138,10 @@ msmtpd:
     name: "msmtpd"
     FQDN: "smtp.gmail.com"
     port: "587"
+  network:
+    hostNetwork: false
+  scheduling:
+    nodeName: ""
   from: "foo@gmail.com"
   credentials:
     email:
