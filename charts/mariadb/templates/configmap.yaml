@@ -10,3 +10,4 @@ data:
   TZ: {{ .Values.global.TZ | quote }}
   MYSQL_ALLOW_EMPTY_PASSWORD: {{ .Values.allow_empty_password | quote }}
   MYSQL_DATABASE: {{ .Values.database | quote }}
+  MARIADB_AUTO_UPGRADE: {{ .Values.autoUpgrade | quote }}
