@@ -18,6 +18,12 @@
 {{- $blockedHostPattern := `(^|\.)((local|localhost|test|invalid))$|(^|\.)example\.[A-Za-z]{2,}$` }}
 {{- $includeSmokepingTlsName := and .Values.smokeping.enable (regexMatch $publicHostPattern $smokepingHost) (not (regexMatch $blockedHostPattern $smokepingHost)) }}
 {{- $includeOxidizedTlsName := and .Values.oxidized.enable (regexMatch $publicHostPattern $oxidizedHost) (not (regexMatch $blockedHostPattern $oxidizedHost)) }}
+{{- $traefikMiddlewareApiVersion := "" }}
+{{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" }}
+{{- $traefikMiddlewareApiVersion = "traefik.io/v1alpha1" }}
+{{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" }}
+{{- $traefikMiddlewareApiVersion = "traefik.containo.us/v1alpha1" }}
+{{- end }}
 {{- if and .Values.ingress.https .Values.ingress.letsEncrypt.enabled .Values.ingress.letsEncrypt.createIssuer (not .Values.ingress.tls.existingSecretName) }}
 ---
 apiVersion: cert-manager.io/v1
@@ -75,9 +81,9 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- if and .Values.ingress.https .Values.ingress.redirectToHttps.enabled }}
+{{- if and .Values.ingress.https .Values.ingress.redirectToHttps.enabled (ne $traefikMiddlewareApiVersion "") }}
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: {{ $traefikMiddlewareApiVersion }}
 kind: Middleware
 metadata:
   name: {{ .Release.Name }}-https-redirect
@@ -90,9 +96,9 @@ spec:
     permanent: true
 {{- end }}
 
-{{- if .Values.ingress.https }}
+{{- if and .Values.ingress.https (ne $traefikMiddlewareApiVersion "") }}
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: {{ $traefikMiddlewareApiVersion }}
 kind: Middleware
 metadata:
   name: {{ .Release.Name }}-forwarded-proto-https

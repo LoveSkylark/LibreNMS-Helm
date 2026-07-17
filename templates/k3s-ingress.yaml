@@ -6,6 +6,13 @@
 {{- $oxidizedHost := default "" .Values.oxidized.host.FQDN }}
 {{- $includeSmokepingIngress := and .Values.smokeping.enable (ne $smokepingHost "") }}
 {{- $includeOxidizedIngress := and .Values.oxidized.enable (ne $oxidizedHost "") }}
+{{- $traefikMiddlewareAnnotationPrefix := "" }}
+{{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" }}
+{{- $traefikMiddlewareAnnotationPrefix = "@kubernetescrd" }}
+{{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" }}
+{{- $traefikMiddlewareAnnotationPrefix = "@kubernetescrd" }}
+{{- end }}
+{{- $hasTraefikMiddlewareCrd := ne $traefikMiddlewareAnnotationPrefix "" }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -17,10 +24,14 @@ metadata:
 {{- if .Values.ingress.https }}  
 {{- if .Values.ingress.redirectToHttps.enabled }}
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+{{- if $hasTraefikMiddlewareCrd }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd,%s-%s@kubernetescrd" .Release.Namespace (printf "%s-https-redirect" .Release.Name) .Release.Namespace (printf "%s-forwarded-proto-https" .Release.Name) | quote }}
+{{- end }}
 {{- else }}
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+{{- if $hasTraefikMiddlewareCrd }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-forwarded-proto-https" .Release.Name) | quote }}
+{{- end }}
 {{- end }}
     traefik.ingress.kubernetes.io/router.tls: "true"
 {{- else }}
