@@ -19,6 +19,8 @@
 {{- $includeSmokepingTlsName := and .Values.smokeping.enable (regexMatch $publicHostPattern $smokepingHost) (not (regexMatch $blockedHostPattern $smokepingHost)) }}
 {{- $includeOxidizedTlsName := and .Values.oxidized.enable (regexMatch $publicHostPattern $oxidizedHost) (not (regexMatch $blockedHostPattern $oxidizedHost)) }}
 {{- $traefikMiddlewareApiVersion := "" }}
+{{- $includeIpCatchAll := .Values.ingress.ipCatchAll.enabled }}
+{{- $catchAllRedirectScheme := ternary "https" "http" .Values.ingress.https }}
 {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" }}
 {{- $traefikMiddlewareApiVersion = "traefik.io/v1alpha1" }}
 {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" }}
@@ -109,4 +111,20 @@ spec:
   headers:
     customRequestHeaders:
       X-Forwarded-Proto: "https"
+{{- end }}
+
+{{- if and $includeIpCatchAll (ne $traefikMiddlewareApiVersion "") }}
+---
+apiVersion: {{ $traefikMiddlewareApiVersion }}
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-catch-all-host-redirect
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  redirectRegex:
+    regex: "^https?://[^/]+(.*)"
+    replacement: {{ printf "%s://%s$1" $catchAllRedirectScheme .Values.application.host.FQDN | quote }}
+    permanent: true
 {{- end }}

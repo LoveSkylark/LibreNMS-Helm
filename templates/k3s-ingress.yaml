@@ -7,6 +7,7 @@
 {{- $includeSmokepingIngress := and .Values.smokeping.enable (ne $smokepingHost "") }}
 {{- $includeOxidizedIngress := and .Values.oxidized.enable (ne $oxidizedHost "") }}
 {{- $traefikMiddlewareAnnotationPrefix := "" }}
+{{- $includeIpCatchAll := .Values.ingress.ipCatchAll.enabled }}
 {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" }}
 {{- $traefikMiddlewareAnnotationPrefix = "@kubernetescrd" }}
 {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" }}
@@ -74,16 +75,6 @@ spec:
             port:
               number: 8888
 {{- end }}
-  # Catch-all rule for IP access (no host specified)
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Values.application.host.name }}  # Main application service
-            port:
-              number: 8000
 {{- if .Values.ingress.https }}  
   tls:
   - hosts:
@@ -95,6 +86,32 @@ spec:
     - {{ $oxidizedHost }}
 {{- end }}
     secretName: {{ $tlsSecretName | quote }}
+{{- end }}
+
+{{- if and $includeIpCatchAll $hasTraefikMiddlewareCrd }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Release.Name }}-catch-all"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-catch-all-host-redirect" .Release.Name) | quote }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.application.host.name }}
+            port:
+              number: 8000
 {{- end }}
 
 ---
