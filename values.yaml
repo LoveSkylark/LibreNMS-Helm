@@ -65,6 +65,11 @@ redis:
 application:
   replicas: "1"
   image: "librenms/librenms:latest"
+  # Optional extra app env vars appended to ConfigMap.
+  # Each entry must be KEY=VALUE format.
+  env: []
+  # env:
+  #   - "CLEAR_ENV=yes"
   host:
     FQDN: "nms.test.local"
     name: "lnms-app"
