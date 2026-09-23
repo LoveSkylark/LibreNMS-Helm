@@ -39,6 +39,19 @@ data:
   #mysql_password: {{ .Values.mariadb.credentials.password | quote }}
   #mysql_root: {{ .Values.mariadb.credentials.rootPassword | quote }}
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jira-transport-file
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  JiraNew.php: |-
+{{ .Files.Get "files/JiraNew.php" | indent 4 }}
+
+
 {{- if .Values.xmatters.enable }}
 ---
 apiVersion: v1
