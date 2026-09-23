@@ -1,11 +1,11 @@
 <?php
 
-/*Copyright (c) 2019 GitStoph <https://github.com/GitStoph>
+/* Copyright (c) 2019 GitStoph <https://github.com/GitStoph>
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.  Please see LICENSE.txt at the top level of
- * the source code distribution for details. */
+ * option) any later version.
+ */
 
 /**
  * Jira Webhook & API Transport
@@ -27,31 +27,48 @@ class JiraNew extends Transport
 
     public function deliverAlert(array $alert_data): bool
     {
-        $webhook_on = $this->config['enable-webhook'] ?? false;
+        $webhook_on = (bool) ($this->config['enable-webhook'] ?? false);
 
-        // Check if messsage is an alert or not
-        if ($alert_data['state'] != 0) {
-            $url = $this->config['jira-url'];
+        $state = (int) ($alert_data['state'] ?? 0);
+
+        /*
+         * Open alert
+         */
+        if ($state !== 0) {
+            $url = (string) ($this->config['jira-url'] ?? '');
             $token = $this->config['jira-token-open'] ?? null;
 
             if (! $webhook_on) {
-                $url .= '/rest/api/latest/issue';
-            }
-        } else {
-            if (! $webhook_on) {
-                return false; // Webhooks not enabled, do nothing.
-            } else {
-                $url = $this->config['jira-close-url'];
-                $token = $this->config['jira-token-close'];
+                $url = rtrim($url, '/') . '/rest/api/latest/issue';
             }
         }
 
-        $project_key = $this->config['jira-key'];
-        $issue_type = $this->config['jira-type'];
-        $title = empty($alert_data['title']) ? 'Librenms alert for: ' . $alert_data['hostname'] : $alert_data['title'];
-        $description = $alert_data['msg'];
+        /*
+         * Recovered alert
+         */
+        else {
+            if (! $webhook_on) {
+                return false;
+            }
 
-        // Construct the payload
+            $url = (string) ($this->config['jira-close-url'] ?? '');
+            $token = $this->config['jira-token-close'] ?? null;
+        }
+
+        $project_key = (string) ($this->config['jira-key'] ?? '');
+        $issue_type = (string) ($this->config['jira-type'] ?? '');
+
+        $hostname = (string) ($alert_data['hostname'] ?? 'Unknown host');
+
+        $title = ! empty($alert_data['title'])
+            ? (string) $alert_data['title']
+            : 'LibreNMS alert for: ' . $hostname;
+
+        $description = (string) ($alert_data['msg'] ?? '');
+
+        /*
+         * Construct the Jira payload.
+         */
         $data = [
             'fields' => [
                 'summary' => $title,
@@ -65,45 +82,82 @@ class JiraNew extends Transport
             ],
         ];
 
-        // Add Custom Webhook ID to the payload
+        /*
+         * Add the LibreNMS alert ID for webhook processing.
+         */
         if ($webhook_on) {
-            if (! empty($this->config['webhook-id'])) {
-                $data['fields'][$this->config['webhook-id']] = $alert_data['id'];
-            } else {
-                $data['fields']['alert_id'] = $alert_data['id'];
+            $alert_id = $alert_data['id'] ?? null;
+
+            if ($alert_id !== null) {
+                $webhook_id = trim(
+                    (string) ($this->config['webhook-id'] ?? '')
+                );
+
+                if ($webhook_id !== '') {
+                    $data['fields'][$webhook_id] = $alert_id;
+                } else {
+                    $data['fields']['alert_id'] = $alert_id;
+                }
             }
         }
 
-        // Add Custom fileds to the payload
-        $custom = json_decode($this->config['jira-custom'], true);
-        if (! empty($custom)) {
-            $data['fields'] = array_merge($data['fields'], $custom);
+        /*
+         * Add custom Jira fields.
+         */
+        $custom_json = (string) ($this->config['jira-custom'] ?? '');
+
+        if ($custom_json !== '') {
+            $custom = json_decode($custom_json, true);
+
+            if (
+                json_last_error() === JSON_ERROR_NONE
+                && is_array($custom)
+                && ! empty($custom)
+            ) {
+                $data['fields'] = array_merge(
+                    $data['fields'],
+                    $custom
+                );
+            }
         }
 
-
+        /*
+         * Create HTTP client.
+         */
         $client = Http::client();
 
         if ($webhook_on) {
             $client = $client->withHeaders([
-                'X-Automation-Webhook-Token' => $token,
+                'X-Automation-Webhook-Token' => (string) ($token ?? ''),
             ]);
         } else {
             $client = $client->withBasicAuth(
-                $this->config['jira-username'],
-                $this->config['jira-password']
+                (string) ($this->config['jira-username'] ?? ''),
+                (string) ($this->config['jira-password'] ?? '')
             );
         }
 
+        /*
+         * Send request.
+         */
         $res = $client
             ->acceptJson()
             ->post($url, $data);
 
         if ($res->successful()) {
-            return true; // Delivery successful
+            return true;
         }
 
-        // An error occurred, throw an exception
-        throw new AlertTransportDeliveryException($alert_data, $res->status(), $res->body(), $description, $data);
+        /*
+         * Delivery failed.
+         */
+        throw new AlertTransportDeliveryException(
+            $alert_data,
+            $res->status(),
+            $res->body(),
+            $description,
+            $data
+        );
     }
 
     public static function configTemplate(): array
@@ -134,11 +188,10 @@ class JiraNew extends Transport
                     'descr' => 'Secret | Webhook Only',
                     'type' => 'text',
                 ],
-
                 [
                     'title' => 'Ticket URL (Close)',
                     'name' => 'jira-close-url',
-                    'descr' => 'Close Jira Ticket | Webhook Only"',
+                    'descr' => 'Close Jira Ticket | Webhook Only',
                     'type' => 'text',
                 ],
                 [
@@ -179,6 +232,7 @@ class JiraNew extends Transport
                     'descr' => '{&quot;components&quot;: [{&quot;id&quot;: &quot;00001&quot;}],&#xA;&quot;customfield_10001&quot;: [{&quot;id&quot;: &quot;00002&quot;}]}',
                 ],
             ],
+
             'validation' => [
                 'jira-key' => 'required|string',
                 'jira-url' => 'required|url',
