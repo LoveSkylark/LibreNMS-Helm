@@ -13,6 +13,7 @@ data:
   REAL_IP_FROM:         {{ .Values.application.host.realIPfrom | quote }}
   REAL_IP_HEADER:       {{ .Values.application.host.realIPheader | quote }}
   APP_TRUSTED_PROXIES:  {{ .Values.application.host.trustedProxies | default .Values.application.host.realIPfrom | quote }}
+  CLEAR_ENV:            {{ .Values.application.clearEnv | quote }}
   UPLOAD_MAX_SIZE:      {{ .Values.application.uploadMAXsize | quote }}
   MEMORY_LIMIT:         {{ .Values.application.php.memoryLimit | quote }}
   OPCACHE_MEM_SIZE:     {{ .Values.application.php.opcacheMemSize | quote }}
