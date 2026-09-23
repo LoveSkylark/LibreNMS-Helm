@@ -21,7 +21,7 @@ use LibreNMS\Alert\Transport;
 use LibreNMS\Exceptions\AlertTransportDeliveryException;
 use LibreNMS\Util\Http;
 
-class JiraNew extends Transport
+class Jiranew extends Transport
 {
     protected string $name = 'JiraNew';
 

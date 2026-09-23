@@ -51,6 +51,9 @@ spec:
                 - NET_ADMIN
                 - NET_RAW
           volumeMounts:
+            - name: jira-transport-file
+              mountPath: /opt/librenms/LibreNMS/Alert/Transport/Jiranew.php
+              subPath: Jiranew.php
 {{- if .Values.xmatters.enable }}
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
@@ -59,6 +62,9 @@ spec:
             - name: application
               mountPath: /data
       volumes:
+        - name: jira-transport-file
+          configMap:
+            name: jira-transport-file
 {{- if .Values.xmatters.enable }}
         - name: xmatters-transport-file
           configMap:

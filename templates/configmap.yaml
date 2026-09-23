@@ -49,8 +49,8 @@ metadata:
   labels:
 {{ include "common.labels" . | indent 4 }}
 data:
-  JiraNew.php: |-
-{{ .Files.Get "files/JiraNew.php" | indent 4 }}
+  Jiranew.php: |-
+{{ .Files.Get "files/Jiranew.php" | indent 4 }}
 
 
 {{- if .Values.xmatters.enable }}
