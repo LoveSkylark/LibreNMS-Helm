@@ -78,7 +78,7 @@ application:
     trustedProxies: "10.42.0.0/16, 10.43.0.0/16"  # Optional override. Empty means APP_TRUSTED_PROXIES defaults to realIPfrom.
     volumeSize: "20Gi"
     baseURL: ""
-  clearEnv: "yes"
+  clearEnv: "no"
   logIP: "remote_addr"
   nodePort: "30080"
   uploadMAXsize: "16M"
