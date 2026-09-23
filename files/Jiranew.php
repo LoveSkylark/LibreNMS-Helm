@@ -23,7 +23,7 @@ use LibreNMS\Util\Http;
 
 class Jiranew extends Transport
 {
-    protected string $name = 'JiraNew';
+    protected string $name = 'Jira webhook';
 
     public function deliverAlert(array $alert_data): bool
     {
