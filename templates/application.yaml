@@ -87,6 +87,9 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
+            - name: jira-transport-file
+              mountPath: /opt/librenms/LibreNMS/Alert/Transport/NewJira.php
+              subPath: NewJira.php
 {{- if .Values.xmatters.enable }}
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
