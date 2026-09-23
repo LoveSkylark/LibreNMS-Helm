@@ -98,6 +98,9 @@ spec:
             - name: application
               mountPath: /data
       volumes:
+        - name: jira-transport-file
+          configMap:
+            name: jira-transport-file
 {{- if .Values.xmatters.enable }}
         - name: xmatters-transport-file
           configMap:
