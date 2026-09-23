@@ -88,8 +88,8 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: jira-transport-file
-              mountPath: /opt/librenms/LibreNMS/Alert/Transport/NewJira.php
-              subPath: NewJira.php
+              mountPath: /opt/librenms/LibreNMS/Alert/Transport/JiraNew.php
+              subPath: JiraNew.php
 {{- if .Values.xmatters.enable }}
             - name: xmatters-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
