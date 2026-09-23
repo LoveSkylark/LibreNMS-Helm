@@ -23,7 +23,7 @@ use LibreNMS\Util\Http;
 
 class JiraNew extends Transport
 {
-    protected string $name = 'Jira New OpenClose';
+    protected string $name = 'JiraNew';
 
     public function deliverAlert(array $alert_data): bool
     {
