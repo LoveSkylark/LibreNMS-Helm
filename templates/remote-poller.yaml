@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-mysql"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+{{- if not .Values.remotePoller.allowFromAnywhere }}
+  loadBalancerSourceRanges: {{ .Values.remotePoller.allowedSourceRanges | toJson }}
+{{- end }}
+  selector:
+    app: {{ .Values.mariadb.host.name | quote }}
+  ports:
+    - name: mysql-lb
+      protocol: TCP
+      port: 3306
+      targetPort: mysql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-redis"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+{{- if not .Values.remotePoller.allowFromAnywhere }}
+  loadBalancerSourceRanges: {{ .Values.remotePoller.allowedSourceRanges | toJson }}
+{{- end }}
+  selector:
+    app: {{ .Values.redis.lnms.host | quote }}
+  ports:
+    - name: redis-lb
+      protocol: TCP
+      port: 6379
+      targetPort: {{ .Values.redis.lnms.host | quote }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-rrd"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+{{- if not .Values.remotePoller.allowFromAnywhere }}
+  loadBalancerSourceRanges: {{ .Values.remotePoller.allowedSourceRanges | toJson }}
+{{- end }}
+  selector:
+    app: {{ .Values.rrdcached.host.name | quote }}
+  ports:
+    - name: rrd-lb
+      protocol: TCP
+      port: 42217
+      targetPort: {{ .Values.rrdcached.host.name | quote }}

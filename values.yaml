@@ -134,6 +134,12 @@ application:
 storage:
   path: "/opt/kubes/storage/"
 
+remotePoller:
+  # true removes source IP filtering from the remote-poller LoadBalancer Services.
+  allowFromAnywhere: false
+  allowedSourceRanges:
+    - "82.112.71.27/32"
+
 xmatters:
   enable: false
   agent:

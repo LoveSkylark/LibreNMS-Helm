@@ -139,6 +139,10 @@ application:
 
 Apply the values with your normal `helm upgrade` command. The plugin files are mounted at `/opt/librenms/html/plugins/Weathermap`; configuration and map data continue to use the chart's persistent `/data/weathermap` directory. This only mounts files; it does not download, install, or make the unsupported plugin compatible.
 
+## Remote Poller Services
+
+The chart exposes MySQL (3306), Redis (6379), and RRDcached (42217) through LoadBalancer Services for remote pollers. By default, their source range is restricted to `remotePoller.allowedSourceRanges`. Set `remotePoller.allowFromAnywhere: true` to omit that restriction. This exposes all three ports without a source-IP allowlist; only enable it when network-level controls and service authentication are appropriate.
+
 ## Deployment Order
 
 Run these in order to avoid CRD race conditions:
