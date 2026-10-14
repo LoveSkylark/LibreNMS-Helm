@@ -118,6 +118,27 @@ kubectl create secret generic acme-dns-credentials \
   -n cert-manager
 ```
 
+## Legacy Network Weathermap Plugin
+
+The chart can optionally mount a host-staged Network Weathermap plugin into the LibreNMS container. LibreNMS currently marks this plugin unsupported: it does not work with supported PHP versions, and its pages have no access restriction. Prefer [Custom Maps](https://docs.librenms.org/Extensions/Custom-Map/) for new maps.
+
+If you still need to test an existing installation, place the plugin files (including `map-poller.php` at the plugin directory root) on the Kubernetes host at:
+
+```text
+/opt/kubes/storage/<helm-release>/application/plugins/Weathermap/
+```
+
+Create that directory before enabling the mount. The path follows `storage.path` and the Helm release name; for a non-default `storage.path`, substitute its configured value. Then set:
+
+```yaml
+application:
+  weathermap:
+    mountPlugin: true
+    enable: true
+```
+
+Apply the values with your normal `helm upgrade` command. The plugin files are mounted at `/opt/librenms/html/plugins/Weathermap`; configuration and map data continue to use the chart's persistent `/data/weathermap` directory. This only mounts files; it does not download, install, or make the unsupported plugin compatible.
+
 ## Deployment Order
 
 Run these in order to avoid CRD race conditions:

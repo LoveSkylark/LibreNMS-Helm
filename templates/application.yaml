@@ -95,6 +95,11 @@ spec:
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Xmatters.php
               subPath: Xmatters.php
 {{- end }}
+{{- if .Values.application.weathermap.mountPlugin }}
+            - name: application
+              mountPath: /opt/librenms/html/plugins/Weathermap
+              subPath: plugins/Weathermap
+{{- end }}
             - name: application
               mountPath: /data
       volumes:

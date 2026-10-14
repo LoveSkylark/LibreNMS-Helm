@@ -93,6 +93,8 @@ application:
   weathermap:
     enable: true
     schedule: "*/5 * * * *"
+    # Mount host-staged legacy plugin files from /data/plugins/Weathermap.
+    mountPlugin: false
   syslogng:
     enable: true
     name: "lnms-syslog"
