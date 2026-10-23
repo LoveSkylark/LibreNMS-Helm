@@ -139,6 +139,32 @@ application:
 
 Apply the values with your normal `helm upgrade` command. The plugin files are mounted at `/opt/librenms/html/plugins/Weathermap`; configuration and map data continue to use the chart's persistent `/data/weathermap` directory. This only mounts files; it does not download, install, or make the unsupported plugin compatible.
 
+## Scheduled Network Discovery
+
+To scan the subnets entered under **Autodiscovery Networks**, enable:
+
+```yaml
+application:
+  networkDiscovery:
+    enabled: true
+    schedule: "0 */6 * * *"
+```
+
+Apply these values with your normal `helm upgrade` command. The existing main LibreNMS container runs `lnms scan:network` through its built-in cron daemon; no extra pod or Kubernetes CronJob is created. Existing maintenance, Laravel scheduler, and Weathermap cron entries are preserved.
+
+The schedule uses `global.TZ` and starts at the next matching time, not immediately on deployment. Use five numeric cron fields; named days/months and cron macros are not supported. Scans use the networks, exclusions, and default SNMP credentials configured in LibreNMS. Ensure the container can reach the target networks and that devices allow SNMP from the source address they see. Neighbour autodiscovery remains handled by the dispatcher.
+
+Overlapping scans are skipped using a lock on the shared data volume. Output is appended to `/data/logs/network-discovery.log`; configure retention for this file as needed. Keep `application.replicas: "1"` for a single cron scheduler.
+
+To test immediately (substitute your namespace or application deployment name if different):
+
+```sh
+kubectl exec -n librenms deployment/lnms-app -- sh -c \
+  'cd /opt/librenms && lnms scan:network'
+kubectl exec -n librenms deployment/lnms-app -- \
+  cat /var/spool/cron/crontabs/librenms
+```
+
 ## Remote Poller Services
 
 The chart exposes MySQL (3306), Redis (6379), and RRDcached (42217) through LoadBalancer Services for remote pollers. By default, their source range is restricted to `remotePoller.allowedSourceRanges`. Set `remotePoller.allowFromAnywhere: true` to omit that restriction. This exposes all three ports without a source-IP allowlist; only enable it when network-level controls and service authentication are appropriate.

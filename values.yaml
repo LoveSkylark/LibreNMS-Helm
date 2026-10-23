@@ -90,6 +90,9 @@ application:
     replicas: "1"
     nodeID: "poller 1"
     args: ""
+  networkDiscovery:
+    enabled: false
+    schedule: "0 */6 * * *"
   weathermap:
     enable: true
     schedule: "*/5 * * * *"

@@ -34,6 +34,10 @@ spec:
     type: Recreate
   template:
     metadata:
+{{- if .Values.application.networkDiscovery.enabled }}
+      annotations:
+        checksum/network-discovery: {{ include (print $.Template.BasePath "/network-discovery.yaml") . | sha256sum }}
+{{- end }}
       labels:
         app: {{ .Values.application.host.name | quote }}
     spec:
@@ -77,6 +81,10 @@ spec:
               value: {{ .Values.application.weathermap.enable | quote }}
             - name: LIBRENMS_WEATHERMAP_SCHEDULE
               value: {{ .Values.application.weathermap.schedule | quote }}
+{{- if .Values.application.networkDiscovery.enabled }}
+            - name: NETWORK_DISCOVERY_SCHEDULE
+              value: {{ .Values.application.networkDiscovery.schedule | quote }}
+{{- end }}
           securityContext:
             capabilities:
               add:
@@ -87,6 +95,12 @@ spec:
               containerPort: 8000
               protocol: TCP
           volumeMounts:
+{{- if .Values.application.networkDiscovery.enabled }}
+            - name: network-discovery
+              mountPath: /etc/cont-init.d/09-network-discovery.sh
+              subPath: 09-network-discovery.sh
+              readOnly: true
+{{- end }}
             - name: jira-transport-file
               mountPath: /opt/librenms/LibreNMS/Alert/Transport/Jiranew.php
               subPath: Jiranew.php
@@ -103,6 +117,12 @@ spec:
             - name: application
               mountPath: /data
       volumes:
+{{- if .Values.application.networkDiscovery.enabled }}
+        - name: network-discovery
+          configMap:
+            name: {{ .Release.Name }}-network-discovery
+            defaultMode: 0755
+{{- end }}
         - name: jira-transport-file
           configMap:
             name: jira-transport-file

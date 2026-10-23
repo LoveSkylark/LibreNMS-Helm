@@ -1,0 +1,22 @@
+{{- if .Values.application.networkDiscovery.enabled }}
+{{- $schedule := required "application.networkDiscovery.schedule is required" .Values.application.networkDiscovery.schedule }}
+{{- if not (regexMatch "^[-0-9*/,]+( +[-0-9*/,]+){4}$" $schedule) }}
+{{- fail "application.networkDiscovery.schedule must contain five numeric cron fields (digits, *, /, comma, or hyphen)" }}
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-network-discovery
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+data:
+  09-network-discovery.sh: |-
+    #!/usr/bin/with-contenv sh
+    set -eu
+
+    test -f /var/spool/cron/crontabs/librenms
+    printf '%s cd /opt/librenms && flock -n /data/logs/network-discovery.lock lnms scan:network >> /data/logs/network-discovery.log 2>&1\n' \
+      "$NETWORK_DISCOVERY_SCHEDULE" >> /var/spool/cron/crontabs/librenms
+    echo "Network discovery scheduled: $NETWORK_DISCOVERY_SCHEDULE"
+{{- end }}
