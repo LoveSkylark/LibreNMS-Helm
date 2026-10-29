@@ -114,6 +114,38 @@ spec:
               number: 8000
 {{- end }}
 
+{{- if and $includeIpCatchAll .Values.ingress.https }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Release.Name }}-catch-all-https"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "common.labels" . | indent 4 }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.priority: "1"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+{{- if $hasTraefikMiddlewareCrd }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Release.Namespace (printf "%s-forwarded-proto-https" .Release.Name) | quote }}
+{{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.application.host.name }}
+            port:
+              number: 8000
+  tls:
+  - secretName: {{ $tlsSecretName | quote }}
+{{- end }}
+
 ---
 {{- if .Values.application.syslogng.enable }}
 apiVersion: v1
