@@ -28,6 +28,9 @@ data:
   REDIS_DB:             {{ .Values.redis.lnms.database | quote }}
   CACHE_DRIVER:         {{ .Values.redis.lnms.cacheDriver | quote }}
   SESSION_DRIVER:       {{ .Values.redis.lnms.sessionDriver | quote }}
+{{- range $module, $enabled := .Values.application.lnms.pollerModules }}
+  POLLER_MODULES_{{ $module | upper | replace "-" "_" }}: {{ $enabled | quote }}
+{{- end }}
 {{- range $entry := .Values.application.env }}
 {{- $parts := regexSplit "=" $entry 2 }}
 {{- if eq (len $parts) 2 }}

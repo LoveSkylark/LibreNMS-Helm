@@ -109,6 +109,13 @@ application:
     replicas: "1"
     purge: "95"
   lnms:
+    pollerModules:
+      nac: false
+      isis: false
+      xdsl: false
+      slas: false
+      arp-table: false
+      port-security: false
     services:
       enable: false
     graphs:

@@ -31,6 +31,9 @@ spec:
             lnms config:set enable_syslog             {{ .Values.application.syslogng.enable | quote }}
             lnms config:set syslog_purge              {{ .Values.application.syslogng.purge | quote }}
             lnms config:set show_services             {{ .Values.application.lnms.services.enable | quote }}
+{{- range $module, $enabled := .Values.application.lnms.pollerModules }}
+            lnms config:set {{ printf "poller_modules.%s" $module | quote }} {{ $enabled | quote }}
+{{- end }}
             # Billing;
             lnms config:set enable_billing            {{ .Values.application.lnms.billing.enable | quote }}
             # Parsing;
